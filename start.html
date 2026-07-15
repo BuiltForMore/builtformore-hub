@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITZ START — Get in the zone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#39FF14;--dim:rgba(255,255,255,0.55);--card:rgba(255,255,255,0.03);--border:rgba(57,255,20,0.22)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Barlow',sans-serif;color:#fff;min-height:100vh;
+    background:radial-gradient(1200px 600px at 50% -10%,rgba(57,255,20,0.10),transparent 60%),radial-gradient(900px 500px at 100% 100%,rgba(57,255,20,0.06),transparent 60%),#030503}
+  .wrap{max-width:720px;margin:0 auto;padding:34px 20px 90px}
+  .brand{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:22px}
+  .logo{width:50px;height:50px;border-radius:50%;border:1px solid var(--green);background:radial-gradient(circle at 40% 35%,#0a1a05,#000);
+    display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;color:var(--green);box-shadow:0 0 24px rgba(57,255,20,0.35)}
+  .brand h1{font-family:'Bebas Neue';font-size:30px;letter-spacing:4px;line-height:1}
+  .brand h1 span{color:var(--green)}
+  .brand .sub{color:var(--green);font-size:11px;letter-spacing:2px;margin-top:2px}
+
+  .screen{display:none}.screen.active{display:block}
+
+  .hero{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px 24px;margin-bottom:22px;backdrop-filter:blur(6px);text-align:center}
+  .invited{color:var(--green);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'Barlow Condensed';font-weight:700}
+  .hero h2{font-family:'Bebas Neue';font-size:clamp(30px,6vw,44px);letter-spacing:2px;margin:6px 0 8px;line-height:1}
+  .hero h2 span{color:var(--green)}
+  .hero p{color:var(--dim);font-size:14.5px;line-height:1.6;max-width:520px;margin:0 auto}
+
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin:0 auto;max-width:440px;backdrop-filter:blur(6px)}
+  label.fld{display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px}
+  .fld-in{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:15px;padding:12px;font-family:'Barlow'}
+  .fld-in:focus{outline:none;border-color:var(--green)}
+  .btn{display:inline-block;background:var(--green);color:#000;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;font-size:14px;text-decoration:none;padding:13px 22px;border-radius:9px;border:none;cursor:pointer;text-align:center}
+  .btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green)}
+  .btn.full{width:100%}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+  .err{color:#ff6b6b;font-size:13px;margin-top:10px;min-height:16px;text-align:center}
+  .fine{color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:14px;text-align:center}
+
+  .progress{display:flex;gap:6px;margin:18px 0 24px}
+  .progress .seg{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.08)}
+  .progress .seg.on{background:var(--green);box-shadow:0 0 10px rgba(57,255,20,0.5)}
+
+  .step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;backdrop-filter:blur(6px);position:relative}
+  .step .num{position:absolute;top:-12px;left:20px;background:var(--green);color:#000;font-family:'Bebas Neue';font-size:16px;letter-spacing:1px;padding:3px 12px;border-radius:6px}
+  .step h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;letter-spacing:.5px;margin:6px 0 8px}
+  .step p{color:var(--dim);font-size:13.5px;line-height:1.6;margin-bottom:14px}
+  .video{aspect-ratio:16/9;border:1px dashed var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;
+    color:var(--dim);font-size:13px;background:rgba(57,255,20,0.03);margin-bottom:4px;overflow:hidden}
+  .video iframe{width:100%;height:100%;border:0}
+  .video .play{width:52px;height:52px;border-radius:50%;border:1px solid var(--green);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:12px}
+  .brokers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .broker{border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;background:rgba(255,255,255,0.02)}
+  .broker .bn{font-family:'Bebas Neue';font-size:22px;letter-spacing:1px}
+  .broker .bt{color:var(--dim);font-size:11.5px;margin:2px 0 12px}
+  .checklist{list-style:none}
+  .checklist li{display:flex;gap:10px;align-items:flex-start;color:#ddd;font-size:13.5px;line-height:1.5;margin-bottom:8px}
+  .checklist li::before{content:"✓";color:var(--green);font-weight:800}
+
+  .foot{text-align:center;color:rgba(255,255,255,0.28);font-size:12px;margin-top:36px;letter-spacing:1px}
+  .loading{text-align:center;color:var(--dim);padding:60px 0;font-size:14px}
+  @media(max-width:520px){.brokers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">ITZ</div>
+    <div>
+      <h1>ITZ <span>START</span></h1>
+      <div class="sub">☕ IN AND OUT THE MARKETS LIKE WE MAKING TEA</div>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">Loading your onboarding…</div>
+
+  <!-- ===== GATE ===== -->
+  <div class="screen" id="gate">
+    <div class="hero">
+      <div class="invited" id="invitedBy">Your spot is saved 🔒</div>
+      <h2>Create your <span>ITZ account</span></h2>
+      <p>One account for everything — signals, community, and your step-by-step onboarding. Takes 20 seconds.</p>
+    </div>
+    <div class="panel">
+      <label class="fld">Name</label>
+      <input class="fld-in" id="g_name" placeholder="Your name" autocomplete="name">
+      <label class="fld">Email</label>
+      <input class="fld-in" id="g_email" type="email" placeholder="you@email.com" autocomplete="email">
+      <label class="fld">Phone <span style="text-transform:none;font-weight:400">(optional)</span></label>
+      <input class="fld-in" id="g_phone" type="tel" placeholder="(optional)" autocomplete="tel">
+      <div style="margin-top:18px"><button class="btn full" id="g_submit" onclick="doSignup()">Create account → get started</button></div>
+      <div class="err" id="g_err"></div>
+      <div class="fine">By continuing you agree to our Terms &amp; Privacy. Educational content only — not financial advice.</div>
+    </div>
+  </div>
+
+  <!-- ===== STEPS ===== -->
+  <div class="screen" id="steps">
+    <div class="hero">
+      <div class="invited" id="stepsInvited">Welcome to ITZ 🚀</div>
+      <h2>Let's get you <span>in the zone.</span></h2>
+      <p id="introText">Four steps and you're trading with the team — watch the intro, open your broker, set it up, then connect to TradeLocker. Take 'em one at a time. ☕</p>
+      <div class="progress"><span class="seg on"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+    </div>
+
+    <div class="step">
+      <div class="num">STEP 1</div>
+      <h3 id="s1title">Watch this first</h3>
+      <p>Quick welcome + how ITZ works. Give it a watch before you set anything up.</p>
+      <div class="video" id="videoBox"><span class="play">▶</span> Getting-started video coming soon</div>
+    </div>
+
+    <div class="step">
+      <div class="num">STEP 2</div>
+      <h3>Open your account</h3>
+      <p>New to this? Start on <b>Genesis (demo)</b> to practice risk-free. Ready for real? Open <b>Crucial (live)</b>. Open it through the link below so you're plugged into the ITZ ecosystem.</p>
+      <div class="brokers">
+        <div class="broker">
+          <div class="bn">GENESIS</div>
+          <div class="bt">🎓 Demo / practice account</div>
+          <a class="btn ghost" id="genesisBtn" href="#" target="_blank" rel="noopener">Start Demo →</a>
+        </div>
+        <div class="broker">
+          <div class="bn">CRUCIAL</div>
+          <div class="bt">💸 Live / funded account</div>
+          <a class="btn" id="crucialBtn" href="#" target="_blank" rel="noopener">Go Live →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">STEP 3</div>
+      <h3>Set up your account</h3>
+      <p>Whether you went demo (Genesis) or live (Crucial), get it dialed in so it's ready to trade:</p>
+      <ul class="checklist">
+        <li>Log into your new broker dashboard</li>
+        <li><b>Genesis</b> → create your demo balance to practice · <b>Crucial</b> → fund your live account</li>
+        <li>Set your account currency + leverage (we'll guide you)</li>
+        <li>Note your login, password + server — you'll need it in Step 4</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="num">STEP 4</div>
+      <h3 id="s4title">Link it to TradeLocker</h3>
+      <p>Connect your broker account to TradeLocker so you can trade the ITZ setups:</p>
+      <ul class="checklist">
+        <li>Open TradeLocker → Add Account</li>
+        <li>Select your broker — Genesis (demo) or Crucial (live)</li>
+        <li>Enter your login, password + server</li>
+        <li>You're live — now hop into the ITZ signals 🚀</li>
+      </ul>
+      <div style="margin-top:16px"><a class="btn full" id="hubBtn" href="/portal">I'm done — take me to the ITZ Hub →</a></div>
+    </div>
+  </div>
+
+  <div class="foot">ITZ — a brand of Built For More Enterprises LLC · itztime.trade</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ---- config ----
+  const SB_URL = 'https://lugawieckrducycfeeql.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1Z2F3aWVja3JkdWN5Y2ZlZXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTkzMDQsImV4cCI6MjA5NjM3NTMwNH0.IP18N9yHclow9OkPQyt7seRYViVyBkfw4Gkw5TMZNqg';
+  const HOUSE_CODE = 'SKYLAR0L_E57';           // ITZ house — fallback sponsor + broker links
+  const HUB_URL = '/hub';                       // Built For More hub (home base)
+  const sb = supabase.createClient(SB_URL, SB_KEY);
+
+  // ---- cookie helpers ----
+  function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
+  function getCookie(k){return document.cookie.split('; ').reduce((r,c)=>{const[n,...val]=c.split('=');return n===k?decodeURIComponent(val.join('=')):r;},'');}
+
+  // ---- figure out the referrer (first-touch) ----
+  function urlRef(){
+    const q=new URLSearchParams(location.search).get('ref');
+    if(q) return q.trim();
+    const parts=location.pathname.split('/').filter(Boolean); // /start/CODE
+    const i=parts.indexOf('start');
+    if(i>=0 && parts[i+1]) return decodeURIComponent(parts[i+1]).trim();
+    return '';
+  }
+  let REF='';
+  (function(){
+    const existing=getCookie('itz_ref');
+    const fresh=urlRef();
+    if(existing){ REF=existing; }                          // first-touch wins
+    else if(fresh){ REF=fresh; setCookie('itz_ref',fresh,90); }
+    else { REF=HOUSE_CODE; }                                // no referrer → ITZ house
+  })();
+
+  let PROFILE=null;
+
+  async function loadProfile(){
+    let {data,error}=await sb.rpc('get_start_profile',{p_code:REF});
+    if(error||!data||!data.length){
+      // fall back to house if the code didn't resolve
+      const r=await sb.rpc('get_start_profile',{p_code:HOUSE_CODE});
+      data=r.data;
+    }
+    PROFILE=(data&&data[0])||{};
+    // broker links: this affiliate's, else house
+    if(!PROFILE.crucial_link||!PROFILE.genesis_link){
+      const r=await sb.rpc('get_start_profile',{p_code:HOUSE_CODE});
+      const house=(r.data&&r.data[0])||{};
+      PROFILE.crucial_link=PROFILE.crucial_link||house.crucial_link;
+      PROFILE.genesis_link=PROFILE.genesis_link||house.genesis_link;
+    }
+    render();
+  }
+
+  function render(){
+    const who=PROFILE.name?PROFILE.name.split(' ')[0]:'ITZ';
+    document.getElementById('invitedBy').textContent=(PROFILE.name?`${who} invited you`:'You’re invited')+' · your spot is saved 🔒';
+    document.getElementById('stepsInvited').textContent=(PROFILE.name?`${who} brought you in`:'Welcome to ITZ')+' 🚀';
+    if(PROFILE.custom_intro) document.getElementById('introText').textContent=PROFILE.custom_intro;
+    // custom step titles
+    const cs=PROFILE.custom_steps||{};
+    if(cs.step1) document.getElementById('s1title').textContent=cs.step1;
+    if(cs.step4) document.getElementById('s4title').textContent=cs.step4;
+    // broker links
+    document.getElementById('genesisBtn').href=PROFILE.genesis_link||'#';
+    document.getElementById('crucialBtn').href=PROFILE.crucial_link||'#';
+    // video
+    const v=PROFILE.custom_video_url;
+    if(v){
+      const embed=toEmbed(v);
+      document.getElementById('videoBox').innerHTML=embed
+        ? `<iframe src="${embed}" allowfullscreen></iframe>`
+        : `<a class="btn ghost" href="${v}" target="_blank" rel="noopener">▶ Watch the intro</a>`;
+    }
+    document.getElementById('hubBtn').href=HUB_URL;
+    // show gate or steps
+    document.getElementById('loading').style.display='none';
+    if(getCookie('itz_member')){ showSteps(); } else { document.getElementById('gate').classList.add('active'); }
+  }
+
+  function toEmbed(url){
+    let m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+    if(m) return `https://www.youtube.com/embed/${m[1]}`;
+    m=url.match(/vimeo\.com\/(\d+)/);
+    if(m) return `https://player.vimeo.com/video/${m[1]}`;
+    return '';
+  }
+
+  function showSteps(){
+    document.getElementById('gate').classList.remove('active');
+    document.getElementById('steps').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  async function doSignup(){
+    const name=document.getElementById('g_name').value.trim();
+    const email=document.getElementById('g_email').value.trim();
+    const phone=document.getElementById('g_phone').value.trim();
+    const err=document.getElementById('g_err');
+    const btn=document.getElementById('g_submit');
+    err.textContent='';
+    if(!name){err.textContent='Add your name.';return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err.textContent='Enter a valid email.';return;}
+    btn.disabled=true;btn.textContent='Creating…';
+    const {data,error}=await sb.rpc('start_signup',{p_name:name,p_email:email,p_phone:phone,p_sponsor:REF});
+    if(error||!data||data.ok===false){
+      err.textContent=(data&&data.error)||'Something went wrong — try again.';
+      btn.disabled=false;btn.textContent='Create account → get started';return;
+    }
+    setCookie('itz_member','1',365);
+    setCookie('itz_name',name,365);
+    setCookie('itz_email',email.toLowerCase(),365);
+    showSteps();
+  }
+
+  loadProfile();
+</script>
+</body>
+</html>

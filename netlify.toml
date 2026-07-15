@@ -1,0 +1,25 @@
+# Built For More ecosystem — Netlify config
+[build]
+  publish = "."
+
+# pretty URLs + the personal start links (/start/CODE)
+[[redirects]]
+  from = "/start/*"
+  to = "/start.html"
+  status = 200
+
+[[redirects]]
+  from = "/start"
+  to = "/start.html"
+  status = 200
+
+[[redirects]]
+  from = "/hub"
+  to = "/hub.html"
+  status = 200
+
+# bare domain lands on the hub (handles its own login) — change later if you build a landing page
+[[redirects]]
+  from = "/"
+  to = "/hub.html"
+  status = 200

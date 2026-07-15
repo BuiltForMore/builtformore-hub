@@ -122,7 +122,11 @@
     <!-- SETUP PANEL -->
     <div class="linkcard" id="setup" style="display:none">
       <div class="ll">⚙️ Your start portal setup</div>
-      <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:4px">Paste your own broker links + getting-started video. Anyone who joins through your link sees these. Leave a field blank to use the ITZ defaults.</p>
+      <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:4px">Customize your link handle + broker links + getting-started video. Anyone who joins through your link sees these. Leave a field blank to use the ITZ defaults.</p>
+
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Your link handle (what comes after /start/)</label>
+      <input class="fld-in" id="f_handle" oninput="handlePreview()" placeholder="e.g. JOHNFX" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:var(--green);font-size:14px;padding:11px 12px;font-family:monospace;letter-spacing:1px">
+      <div id="handleHint" style="color:var(--dim);font-size:12px;margin-top:6px"></div>
 
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Crucial — your LIVE-account referral link</label>
       <input class="fld-in" id="f_crucial" placeholder="https://dashboard.crucialmarkets.com/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
@@ -225,9 +229,20 @@
 
   function copyLink(){const i=document.getElementById('startLink');i.select();document.execCommand('copy');}
 
+  function handlePreview(){
+    const el=document.getElementById('f_handle');
+    let v=(el.value||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'');
+    el.value=v;
+    document.getElementById('handleHint').innerHTML = v.length>=3
+      ? `Your link: <span style="color:var(--green)">${location.host}/start/${v}</span>`
+      : 'At least 3 characters — letters, numbers, - and _.';
+  }
+
   function openSetup(){
     const d=window.DATA||{};
     const cs=d.custom_steps||{};
+    document.getElementById('f_handle').value=d.referral_code||'';
+    handlePreview();
     document.getElementById('f_crucial').value=d.crucial_link||'';
     document.getElementById('f_genesis').value=d.genesis_link||'';
     document.getElementById('f_video').value=d.custom_video_url||'';
@@ -245,6 +260,16 @@
     const btn=document.getElementById('saveBtn');
     const msg=document.getElementById('setupMsg');
     btn.disabled=true;btn.textContent='Saving…';msg.textContent='';
+    // handle change first (if the person edited their link handle)
+    const newHandle=(document.getElementById('f_handle').value||'').trim();
+    const curCode=((window.DATA&&window.DATA.referral_code)||'').toUpperCase();
+    if(newHandle && newHandle.toUpperCase()!==curCode){
+      const r=await sb.rpc('set_my_referral_code',{p_email:email,p_new_code:newHandle});
+      if(r.error||!r.data||r.data.ok===false){
+        msg.style.color='#ff6b6b';msg.textContent=(r.data&&r.data.error)||'Could not change your handle.';
+        btn.disabled=false;btn.textContent='💾 Save my setup';return;
+      }
+    }
     const {data,error}=await sb.rpc('update_start_setup',{
       p_email:email,
       p_crucial:document.getElementById('f_crucial').value,

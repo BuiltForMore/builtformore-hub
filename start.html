@@ -313,7 +313,7 @@
     setCookie('itz_member','1',365);
     setCookie('itz_name',data.name||'',365);
     setCookie('itz_email',email.toLowerCase(),365);
-    showSteps();
+    window.location.href = HUB_URL;   // returning member → straight to the hub
   }
 
   loadProfile();

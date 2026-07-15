@@ -51,6 +51,8 @@
   .tile:hover::before{opacity:1}
   .tile.soon{opacity:.6}
   .tile.soon:hover{transform:none;border-color:var(--border);box-shadow:none;cursor:default}
+  .tile.locked{cursor:pointer}
+  .tile.locked .badge{background:rgba(255,255,255,0.15);color:#fff}
   .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(57,255,20,0.08);border:1px solid var(--border);margin-bottom:14px}
   .tile h3{font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:.5px;margin-bottom:6px}
   .tile p{color:var(--dim);font-size:12.5px;line-height:1.5}
@@ -119,6 +121,22 @@
       <div class="up" id="uplineLine"></div>
     </div>
 
+    <!-- GO AI VERIFICATION CARD -->
+    <div class="linkcard" id="goaiCard" style="display:none">
+      <div class="ll" id="goaiTitle">🔒 Unlock your GO AI perks</div>
+      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:6px">Submit your GO AI ID + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.</p>
+      <div id="goaiForm">
+        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI ID number</label>
+        <input class="fld-in" id="f_goai_id" placeholder="e.g. GA-000123" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI affiliate link</label>
+        <input class="fld-in" id="f_goai_link" placeholder="https://...your GO AI link" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn" id="goaiBtn" onclick="submitGoAi()">🔓 Submit &amp; unlock</button>
+          <span id="goaiMsg" style="font-size:13px"></span>
+        </div>
+      </div>
+    </div>
+
     <!-- SETUP PANEL -->
     <div class="linkcard" id="setup" style="display:none">
       <div class="ll">⚙️ Your start portal setup</div>
@@ -158,8 +176,8 @@
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
-      <div class="tile soon"><span class="badge gray">Soon</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></div>
-      <div class="tile soon"><span class="badge gray">Soon</span><div class="ic">👥</div><h3>The Community</h3><p>Built For More — courses, events, wins.</p></div>
+      <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
+      <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
       <a class="tile" id="tileChat"><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
       <a class="tile" onclick="openSetup()"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Edit your start link, broker links &amp; video.</p></a>
     </div>
@@ -177,6 +195,8 @@
   const EDU_URL='https://itztime.trade/portal';
   const BOARD_URL='https://itztime.trade/leaderboard';
   const CHAT_URL='https://itztime.trade/portal';
+  const GOKOLAB_URL='#';   // set when GOKOLAB is live
+  const GOAI_URL='#';      // set to the GO AI back-office login when ready
   const sb=supabase.createClient(SB_URL,SB_KEY);
 
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
@@ -212,6 +232,51 @@
     document.getElementById('tileEdu').href=EDU_URL;
     document.getElementById('tileBoard').href=BOARD_URL;
     document.getElementById('tileChat').href=CHAT_URL;
+
+    // GO AI soft gate
+    const gs=d.go_ai_status;
+    window.UNLOCKED=(gs==='submitted'||gs==='verified');
+    document.getElementById('goaiCard').style.display='block';
+    if(window.UNLOCKED){
+      document.getElementById('goaiForm').style.display='none';
+      document.getElementById('goaiTitle').textContent='✅ GO AI perks unlocked';
+      document.getElementById('goaiText').textContent = gs==='verified'
+        ? 'Your GO AI membership is verified — enjoy everything.'
+        : "GO AI info submitted — you're in. (We may spot-check it later.)";
+    } else {
+      document.getElementById('goaiForm').style.display='block';
+      document.getElementById('f_goai_id').value=d.go_ai_id||'';
+      document.getElementById('f_goai_link').value=d.go_ai_link||'';
+      if(gs==='rejected'){
+        document.getElementById('goaiTitle').textContent='⚠️ Re-submit your GO AI info';
+        document.getElementById('goaiText').textContent="Your GO AI info didn't check out. Double-check your GO AI ID + affiliate link and re-submit, or contact support.";
+      } else {
+        document.getElementById('goaiTitle').textContent='🔒 Unlock your GO AI perks';
+        document.getElementById('goaiText').textContent='Submit your GO AI ID + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.';
+      }
+    }
+    setTileLock('tileGoai',window.UNLOCKED);
+    setTileLock('tileCommunity',window.UNLOCKED);
+  }
+
+  function setTileLock(id,unlocked){
+    const t=document.getElementById(id); if(!t) return;
+    const b=t.querySelector('.badge');
+    if(unlocked){ t.classList.remove('locked'); if(b) b.style.display='none'; }
+    else { t.classList.add('locked'); if(b){ b.textContent='🔒 GO AI'; b.style.display=''; } }
+  }
+  function openGoAi(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); const f=document.getElementById('f_goai_id'); if(f) f.focus(); }
+  function tileGoAiClick(){ if(window.UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGoAi(); }
+  function tileCommunityClick(){ if(window.UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGoAi(); }
+  async function submitGoAi(){
+    const email=getCookie('itz_email');
+    const btn=document.getElementById('goaiBtn'), msg=document.getElementById('goaiMsg');
+    btn.disabled=true;btn.textContent='Submitting…';msg.textContent='';
+    const {data,error}=await sb.rpc('submit_go_ai_info',{p_email:email,p_go_ai_id:document.getElementById('f_goai_id').value,p_go_ai_link:document.getElementById('f_goai_link').value});
+    btn.disabled=false;btn.textContent='🔓 Submit & unlock';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    msg.style.color='var(--green)';msg.textContent='Unlocked ✓';
+    await loadHub(email);
   }
 
   async function doLogin(){

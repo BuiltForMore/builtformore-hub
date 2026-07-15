@@ -114,8 +114,38 @@
       <div class="linkbox">
         <input id="startLink" readonly>
         <button class="btn" onclick="copyLink()">Copy</button>
+        <button class="btn ghost" onclick="openSetup()">✏️ Edit links &amp; video</button>
       </div>
       <div class="up" id="uplineLine"></div>
+    </div>
+
+    <!-- SETUP PANEL -->
+    <div class="linkcard" id="setup" style="display:none">
+      <div class="ll">⚙️ Your start portal setup</div>
+      <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:4px">Paste your own broker links + getting-started video. Anyone who joins through your link sees these. Leave a field blank to use the ITZ defaults.</p>
+
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Crucial — your LIVE-account referral link</label>
+      <input class="fld-in" id="f_crucial" placeholder="https://dashboard.crucialmarkets.com/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Genesis — your DEMO-account referral link</label>
+      <input class="fld-in" id="f_genesis" placeholder="https://dashboard.genesisfxmarkets.com/auth/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Getting-started video (YouTube / Vimeo URL)</label>
+      <input class="fld-in" id="f_video" placeholder="Paste a video link (optional)" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Personal welcome note (optional)</label>
+      <input class="fld-in" id="f_intro" placeholder="e.g. So hyped you're here — let's get you trading!" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Step 1 title (optional)</label><input class="fld-in" id="f_step1" placeholder="Watch this first" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'"></div>
+        <div><label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Step 4 title (optional)</label><input class="fld-in" id="f_step4" placeholder="Link it to TradeLocker" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'"></div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn" onclick="saveSetup()" id="saveBtn">💾 Save my setup</button>
+        <button class="btn ghost" onclick="closeSetup()">Cancel</button>
+        <span id="setupMsg" style="color:var(--green);font-size:13px"></span>
+      </div>
     </div>
 
     <div class="section-label">Jump In</div>
@@ -127,7 +157,7 @@
       <div class="tile soon"><span class="badge gray">Soon</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></div>
       <div class="tile soon"><span class="badge gray">Soon</span><div class="ic">👥</div><h3>The Community</h3><p>Built For More — courses, events, wins.</p></div>
       <a class="tile" id="tileChat"><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
-      <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Your start link, your sponsor, your broker links.</p></a>
+      <a class="tile" onclick="openSetup()"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Edit your start link, broker links &amp; video.</p></a>
     </div>
 
     <div class="foot">ITZ — a brand of Built For More Enterprises LLC · builtformore.xyz</div>
@@ -157,6 +187,7 @@
   }
 
   function render(d){
+    window.DATA=d;
     document.getElementById('loading').style.display='none';
     document.getElementById('login').style.display='none';
     document.getElementById('app').style.display='block';
@@ -193,6 +224,42 @@
   function logout(){setCookie('itz_email','',-1);location.reload();}
 
   function copyLink(){const i=document.getElementById('startLink');i.select();document.execCommand('copy');}
+
+  function openSetup(){
+    const d=window.DATA||{};
+    const cs=d.custom_steps||{};
+    document.getElementById('f_crucial').value=d.crucial_link||'';
+    document.getElementById('f_genesis').value=d.genesis_link||'';
+    document.getElementById('f_video').value=d.custom_video_url||'';
+    document.getElementById('f_intro').value=d.custom_intro||'';
+    document.getElementById('f_step1').value=cs.step1||'';
+    document.getElementById('f_step4').value=cs.step4||'';
+    document.getElementById('setupMsg').textContent='';
+    document.getElementById('setup').style.display='block';
+    document.getElementById('setup').scrollIntoView({behavior:'smooth'});
+  }
+  function closeSetup(){document.getElementById('setup').style.display='none';}
+
+  async function saveSetup(){
+    const email=getCookie('itz_email');
+    const btn=document.getElementById('saveBtn');
+    const msg=document.getElementById('setupMsg');
+    btn.disabled=true;btn.textContent='Saving…';msg.textContent='';
+    const {data,error}=await sb.rpc('update_start_setup',{
+      p_email:email,
+      p_crucial:document.getElementById('f_crucial').value,
+      p_genesis:document.getElementById('f_genesis').value,
+      p_video:document.getElementById('f_video').value,
+      p_intro:document.getElementById('f_intro').value,
+      p_step1:document.getElementById('f_step1').value,
+      p_step4:document.getElementById('f_step4').value
+    });
+    btn.disabled=false;btn.textContent='💾 Save my setup';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent='Save failed — try again.';return;}
+    msg.style.color='var(--green)';msg.textContent='Saved ✓';
+    await loadHub(email);       // refresh stats (broker ✓)
+    setTimeout(()=>{closeSetup();},900);
+  }
 
   (async function init(){
     const email=getCookie('itz_email');

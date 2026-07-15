@@ -18,8 +18,8 @@
   to = "/hub.html"
   status = 200
 
-# bare domain lands on the hub (handles its own login) — change later if you build a landing page
+# bare domain lands on the Start welcome page (open onboarding) — the front door
 [[redirects]]
   from = "/"
-  to = "/hub.html"
+  to = "/start.html"
   status = 200

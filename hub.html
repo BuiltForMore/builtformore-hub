@@ -129,44 +129,33 @@
       <div class="ll" id="goaiTitle">🔒 Unlock the ITZ Signals channel</div>
       <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Two ways in — pick the one that's you.</p>
 
-      <!-- Q1 -->
-      <div id="gateQ1">
-        <p style="color:#fff;font-size:14px;margin:0 0 12px">Are you a paid GO AI member?</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn" onclick="gatePick('goai')">Yes — I'm GO AI</button>
-          <button class="btn ghost" onclick="gatePick('broker')">No, I'm not</button>
-        </div>
-      </div>
+      <!-- unlocked banner -->
+      <div id="gateUnlocked" style="display:none;color:var(--green);font-size:14px;margin:4px 0 4px"></div>
 
-      <!-- GO AI path -->
-      <div id="goaiForm" style="display:none">
-        <label class="gl">Your GO AI username</label>
-        <input class="gi" id="f_goai_id" placeholder="your GO AI username">
-        <label class="gl">Your GO AI affiliate link</label>
-        <input class="gi" id="f_goai_link" placeholder="https://...your GO AI link">
-        <div class="grow">
-          <button class="btn" id="goaiBtn" onclick="submitGoAi()">🔓 Submit &amp; unlock</button>
-          <button class="btn ghost" onclick="gateBack()">Back</button>
-          <span id="goaiMsg" style="font-size:13px"></span>
-        </div>
-      </div>
+      <!-- two separate unlock boxes -->
+      <div id="gateBoxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:6px">
 
-      <!-- Broker path -->
-      <div id="brokerForm" style="display:none">
-        <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 8px">Funded your Crucial account? Verify it here to unlock. You need <b style="color:var(--green)">$125+ funded</b> on <b style="color:#fff">Crucial</b>, using the <b style="color:#fff">same email you registered with ITZ</b>.</div>
-        <label class="gl">Your Crucial account email</label>
-        <input class="gi" id="f_broker_email" placeholder="the email on your Crucial account">
-        <div style="color:var(--dim);font-size:11.5px;margin:5px 0 2px">Must match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
-        <div class="grow">
-          <button class="btn" id="brokerBtn" onclick="submitBroker()">Verify & unlock</button>
-          <button class="btn ghost" onclick="gateBack()">Back</button>
-          <span id="brokerMsg" style="font-size:13px"></span>
+        <!-- BOX 1: GO AI — unlocks everything -->
+        <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
+          <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — signals, ITZTAP, indicator, PAMM, community &amp; back office.</p>
+          <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
+          <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
+          <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>
+          <button class="btn full" id="goaiBtn" onclick="submitGoAiBox()" style="width:100%">🔓 Unlock everything</button>
+          <p id="goaiMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
         </div>
-      </div>
 
-      <!-- Unlocked -->
-      <div id="gateUnlocked" style="display:none">
-        <p style="color:var(--green);font-size:14px;margin:4px 0">✅ You're verified — tap the <b>ITZ Signals</b> tile to open the channel.</p>
+        <!-- BOX 2: Funded on Crucial — unlocks signals, ITZTAP & PAMM -->
+        <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">📈 FUNDED ON CRUCIAL</div>
+          <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">$125+ funded</b> on Crucial unlocks <b style="color:#fff">signals, ITZTAP &amp; PAMM</b>.</p>
+          <input class="gi" id="f_broker_email" placeholder="your Crucial email (same as ITZ)" style="margin-bottom:4px">
+          <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
+          <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
+          <p id="brokerMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+        </div>
+
       </div>
     </div>
 
@@ -206,9 +195,9 @@
     <div class="section-label">Jump In</div>
     <div class="grid">
       <a class="tile" id="tileSignals"><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
-      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
-      <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
-      <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>Goldilots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
+      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
+      <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
+      <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
@@ -243,7 +232,7 @@
 <div id="pammModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">📊 GOLDILOTS PAMM</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">📊 ITZ GOLDIELOTS PAMM</div>
       <button onclick="closePamm()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
     <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 12px">Goldilots is a <b>managed PAMM strategy</b> that runs on Crucial. A professional manager trades the allocation and your account follows along automatically — fully hands-off.</p>
@@ -343,34 +332,40 @@
     document.getElementById('tileBoard').href=BOARD_URL;
     document.getElementById('tileChat').href=CHAT_URL;
 
-    // ---- ITZ Signals access gate (branching) ----
+    // ---- access flags ----
     const gs=d.go_ai_status, bs=d.broker_status;
-    window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');   // GOKOLAB + GO AI perks
-    window.SIGNALS_UNLOCKED=!!d.signals_unlocked;               // ITZ Signals channel
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');       // unlocks EVERYTHING
+    window.BROKER_UNLOCKED=(bs==='verified');                       // funded Crucial
+    window.SIGNALS_UNLOCKED=!!d.signals_unlocked;
     window.SIGNALS_LINK=d.signals_link||'https://t.me/+o0ntth5T7YtkMThh';
+    window.HAS_CRUCIAL=!!d.has_crucial;
+    window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
+    const shared = window.GOAI_UNLOCKED || window.BROKER_UNLOCKED;   // signals, ITZTAP, PAMM
+
+    // ---- unlock card (two separate boxes) ----
     document.getElementById('goaiCard').style.display='block';
-    ['gateQ1','goaiForm','brokerForm','gateUnlocked'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    document.getElementById('goaiItzEmail').textContent=itz||'your ITZ email';
+    document.getElementById('brokerItzEmail').textContent=itz||'your ITZ email';
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
-    document.getElementById('f_goai_link').value=d.go_ai_link||'';
-    document.getElementById('brokerItzEmail').textContent=(getCookie('itz_email')||'').toLowerCase()||'your ITZ email';
-    if(window.SIGNALS_UNLOCKED){
-      document.getElementById('goaiTitle').textContent='✅ ITZ Signals unlocked';
-      document.getElementById('goaiText').textContent="You're verified — tap the ITZ Signals tile to open the channel.";
-      document.getElementById('gateUnlocked').style.display='block';
-    } else if(bs==='submitted'){
-      document.getElementById('goaiTitle').textContent='⏳ Broker verification pending';
-      document.getElementById('goaiText').textContent="We're confirming your Crucial deposit with the broker. You'll get an email the moment you're approved.";
+    document.getElementById('f_goai_email').value=itz;
+    if(shared){
+      const bits=['Signals','ITZTAP']; if(window.GOAI_UNLOCKED||window.HAS_CRUCIAL)bits.push('PAMM'); if(window.GOAI_UNLOCKED)bits.push('Community + Back Office');
+      document.getElementById('goaiTitle').textContent="✅ You're unlocked";
+      document.getElementById('goaiText').textContent='You have access to: '+bits.join(', ')+'. Tap any tile below to jump in.';
+      document.getElementById('gateBoxes').style.display='none';
     } else {
-      document.getElementById('goaiTitle').textContent='🔒 Unlock the ITZ Signals channel';
-      document.getElementById('goaiText').textContent="Two ways in — pick the one that's you.";
-      document.getElementById('gateQ1').style.display='block';
+      document.getElementById('goaiTitle').textContent='🔓 Unlock your access';
+      document.getElementById('goaiText').textContent='Two ways in — use whichever fits you.';
+      document.getElementById('gateBoxes').style.display='grid';
     }
+
+    // ---- tiles ----
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
-    setTileLock('tileTapTrade',window.GOAI_UNLOCKED);
-    setTileLock('tileIndicator',window.GOAI_UNLOCKED);
-    window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
-    window.HAS_CRUCIAL=!!d.has_crucial; setTileLock('tilePamm',window.HAS_CRUCIAL);
+    setTileLock('tileTapTrade',shared);
+    setTileLock('tilePamm',window.GOAI_UNLOCKED||window.HAS_CRUCIAL);
+    // ITZ Indicator stays locked — Coming Soon (not unlockable yet)
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }
 
@@ -378,7 +373,7 @@
     const t=document.getElementById(id); if(!t) return;
     const b=t.querySelector('.badge');
     if(unlocked){ t.classList.remove('locked'); if(b) b.style.display='none'; }
-    else { t.classList.add('locked'); if(b){ b.textContent='🔒 GO AI'; b.style.display=''; } }
+    else { t.classList.add('locked'); if(b){ b.style.display=''; } }  // keep each tile's own badge label
   }
   function openGate(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); }
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
@@ -412,8 +407,8 @@
     document.getElementById('gokVerify').style.display='none';
     document.getElementById('gokOpen').style.display='block';
   }
-  function tileTapTradeClick(){ if(window.GOAI_UNLOCKED){ location.href='/trades'; } else openGate(); }
-  function tileIndicatorClick(){ if(window.GOAI_UNLOCKED){ openIndicator(); } else openGate(); }
+  function tileTapTradeClick(){ if(window.GOAI_UNLOCKED||window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
+  function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
   function openIndicator(){
     const o=document.getElementById('indModal');
     const inp=document.getElementById('tvUser'); inp.value=window.TV_USERNAME||'';
@@ -468,17 +463,6 @@
   }
 
   // ---- ITZ Signals gate ----
-  function gatePick(which){
-    document.getElementById('gateQ1').style.display='none';
-    document.getElementById('goaiForm').style.display = which==='goai' ? 'block':'none';
-    document.getElementById('brokerForm').style.display = which==='broker' ? 'block':'none';
-    const f = document.getElementById(which==='goai'?'f_goai_id':'f_broker_id'); if(f) f.focus();
-  }
-  function gateBack(){
-    document.getElementById('goaiForm').style.display='none';
-    document.getElementById('brokerForm').style.display='none';
-    document.getElementById('gateQ1').style.display='block';
-  }
   async function submitBroker(){
     const email=getCookie('itz_email');
     const btn=document.getElementById('brokerBtn'), msg=document.getElementById('brokerMsg');
@@ -503,15 +487,20 @@
     if(window.SIGNALS_UNLOCKED){ window.open(window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh','_blank'); }
     else { openGate(); }
   }
-  async function submitGoAi(){
-    const email=getCookie('itz_email');
+  async function submitGoAiBox(){
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    const user=document.getElementById('f_goai_id').value.trim();
+    const typed=document.getElementById('f_goai_email').value.trim().toLowerCase();
     const btn=document.getElementById('goaiBtn'), msg=document.getElementById('goaiMsg');
-    btn.disabled=true;btn.textContent='Submitting…';msg.textContent='';
-    const {data,error}=await sb.rpc('submit_go_ai_info',{p_email:email,p_username:document.getElementById('f_goai_id').value,p_go_ai_link:document.getElementById('f_goai_link').value});
-    btn.disabled=false;btn.textContent='🔓 Submit & unlock';
+    if(!user){msg.style.color='#ff6b6b';msg.textContent='Enter your GO AI username.';return;}
+    if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your email.';return;}
+    if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
+    btn.disabled=true;btn.textContent='Unlocking…';msg.textContent='';
+    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user}});
+    btn.disabled=false;btn.textContent='🔓 Unlock everything';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
-    msg.style.color='var(--green)';msg.textContent='Unlocked ✓';
-    await loadHub(email);
+    msg.style.color='var(--green)';msg.textContent='✅ Unlocked! Loading your access…';
+    await loadHub(itz);
   }
 
   async function doLogin(){

@@ -239,7 +239,7 @@
     const broker=document.getElementById('tl_broker').value;
     const {data,error}=await sb.functions.invoke('tradelocker-connect',{body:{member_email:email,broker,tl_email,tl_password,tl_server,demo:document.getElementById('tl_demo').checked}});
     btn.disabled=false;btn.textContent='🔗 Link my account';
-    if(error||!data||data.ok===false){err.textContent=(data&&data.error)||'Link failed — check your details.';return;}
+    if(error||!data||data.ok===false){err.textContent=((data&&data.error)||'Link failed — check your details.')+((data&&data.detail)?(' — '+data.detail):'');return;}
     document.getElementById('tl_password').value='';
     showLinked(data.balance,data.currency);
   }

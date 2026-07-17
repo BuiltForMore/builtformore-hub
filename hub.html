@@ -153,10 +153,10 @@
 
       <!-- Broker path -->
       <div id="brokerForm" style="display:none">
-        <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 8px">You must be on the <b style="color:#fff">Crucial</b> broker with at least <b style="color:var(--green)">$125 funded</b>. We verify directly with the broker before unlocking.</div>
+        <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 8px">Funded your Crucial account? Verify it here to unlock. You need <b style="color:var(--green)">$125+ funded</b> on <b style="color:#fff">Crucial</b>, using the <b style="color:#fff">same email you registered with ITZ</b>.</div>
         <label class="gl">Your Crucial account email</label>
-        <input class="gi" id="f_broker_id" placeholder="the email on your Crucial account">
-        <div style="color:var(--dim);font-size:11.5px;margin:4px 0 2px">Use the email you signed up to Crucial with. (You can also enter your account number instead.)</div>
+        <input class="gi" id="f_broker_email" placeholder="the email on your Crucial account">
+        <div style="color:var(--dim);font-size:11.5px;margin:5px 0 2px">Must match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
         <div class="grow">
           <button class="btn" id="brokerBtn" onclick="submitBroker()">Verify & unlock</button>
           <button class="btn ghost" onclick="gateBack()">Back</button>
@@ -293,7 +293,7 @@
     ['gateQ1','goaiForm','brokerForm','gateUnlocked'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
     document.getElementById('f_goai_link').value=d.go_ai_link||'';
-    document.getElementById('f_broker_id').value=d.broker_id||'';
+    document.getElementById('brokerItzEmail').textContent=(getCookie('itz_email')||'').toLowerCase()||'your ITZ email';
     if(window.SIGNALS_UNLOCKED){
       document.getElementById('goaiTitle').textContent='✅ ITZ Signals unlocked';
       document.getElementById('goaiText').textContent="You're verified — tap the ITZ Signals tile to open the channel.";
@@ -366,11 +366,12 @@
   async function submitBroker(){
     const email=getCookie('itz_email');
     const btn=document.getElementById('brokerBtn'), msg=document.getElementById('brokerMsg');
-    const val=document.getElementById('f_broker_id').value.trim();
-    if(!val){msg.style.color='#ff6b6b';msg.textContent='Enter your Crucial account email (or account number).';return;}
+    const typed=document.getElementById('f_broker_email').value.trim().toLowerCase();
+    const itz=(email||'').toLowerCase();
+    if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your Crucial account email.';return;}
+    if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+'). Use that email on Crucial, or contact support.';return;}
     btn.disabled=true;btn.textContent='Verifying…';msg.textContent='';
-    const body = val.includes('@') ? {member_email:email,broker_email:val} : {member_email:email,account:val};
-    const {data,error}=await sb.functions.invoke('crucial-verify',{body});
+    const {data,error}=await sb.functions.invoke('crucial-verify',{body:{member_email:itz}});
     btn.disabled=false;btn.textContent='Verify & unlock';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     if(data.verified){

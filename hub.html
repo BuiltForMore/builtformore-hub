@@ -404,7 +404,7 @@
     if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your email.';return;}
     if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
     const btn=document.getElementById('gokBtn'); btn.disabled=true; btn.textContent='Unlocking…';
-    const {data,error}=await sb.rpc('submit_go_ai_info',{p_email:itz,p_username:user,p_go_ai_link:''});
+    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user}});
     btn.disabled=false; btn.textContent='Unlock GOKOLAB →';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     window.GOAI_UNLOCKED=true;

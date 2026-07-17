@@ -268,6 +268,34 @@
   </div>
 </div>
 
+<!-- GOKOLAB access modal (GO AI unlock — separate from the broker path) -->
+<div id="gokolabModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">👥 GOKOLAB</div>
+      <button onclick="closeGokolab()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+
+    <!-- locked: enter GO AI username + email to auto-approve -->
+    <div id="gokVerify">
+      <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 12px">GOKOLAB is the ITZ community — courses, events and wins. Unlock it with your <b>GO AI account</b>.</p>
+      <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Your GO AI username</label>
+      <input id="gokUser" placeholder="your GO AI username" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px;margin-bottom:10px">
+      <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Your email</label>
+      <input id="gokEmail" placeholder="the email you registered with ITZ" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px;margin-bottom:5px">
+      <div style="color:var(--dim);font-size:11.5px;margin:0 0 12px">Must match your ITZ email: <b id="gokItzEmail" style="color:var(--green)">—</b></div>
+      <button class="btn full" id="gokBtn" onclick="submitGokolab()" style="width:100%">Unlock GOKOLAB →</button>
+      <p id="gokMsg" style="color:var(--green);font-size:13px;margin-top:10px;min-height:16px"></p>
+    </div>
+
+    <!-- unlocked: fire them off to GOKOLAB -->
+    <div id="gokOpen" style="display:none">
+      <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:0 0 12px">✅ You're approved for GOKOLAB. Tap below to jump into the community.</p>
+      <a href="#" onclick="openGokolabSite();return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Open GOKOLAB →</a>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SB_URL='https://lugawieckrducycfeeql.supabase.co';
@@ -354,7 +382,36 @@
   }
   function openGate(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); }
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
-  function tileCommunityClick(){ if(window.GOAI_UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGate(); }
+  function tileCommunityClick(){ openGokolab(); }
+  function openGokolabSite(){ if(GOKOLAB_URL && GOKOLAB_URL!=='#'){ window.open(GOKOLAB_URL,'_blank'); } else { alert("GOKOLAB launches soon — you're on the approved list. 👥"); } }
+  function openGokolab(){
+    const unlocked=!!window.GOAI_UNLOCKED;
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    document.getElementById('gokVerify').style.display=unlocked?'none':'block';
+    document.getElementById('gokOpen').style.display=unlocked?'block':'none';
+    document.getElementById('gokItzEmail').textContent=itz||'your ITZ email';
+    if(!unlocked){ document.getElementById('gokEmail').value=itz; }
+    document.getElementById('gokMsg').textContent='';
+    document.getElementById('gokolabModal').style.display='flex';
+  }
+  function closeGokolab(){ document.getElementById('gokolabModal').style.display='none'; }
+  async function submitGokolab(){
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    const user=document.getElementById('gokUser').value.trim();
+    const typed=document.getElementById('gokEmail').value.trim().toLowerCase();
+    const msg=document.getElementById('gokMsg');
+    if(!user){msg.style.color='#ff6b6b';msg.textContent='Enter your GO AI username.';return;}
+    if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your email.';return;}
+    if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
+    const btn=document.getElementById('gokBtn'); btn.disabled=true; btn.textContent='Unlocking…';
+    const {data,error}=await sb.rpc('submit_go_ai_info',{p_email:itz,p_username:user,p_go_ai_link:''});
+    btn.disabled=false; btn.textContent='Unlock GOKOLAB →';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    window.GOAI_UNLOCKED=true;
+    ['tileGoai','tileCommunity','tileTapTrade','tileIndicator'].forEach(id=>setTileLock(id,true));
+    document.getElementById('gokVerify').style.display='none';
+    document.getElementById('gokOpen').style.display='block';
+  }
   function tileTapTradeClick(){ if(window.GOAI_UNLOCKED){ location.href='/trades'; } else openGate(); }
   function tileIndicatorClick(){ if(window.GOAI_UNLOCKED){ openIndicator(); } else openGate(); }
   function openIndicator(){

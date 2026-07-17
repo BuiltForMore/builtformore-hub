@@ -65,13 +65,21 @@
 
   <div class="loading" id="loading">Loading…</div>
 
-  <!-- LOGIN -->
+  <!-- LOGIN (email code) -->
   <div class="screen" id="login">
     <div class="card" style="max-width:420px;margin:40px auto">
-      <div class="ll">🔑 Members only</div>
-      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">Enter the email you signed up with.</p>
-      <input class="in" id="loginEmail" type="email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()">
-      <button class="btn full" style="margin-top:12px" id="loginBtn" onclick="doLogin()">Continue →</button>
+      <div class="ll">🔑 Log in</div>
+      <div id="step_email">
+        <p style="color:var(--dim);font-size:13px;margin-bottom:14px">Enter your ITZ email — we'll email you a login code.</p>
+        <input class="in" id="loginEmail" type="email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')sendCode()">
+        <button class="btn full" style="margin-top:12px" id="sendBtn" onclick="sendCode()">Send my code →</button>
+      </div>
+      <div id="step_code" style="display:none">
+        <p style="color:var(--dim);font-size:13px;margin-bottom:14px">Enter the 6-digit code we sent to <b id="codeEmail" style="color:var(--green)"></b> (from support@itztime.trade).</p>
+        <input class="in" id="loginCode" inputmode="numeric" placeholder="6-digit code" onkeydown="if(event.key==='Enter')verifyCode()" style="letter-spacing:5px;text-align:center;font-size:20px">
+        <button class="btn full" style="margin-top:12px" id="verifyBtn" onclick="verifyCode()">Verify →</button>
+        <button class="btn ghost full" style="margin-top:8px" onclick="backToEmail()">← Different email</button>
+      </div>
       <div class="err" id="loginErr"></div>
     </div>
   </div>
@@ -169,12 +177,38 @@
     window._linked = !!data.broker_linked;
     startTrades();
   }
-  async function doLogin(){
-    const email=document.getElementById('loginEmail').value.trim();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){document.getElementById('loginErr').textContent='Enter a valid email.';return;}
-    document.getElementById('loginBtn').disabled=true;
-    await route(email);
-    document.getElementById('loginBtn').disabled=false;
+  let _pendingEmail='';
+  function backToEmail(){
+    document.getElementById('step_code').style.display='none';
+    document.getElementById('step_email').style.display='block';
+    document.getElementById('loginErr').textContent='';
+    document.getElementById('loginCode').value='';
+  }
+  async function sendCode(){
+    const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+    const err=document.getElementById('loginErr'); err.textContent='';
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err.textContent='Enter a valid email.';return;}
+    const btn=document.getElementById('sendBtn'); btn.disabled=true; btn.textContent='Sending…';
+    const {data,error}=await sb.functions.invoke('trades-auth',{body:{action:'request',email}});
+    btn.disabled=false; btn.textContent='Send my code →';
+    if(error||!data||data.ok===false){ err.textContent=(data&&data.error)||"Couldn't send a code. Check the email and try again."; return; }
+    _pendingEmail=email;
+    document.getElementById('codeEmail').textContent=email;
+    document.getElementById('step_email').style.display='none';
+    document.getElementById('step_code').style.display='block';
+    document.getElementById('loginCode').focus();
+  }
+  async function verifyCode(){
+    const code=document.getElementById('loginCode').value.trim();
+    const err=document.getElementById('loginErr'); err.textContent='';
+    if(!/^\d{6}$/.test(code)){err.textContent='Enter the 6-digit code.';return;}
+    const btn=document.getElementById('verifyBtn'); btn.disabled=true; btn.textContent='Verifying…';
+    const {data,error}=await sb.functions.invoke('trades-auth',{body:{action:'verify',email:_pendingEmail,code}});
+    btn.disabled=false; btn.textContent='Verify →';
+    if(error||!data||data.ok===false){ err.textContent=(data&&data.error)||'That code is wrong or expired.'; return; }
+    setCookie('itz_session',data.token,30);
+    setCookie('itz_email',(data.email||_pendingEmail).toLowerCase(),30);
+    await route(data.email||_pendingEmail);
   }
   async function doAgree(){
     const email=getCookie('itz_email');
@@ -215,9 +249,9 @@
   async function approveTrade(asset){
     if(!window._linked){ alert('Link your broker in the card above first, then tap to copy.'); return; }
     if(!confirm('Copy '+asset+' to your account now? This places a real order on your linked account.')) return;
-    const email=getCookie('itz_email');
-    const {data,error}=await sb.functions.invoke('tradelocker-copy',{body:{member_email:email,asset}});
+    const {data,error}=await sb.functions.invoke('tradelocker-copy',{body:{session_token:getCookie('itz_session'),asset}});
     if(error||!data||data.ok===false){
+      if(data&&/session/i.test(data.error||'')){ showScreen('login'); backToEmail(); document.getElementById('loginErr').textContent='Please log in again.'; return; }
       alert('Copy failed: '+((data&&data.error)||'try again')+((data&&data.detail)?('\n\n'+data.detail):''));
       return;
     }
@@ -236,7 +270,6 @@
     window._linked=true;
   }
   async function connectBroker(){
-    const email=getCookie('itz_email');
     const btn=document.getElementById('linkBtn'), err=document.getElementById('brokerErr');
     err.textContent='';
     const tl_email=document.getElementById('tl_email').value.trim();
@@ -245,16 +278,18 @@
     if(!tl_email||!tl_password||!tl_server){err.textContent='Enter your email, password, and server.';return;}
     btn.disabled=true;btn.textContent='Linking…';
     const broker=document.getElementById('tl_broker').value;
-    const {data,error}=await sb.functions.invoke('tradelocker-connect',{body:{member_email:email,broker,tl_email,tl_password,tl_server,demo:document.getElementById('tl_demo').checked}});
+    const {data,error}=await sb.functions.invoke('tradelocker-connect',{body:{session_token:getCookie('itz_session'),broker,tl_email,tl_password,tl_server,demo:document.getElementById('tl_demo').checked}});
     btn.disabled=false;btn.textContent='🔗 Link my account';
-    if(error||!data||data.ok===false){err.textContent=((data&&data.error)||'Link failed — check your details.')+((data&&data.detail)?(' — '+data.detail):'');return;}
+    if(error||!data||data.ok===false){
+      if(data&&/session/i.test(data.error||'')){ showScreen('login'); backToEmail(); document.getElementById('loginErr').textContent='Please log in again.'; return; }
+      err.textContent=((data&&data.error)||'Link failed — check your details.')+((data&&data.detail)?(' — '+data.detail):'');return;}
     document.getElementById('tl_password').value='';
     showLinked(data.balance,data.currency);
   }
 
   (function init(){
-    const email=getCookie('itz_email');
-    if(email){ route(email); } else { showScreen('login'); }
+    const email=getCookie('itz_email'); const sess=getCookie('itz_session');
+    if(email && sess){ route(email); } else { showScreen('login'); }
   })();
 </script>
 </body>

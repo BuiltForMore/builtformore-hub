@@ -327,15 +327,16 @@
     const email=getCookie('itz_email');
     const gu=document.getElementById('gateUnlocked');
     document.getElementById('goaiCard').scrollIntoView({behavior:'smooth'});
-    gu.innerHTML='<p style="color:var(--dim);font-size:14px;margin:4px 0">Sending your access email…</p>';
+    gu.innerHTML='<p style="color:var(--dim);font-size:14px;margin:4px 0">One sec…</p>';
     const {data,error}=await sb.functions.invoke('send-signals-access',{body:{email}});
     if(error||(data&&data.ok===false)){
-      gu.innerHTML='<p style="color:#ff6b6b;font-size:14px;margin:4px 0">Couldn\'t send it right now — try again in a sec.</p>';
+      gu.innerHTML='<p style="color:#ff6b6b;font-size:14px;margin:4px 0">Couldn\'t do that right now — try again in a sec.</p>';
       return;
     }
-    gu.innerHTML='<p style="color:var(--green);font-size:16px;font-weight:700;margin:4px 0">📧 Check your email!</p>'
-      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">We just sent your ITZ Signals access link + steps to <b style="color:var(--green)">'+email+'</b>.</p>'
-      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">It comes from <b style="color:var(--green)">support@itztime.trade</b> — if it\'s not in your inbox within a minute, check your <b>spam</b> or <b>promotions</b> folder.</p>';
+    const head = (data&&data.already_sent) ? '📧 Already sent — check your email' : '📧 Check your email!';
+    gu.innerHTML='<p style="color:var(--green);font-size:16px;font-weight:700;margin:4px 0">'+head+'</p>'
+      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">Your ITZ Signals access link + steps are in your inbox at <b style="color:var(--green)">'+email+'</b>.</p>'
+      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">From <b style="color:var(--green)">support@itztime.trade</b> — if it\'s not there in a minute, check <b>spam</b> or <b>promotions</b>.</p>';
   }
   async function submitGoAi(){
     const email=getCookie('itz_email');

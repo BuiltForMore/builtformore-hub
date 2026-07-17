@@ -332,7 +332,7 @@
     initLot();
     resetBrokerUI();
     document.getElementById('whoami').textContent=who();
-    if(window._linked) showLinked(null,'');
+    if(window._linked){ showLinked(null,''); loadBalance(); }
     loadTrades();
     clearInterval(window._t); window._t=setInterval(loadTrades, 30000);
   }
@@ -352,8 +352,14 @@
   function showLinked(bal,cur){
     document.getElementById('brokerForm').style.display='none';
     document.getElementById('brokerLinked').style.display='block';
-    document.getElementById('balLine').textContent = (bal!=null) ? (' · balance '+(cur?cur+' ':'')+Number(bal).toLocaleString()) : '';
+    if(bal!=null) document.getElementById('balLine').textContent = ' · balance '+(cur?cur+' ':'')+Number(bal).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
     window._linked=true;
+  }
+  async function loadBalance(){
+    document.getElementById('balLine').textContent=' · loading balance…';
+    const {data}=await sb.functions.invoke('tradelocker-balance',{body:{session_token:getCookie('itz_session')}});
+    if(data&&data.ok&&data.balance!=null){ showLinked(data.balance,data.currency); }
+    else { document.getElementById('balLine').textContent=''; }
   }
   async function connectBroker(){
     const btn=document.getElementById('linkBtn'), err=document.getElementById('brokerErr');

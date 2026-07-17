@@ -53,6 +53,9 @@
   .tile.soon:hover{transform:none;border-color:var(--border);box-shadow:none;cursor:default}
   .tile.locked{cursor:pointer}
   .tile.locked .badge{background:rgba(255,255,255,0.15);color:#fff}
+  .gl{display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px}
+  .gi{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'}
+  .grow{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(57,255,20,0.08);border:1px solid var(--border);margin-bottom:14px}
   .tile h3{font-family:'Barlow Condensed';font-weight:700;font-size:20px;letter-spacing:.5px;margin-bottom:6px}
   .tile p{color:var(--dim);font-size:12.5px;line-height:1.5}
@@ -121,19 +124,48 @@
       <div class="up" id="uplineLine"></div>
     </div>
 
-    <!-- GO AI VERIFICATION CARD -->
+    <!-- ITZ SIGNALS ACCESS GATE (branching) -->
     <div class="linkcard" id="goaiCard" style="display:none">
-      <div class="ll" id="goaiTitle">🔒 Unlock your GO AI perks</div>
-      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:6px">Submit your GO AI username + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.</p>
-      <div id="goaiForm">
-        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI username</label>
-        <input class="fld-in" id="f_goai_id" placeholder="your GO AI username" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI affiliate link</label>
-        <input class="fld-in" id="f_goai_link" placeholder="https://...your GO AI link" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-        <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div class="ll" id="goaiTitle">🔒 Unlock the ITZ Signals channel</div>
+      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Two ways in — pick the one that's you.</p>
+
+      <!-- Q1 -->
+      <div id="gateQ1">
+        <p style="color:#fff;font-size:14px;margin:0 0 12px">Are you a paid GO AI member?</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="gatePick('goai')">Yes — I'm GO AI</button>
+          <button class="btn ghost" onclick="gatePick('broker')">No, I'm not</button>
+        </div>
+      </div>
+
+      <!-- GO AI path -->
+      <div id="goaiForm" style="display:none">
+        <label class="gl">Your GO AI username</label>
+        <input class="gi" id="f_goai_id" placeholder="your GO AI username">
+        <label class="gl">Your GO AI affiliate link</label>
+        <input class="gi" id="f_goai_link" placeholder="https://...your GO AI link">
+        <div class="grow">
           <button class="btn" id="goaiBtn" onclick="submitGoAi()">🔓 Submit &amp; unlock</button>
+          <button class="btn ghost" onclick="gateBack()">Back</button>
           <span id="goaiMsg" style="font-size:13px"></span>
         </div>
+      </div>
+
+      <!-- Broker path -->
+      <div id="brokerForm" style="display:none">
+        <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 8px">You must be on the <b style="color:#fff">Crucial</b> broker with at least <b style="color:var(--green)">$125 funded</b>. We verify directly with the broker before unlocking.</div>
+        <label class="gl">Your Crucial broker ID</label>
+        <input class="gi" id="f_broker_id" placeholder="your Crucial account ID">
+        <div class="grow">
+          <button class="btn" id="brokerBtn" onclick="submitBroker()">Submit for verification</button>
+          <button class="btn ghost" onclick="gateBack()">Back</button>
+          <span id="brokerMsg" style="font-size:13px"></span>
+        </div>
+      </div>
+
+      <!-- Unlocked -->
+      <div id="gateUnlocked" style="display:none">
+        <p style="color:var(--green);font-size:14px;margin:4px 0">✅ You're verified — the ITZ Signals channel is unlocked. Click the <b>ITZ Signals</b> tile below to get your access email.</p>
       </div>
     </div>
 
@@ -228,35 +260,34 @@
     else up=`You're at the top of your tree 👑`;
     if(!d.has_broker_links) up+=` &nbsp;·&nbsp; <span style="color:var(--green)">Set your Crucial + Genesis links in onboarding</span>`;
     document.getElementById('uplineLine').innerHTML=up;
-    document.getElementById('tileSignals').href=SIGNALS_URL;
     document.getElementById('tileEdu').href=EDU_URL;
     document.getElementById('tileBoard').href=BOARD_URL;
     document.getElementById('tileChat').href=CHAT_URL;
 
-    // GO AI soft gate
-    const gs=d.go_ai_status;
-    window.UNLOCKED=(gs==='submitted'||gs==='verified');
+    // ---- ITZ Signals access gate (branching) ----
+    const gs=d.go_ai_status, bs=d.broker_status;
+    window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');   // GOKOLAB + GO AI perks
+    window.SIGNALS_UNLOCKED=!!d.signals_unlocked;               // ITZ Signals channel
     document.getElementById('goaiCard').style.display='block';
-    if(window.UNLOCKED){
-      document.getElementById('goaiForm').style.display='none';
-      document.getElementById('goaiTitle').textContent='✅ GO AI perks unlocked';
-      document.getElementById('goaiText').textContent = gs==='verified'
-        ? 'Your GO AI membership is verified — enjoy everything.'
-        : "GO AI info submitted — you're in. (We may spot-check it later.)";
+    ['gateQ1','goaiForm','brokerForm','gateUnlocked'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    document.getElementById('f_goai_id').value=d.go_ai_username||'';
+    document.getElementById('f_goai_link').value=d.go_ai_link||'';
+    document.getElementById('f_broker_id').value=d.broker_id||'';
+    if(window.SIGNALS_UNLOCKED){
+      document.getElementById('goaiTitle').textContent='✅ ITZ Signals unlocked';
+      document.getElementById('goaiText').textContent="You're verified. Click the ITZ Signals tile below to get your access email.";
+      document.getElementById('gateUnlocked').style.display='block';
+    } else if(bs==='submitted'){
+      document.getElementById('goaiTitle').textContent='⏳ Broker verification pending';
+      document.getElementById('goaiText').textContent="We're confirming your Crucial deposit with the broker. You'll get an email the moment you're approved.";
     } else {
-      document.getElementById('goaiForm').style.display='block';
-      document.getElementById('f_goai_id').value=d.go_ai_username||'';
-      document.getElementById('f_goai_link').value=d.go_ai_link||'';
-      if(gs==='rejected'){
-        document.getElementById('goaiTitle').textContent='⚠️ Re-submit your GO AI info';
-        document.getElementById('goaiText').textContent="Your GO AI info didn't check out. Double-check your GO AI username + affiliate link and re-submit, or contact support.";
-      } else {
-        document.getElementById('goaiTitle').textContent='🔒 Unlock your GO AI perks';
-        document.getElementById('goaiText').textContent='Submit your GO AI username + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.';
-      }
+      document.getElementById('goaiTitle').textContent='🔒 Unlock the ITZ Signals channel';
+      document.getElementById('goaiText').textContent="Two ways in — pick the one that's you.";
+      document.getElementById('gateQ1').style.display='block';
     }
-    setTileLock('tileGoai',window.UNLOCKED);
-    setTileLock('tileCommunity',window.UNLOCKED);
+    setTileLock('tileGoai',window.GOAI_UNLOCKED);
+    setTileLock('tileCommunity',window.GOAI_UNLOCKED);
+    const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }
 
   function setTileLock(id,unlocked){
@@ -265,9 +296,39 @@
     if(unlocked){ t.classList.remove('locked'); if(b) b.style.display='none'; }
     else { t.classList.add('locked'); if(b){ b.textContent='🔒 GO AI'; b.style.display=''; } }
   }
-  function openGoAi(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); const f=document.getElementById('f_goai_id'); if(f) f.focus(); }
-  function tileGoAiClick(){ if(window.UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGoAi(); }
-  function tileCommunityClick(){ if(window.UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGoAi(); }
+  function openGate(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); }
+  function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
+  function tileCommunityClick(){ if(window.GOAI_UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGate(); }
+
+  // ---- ITZ Signals gate ----
+  function gatePick(which){
+    document.getElementById('gateQ1').style.display='none';
+    document.getElementById('goaiForm').style.display = which==='goai' ? 'block':'none';
+    document.getElementById('brokerForm').style.display = which==='broker' ? 'block':'none';
+    const f = document.getElementById(which==='goai'?'f_goai_id':'f_broker_id'); if(f) f.focus();
+  }
+  function gateBack(){
+    document.getElementById('goaiForm').style.display='none';
+    document.getElementById('brokerForm').style.display='none';
+    document.getElementById('gateQ1').style.display='block';
+  }
+  async function submitBroker(){
+    const email=getCookie('itz_email');
+    const btn=document.getElementById('brokerBtn'), msg=document.getElementById('brokerMsg');
+    btn.disabled=true;btn.textContent='Submitting…';msg.textContent='';
+    const {data,error}=await sb.rpc('submit_broker_id',{p_email:email,p_broker_id:document.getElementById('f_broker_id').value});
+    btn.disabled=false;btn.textContent='Submit for verification';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    msg.style.color='var(--green)';msg.textContent='Submitted — verifying with the broker ✓';
+    await loadHub(email);
+  }
+  function signalsTileClick(){ if(window.SIGNALS_UNLOCKED){ getSignalsAccess(); } else { openGate(); } }
+  async function getSignalsAccess(){
+    const email=getCookie('itz_email');
+    const {data,error}=await sb.functions.invoke('send-signals-access',{body:{email}});
+    if(error){ alert("Couldn't send your access email — try again in a sec."); return; }
+    alert("✅ Check your email — we just sent your ITZ Signals access link + steps.");
+  }
   async function submitGoAi(){
     const email=getCookie('itz_email');
     const btn=document.getElementById('goaiBtn'), msg=document.getElementById('goaiMsg');

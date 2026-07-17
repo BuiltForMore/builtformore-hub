@@ -165,7 +165,7 @@
 
       <!-- Unlocked -->
       <div id="gateUnlocked" style="display:none">
-        <p style="color:var(--green);font-size:14px;margin:4px 0">✅ You're verified — the ITZ Signals channel is unlocked. Click the <b>ITZ Signals</b> tile below to get your access email.</p>
+        <p style="color:var(--green);font-size:14px;margin:4px 0">✅ You're verified — tap the <b>ITZ Signals</b> tile to open the channel.</p>
       </div>
     </div>
 
@@ -268,6 +268,7 @@
     const gs=d.go_ai_status, bs=d.broker_status;
     window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');   // GOKOLAB + GO AI perks
     window.SIGNALS_UNLOCKED=!!d.signals_unlocked;               // ITZ Signals channel
+    window.SIGNALS_LINK=d.signals_link||'https://t.me/+o0ntth5T7YtkMThh';
     document.getElementById('goaiCard').style.display='block';
     ['gateQ1','goaiForm','brokerForm','gateUnlocked'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
@@ -275,7 +276,7 @@
     document.getElementById('f_broker_id').value=d.broker_id||'';
     if(window.SIGNALS_UNLOCKED){
       document.getElementById('goaiTitle').textContent='✅ ITZ Signals unlocked';
-      document.getElementById('goaiText').textContent="You're verified. Click the ITZ Signals tile below to get your access email.";
+      document.getElementById('goaiText').textContent="You're verified — tap the ITZ Signals tile to open the channel.";
       document.getElementById('gateUnlocked').style.display='block';
     } else if(bs==='submitted'){
       document.getElementById('goaiTitle').textContent='⏳ Broker verification pending';
@@ -322,21 +323,9 @@
     msg.style.color='var(--green)';msg.textContent='Submitted — verifying with the broker ✓';
     await loadHub(email);
   }
-  function signalsTileClick(){ if(window.SIGNALS_UNLOCKED){ getSignalsAccess(); } else { openGate(); } }
-  async function getSignalsAccess(){
-    const email=getCookie('itz_email');
-    const gu=document.getElementById('gateUnlocked');
-    document.getElementById('goaiCard').scrollIntoView({behavior:'smooth'});
-    gu.innerHTML='<p style="color:var(--dim);font-size:14px;margin:4px 0">One sec…</p>';
-    const {data,error}=await sb.functions.invoke('send-signals-access',{body:{email}});
-    if(error||(data&&data.ok===false)){
-      gu.innerHTML='<p style="color:#ff6b6b;font-size:14px;margin:4px 0">Couldn\'t do that right now — try again in a sec.</p>';
-      return;
-    }
-    const head = (data&&data.already_sent) ? '📧 Already sent — check your email' : '📧 Check your email!';
-    gu.innerHTML='<p style="color:var(--green);font-size:16px;font-weight:700;margin:4px 0">'+head+'</p>'
-      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">Your ITZ Signals access link + steps are in your inbox at <b style="color:var(--green)">'+email+'</b>.</p>'
-      +'<p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:8px 0 0">From <b style="color:var(--green)">support@itztime.trade</b> — if it\'s not there in a minute, check <b>spam</b> or <b>promotions</b>.</p>';
+  function signalsTileClick(){
+    if(window.SIGNALS_UNLOCKED){ window.open(window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh','_blank'); }
+    else { openGate(); }
   }
   async function submitGoAi(){
     const email=getCookie('itz_email');

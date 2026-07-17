@@ -205,6 +205,7 @@
     <div class="section-label">Jump In</div>
     <div class="grid">
       <a class="tile" id="tileSignals"><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
+      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
@@ -288,6 +289,7 @@
     }
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
+    setTileLock('tileTapTrade',window.GOAI_UNLOCKED);
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }
 
@@ -300,6 +302,7 @@
   function openGate(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); }
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
   function tileCommunityClick(){ if(window.GOAI_UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGate(); }
+  function tileTapTradeClick(){ if(window.GOAI_UNLOCKED){ location.href='/trades'; } else openGate(); }
 
   // ---- ITZ Signals gate ----
   function gatePick(which){

@@ -96,8 +96,8 @@
   <!-- NOT GO AI -->
   <div class="screen" id="notgoai">
     <div class="card" style="text-align:center">
-      <div class="ll" style="justify-content:center">🔒 GO AI members only</div>
-      <p style="color:#ddd;font-size:14px;line-height:1.6;margin:6px 0 16px">ITZTAP is a GO AI member perk. Unlock it by submitting your GO AI username in your hub.</p>
+      <div class="ll" style="justify-content:center">🔒 ITZTAP is locked</div>
+      <p style="color:#ddd;font-size:14px;line-height:1.6;margin:6px 0 16px">ITZTAP unlocks with <b>GO AI</b>, or a <b>funded live Crucial account ($125+)</b>. Unlock it in your hub, then come back.</p>
       <a class="btn" href="/hub">Go to my hub →</a>
     </div>
   </div>
@@ -226,7 +226,7 @@
     const {data,error}=await sb.rpc('get_copy_state',{p_email:email});
     if(error||!data||data.ok===false){ showScreen('login'); document.getElementById('loginErr').textContent="We couldn't find that email."; return; }
     setCookie('itz_email',email.toLowerCase(),365);
-    if(!data.go_ai_ok){ showScreen('notgoai'); return; }
+    if(!(data.go_ai_ok||data.broker_ok)){ showScreen('notgoai'); return; }
     if(!data.disclaimer_ok){ showScreen('disc'); return; }
     window._linked = !!data.broker_linked;
     startTrades();

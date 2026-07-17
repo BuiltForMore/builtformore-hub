@@ -126,36 +126,12 @@
 
     <!-- ITZ SIGNALS ACCESS GATE (branching) -->
     <div class="linkcard" id="goaiCard" style="display:none">
-      <div class="ll" id="goaiTitle">🔒 Unlock the ITZ Signals channel</div>
-      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Two ways in — pick the one that's you.</p>
-
-      <!-- unlocked banner -->
-      <div id="gateUnlocked" style="display:none;color:var(--green);font-size:14px;margin:4px 0 4px"></div>
-
-      <!-- two separate unlock boxes -->
-      <div id="gateBoxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:6px">
-
-        <!-- BOX 1: GO AI — unlocks everything -->
-        <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
-          <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — signals, ITZTAP, indicator, PAMM, community &amp; back office.</p>
-          <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
-          <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
-          <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>
-          <button class="btn full" id="goaiBtn" onclick="submitGoAiBox()" style="width:100%">🔓 Unlock everything</button>
-          <p id="goaiMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div class="ll" id="goaiTitle" style="margin:0">🔒 Unlock your access</div>
+          <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin:4px 0 0">Two ways in — GO AI or a funded Crucial account.</p>
         </div>
-
-        <!-- BOX 2: Funded on Crucial — unlocks signals, ITZTAP & PAMM -->
-        <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">📈 FUNDED ON CRUCIAL</div>
-          <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">$125+ funded</b> on Crucial unlocks <b style="color:#fff">signals, ITZTAP &amp; PAMM</b>.</p>
-          <input class="gi" id="f_broker_email" placeholder="your Crucial email (same as ITZ)" style="margin-bottom:4px">
-          <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
-          <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
-          <p id="brokerMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
-        </div>
-
+        <button class="btn" id="unlockOpenBtn" onclick="openGate()">Unlock access →</button>
       </div>
     </div>
 
@@ -194,16 +170,16 @@
 
     <div class="section-label">Jump In</div>
     <div class="grid">
-      <a class="tile" id="tileSignals"><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
+      <a class="tile locked" id="tileSignals"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
       <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
-      <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
-      <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
+      <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
+      <a class="tile locked" id="tileBoard"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
       <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
-      <a class="tile" id="tileChat"><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
+      <a class="tile locked" id="tileChat"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
       <a class="tile" onclick="openSetup()"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Edit your start link, broker links &amp; video.</p></a>
     </div>
 
@@ -254,6 +230,38 @@
       <a href="#" onclick="window.open(PAMM_URL,'_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Open Goldilots PAMM on Crucial →</a>
     </div>
     <p style="color:var(--dim);font-size:11px;line-height:1.5;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">Managed trading carries real risk — you can lose money, and past performance doesn't guarantee future results. Only allocate what you can afford to lose. Educational only, not financial advice.</p>
+  </div>
+</div>
+
+<!-- UNLOCK ACCESS popup (two ways in) -->
+<div id="unlockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">🔓 UNLOCK YOUR ACCESS</div>
+      <button onclick="closeGate()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p style="color:var(--dim);font-size:12.5px;margin:0 0 14px">Two ways in — use whichever fits you.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
+      <!-- BOX 1: GO AI -->
+      <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — signals, ITZTAP, indicator, PAMM, community &amp; back office.</p>
+        <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
+        <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
+        <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>
+        <button class="btn full" id="goaiBtn" onclick="submitGoAiBox()" style="width:100%">🔓 Unlock everything</button>
+        <p id="goaiMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+      </div>
+      <!-- BOX 2: Funded on Crucial -->
+      <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">📈 FUNDED ON CRUCIAL</div>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">$125+ funded</b> on Crucial unlocks <b style="color:#fff">signals, ITZTAP &amp; PAMM</b>.</p>
+        <input class="gi" id="f_broker_email" placeholder="your Crucial email (same as ITZ)" style="margin-bottom:4px">
+        <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
+        <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
+        <p id="brokerMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -328,9 +336,6 @@
     else up=`You're at the top of your tree 👑`;
     if(!d.has_broker_links) up+=` &nbsp;·&nbsp; <span style="color:var(--green)">Set your Crucial + Genesis links in onboarding</span>`;
     document.getElementById('uplineLine').innerHTML=up;
-    document.getElementById('tileEdu').href=EDU_URL;
-    document.getElementById('tileBoard').href=BOARD_URL;
-    document.getElementById('tileChat').href=CHAT_URL;
 
     // ---- access flags ----
     const gs=d.go_ai_status, bs=d.broker_status;
@@ -352,30 +357,43 @@
     if(shared){
       const bits=['Signals','ITZTAP']; if(window.GOAI_UNLOCKED||window.HAS_CRUCIAL)bits.push('PAMM'); if(window.GOAI_UNLOCKED)bits.push('Community + Back Office');
       document.getElementById('goaiTitle').textContent="✅ You're unlocked";
-      document.getElementById('goaiText').textContent='You have access to: '+bits.join(', ')+'. Tap any tile below to jump in.';
-      document.getElementById('gateBoxes').style.display='none';
+      document.getElementById('goaiText').textContent='You have access to: '+bits.join(', ')+'.';
+      document.getElementById('unlockOpenBtn').style.display='none';
+      closeGate();
     } else {
-      document.getElementById('goaiTitle').textContent='🔓 Unlock your access';
-      document.getElementById('goaiText').textContent='Two ways in — use whichever fits you.';
-      document.getElementById('gateBoxes').style.display='grid';
+      document.getElementById('goaiTitle').textContent='🔒 Unlock your access';
+      document.getElementById('goaiText').textContent='Two ways in — GO AI or a funded Crucial account.';
+      document.getElementById('unlockOpenBtn').style.display='';
     }
 
-    // ---- tiles ----
-    setTileLock('tileGoai',window.GOAI_UNLOCKED);
-    setTileLock('tileCommunity',window.GOAI_UNLOCKED);
+    // ---- tiles: everything gated until they unlock one way or the other ----
+    setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
     setTileLock('tileTapTrade',shared);
     setTileLock('tilePamm',window.GOAI_UNLOCKED||window.HAS_CRUCIAL);
+    setTileLock('tileGoai',window.GOAI_UNLOCKED);
+    setTileLock('tileCommunity',window.GOAI_UNLOCKED);
+    lockOrLink('tileEdu',shared,EDU_URL);
+    lockOrLink('tileBoard',shared,BOARD_URL);
+    lockOrLink('tileChat',shared,CHAT_URL);
     // ITZ Indicator stays locked — Coming Soon (not unlockable yet)
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }
 
   function setTileLock(id,unlocked){
     const t=document.getElementById(id); if(!t) return;
-    const b=t.querySelector('.badge');
-    if(unlocked){ t.classList.remove('locked'); if(b) b.style.display='none'; }
-    else { t.classList.add('locked'); if(b){ b.style.display=''; } }  // keep each tile's own badge label
+    const b=t.querySelector('.badge'); const ar=t.querySelector('.arrow');
+    if(unlocked){ t.classList.remove('locked'); if(b) b.style.display='none'; if(ar) ar.style.display=''; }
+    else { t.classList.add('locked'); if(b) b.style.display=''; if(ar) ar.style.display='none'; }  // keep each tile's own badge label
   }
-  function openGate(){ const c=document.getElementById('goaiCard'); c.scrollIntoView({behavior:'smooth'}); }
+  // for content tiles: open the URL when unlocked, else pop the unlock modal
+  function lockOrLink(id,unlocked,url){
+    const t=document.getElementById(id); if(!t) return;
+    setTileLock(id,unlocked);
+    t.removeAttribute('href');
+    t.onclick = unlocked ? function(){ if(url&&url!=='#'){ window.open(url,'_blank'); } else { alert('Coming soon.'); } } : openGate;
+  }
+  function openGate(){ document.getElementById('unlockModal').style.display='flex'; }
+  function closeGate(){ document.getElementById('unlockModal').style.display='none'; }
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
   function tileCommunityClick(){ openGokolab(); }
   function openGokolabSite(){ if(GOKOLAB_URL && GOKOLAB_URL!=='#'){ window.open(GOKOLAB_URL,'_blank'); } else { alert("GOKOLAB launches soon — you're on the approved list. 👥"); } }

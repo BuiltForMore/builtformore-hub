@@ -212,8 +212,16 @@
       </div>`;
     }).join('');
   }
-  function approveTrade(asset){
-    alert("Once your broker's linked, tapping this copies "+asset+" to your account with your risk settings. Broker linking launches when the Crucial/TradeLocker API is connected.");
+  async function approveTrade(asset){
+    if(!window._linked){ alert('Link your broker in the card above first, then tap to copy.'); return; }
+    if(!confirm('Copy '+asset+' to your account now? This places a real order on your linked account.')) return;
+    const email=getCookie('itz_email');
+    const {data,error}=await sb.functions.invoke('tradelocker-copy',{body:{member_email:email,asset}});
+    if(error||!data||data.ok===false){
+      alert('Copy failed: '+((data&&data.error)||'try again')+((data&&data.detail)?('\n\n'+data.detail):''));
+      return;
+    }
+    alert('✅ Copied '+asset+' ('+data.side+' '+data.qty+' lots) to your account! Check TradeLocker.');
   }
   function startTrades(){
     showScreen('app');

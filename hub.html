@@ -124,10 +124,10 @@
     <!-- GO AI VERIFICATION CARD -->
     <div class="linkcard" id="goaiCard" style="display:none">
       <div class="ll" id="goaiTitle">🔒 Unlock your GO AI perks</div>
-      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:6px">Submit your Akashx / GO AI username + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.</p>
+      <p id="goaiText" style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:6px">Submit your GO AI username + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.</p>
       <div id="goaiForm">
-        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your Akashx / GO AI username</label>
-        <input class="fld-in" id="f_goai_id" placeholder="your Akashx username" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+        <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI username</label>
+        <input class="fld-in" id="f_goai_id" placeholder="your GO AI username" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
         <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:12px 0 6px">Your GO AI affiliate link</label>
         <input class="fld-in" id="f_goai_link" placeholder="https://...your GO AI link" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
         <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -249,10 +249,10 @@
       document.getElementById('f_goai_link').value=d.go_ai_link||'';
       if(gs==='rejected'){
         document.getElementById('goaiTitle').textContent='⚠️ Re-submit your GO AI info';
-        document.getElementById('goaiText').textContent="Your GO AI info didn't check out. Double-check your GO AI ID + affiliate link and re-submit, or contact support.";
+        document.getElementById('goaiText').textContent="Your GO AI info didn't check out. Double-check your GO AI username + affiliate link and re-submit, or contact support.";
       } else {
         document.getElementById('goaiTitle').textContent='🔒 Unlock your GO AI perks';
-        document.getElementById('goaiText').textContent='Submit your GO AI ID + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.';
+        document.getElementById('goaiText').textContent='Submit your GO AI username + affiliate link to open GOKOLAB and your GO AI perks. Legit members only — we fact-check.';
       }
     }
     setTileLock('tileGoai',window.UNLOCKED);

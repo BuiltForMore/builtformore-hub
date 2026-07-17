@@ -208,6 +208,7 @@
       <a class="tile" id="tileSignals"><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
       <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
+      <a class="tile" id="tilePamm" onclick="openPamm()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Goldilots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
@@ -238,6 +239,21 @@
   </div>
 </div>
 
+<!-- Goldilots PAMM info modal -->
+<div id="pammModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">📊 GOLDILOTS PAMM</div>
+      <button onclick="closePamm()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 12px">Goldilots is a <b>managed PAMM strategy</b> that runs on Crucial. A professional manager trades the allocation and your account follows along automatically — fully hands-off.</p>
+    <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:0 0 12px">Tap below to open the Goldilots PAMM page inside your Crucial dashboard, where you'll see the <b>live stats, minimum, and profit split</b>, and can allocate. You'll need to be <b>logged into your Crucial account</b> first.</p>
+    <a href="#" onclick="window.open(PAMM_URL,'_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Open Goldilots PAMM on Crucial →</a>
+    <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:10px">Don't have a Crucial account yet? Set it up in <b>Getting Started</b> first, then come back.</p>
+    <p style="color:var(--dim);font-size:11px;line-height:1.5;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">Managed trading carries real risk — you can lose money, and past performance doesn't guarantee future results. Only allocate what you can afford to lose. Educational only, not financial advice.</p>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SB_URL='https://lugawieckrducycfeeql.supabase.co';
@@ -248,7 +264,8 @@
   const BOARD_URL='https://itztime.trade/leaderboard';
   const CHAT_URL='https://itztime.trade/portal';
   const GOKOLAB_URL='#';   // set when GOKOLAB is live
-  const GOAI_URL='#';      // set to the GO AI back-office login when ready
+  const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
+  const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
   const sb=supabase.createClient(SB_URL,SB_KEY);
 
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
@@ -337,6 +354,8 @@
     o.style.display='flex';
   }
   function closeIndicator(){ document.getElementById('indModal').style.display='none'; }
+  function openPamm(){ document.getElementById('pammModal').style.display='flex'; }
+  function closePamm(){ document.getElementById('pammModal').style.display='none'; }
   async function submitTv(){
     const u=document.getElementById('tvUser').value.trim().replace(/^@/,'');
     const msg=document.getElementById('indMsg');

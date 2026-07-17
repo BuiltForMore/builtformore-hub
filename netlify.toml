@@ -18,6 +18,11 @@
   to = "/hub.html"
   status = 200
 
+[[redirects]]
+  from = "/trades"
+  to = "/trades.html"
+  status = 200
+
 # bare domain lands on the Start welcome page (open onboarding) — the front door
 [[redirects]]
   from = "/"

@@ -125,11 +125,16 @@
         <p style="color:var(--dim);font-size:12px;margin:6px 0 0">You're connected. Tap any live trade below to copy it to your account.</p>
       </div>
       <div id="brokerForm">
-        <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Link your Crucial / TradeLocker account. Use the same login you use for TradeLocker — we store a secure token, <b style="color:#fff">never your password</b>.</p>
-        <input class="in" id="tl_email" placeholder="TradeLocker email" autocomplete="off" style="margin-bottom:8px">
-        <input class="in" id="tl_password" type="password" placeholder="TradeLocker password" autocomplete="off" style="margin-bottom:8px">
-        <input class="in" id="tl_server" placeholder="Server (e.g. CRUCIAL-LIVE)" autocomplete="off" style="margin-bottom:8px">
-        <label style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:12px;margin-bottom:12px"><input type="checkbox" id="tl_demo"> This is a demo account</label>
+        <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Link your <b style="color:#fff">Crucial or Genesis</b> account — both run on TradeLocker. Use the same login you use for TradeLocker; we store a secure token, <b style="color:#fff">never your password</b>.</p>
+        <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Broker</label>
+        <select class="in" id="tl_broker" style="margin-bottom:8px" onchange="document.getElementById('tl_demo').checked=(this.value==='genesis')">
+          <option value="crucial">Crucial (live)</option>
+          <option value="genesis">Genesis (demo)</option>
+        </select>
+        <input class="in" id="tl_email" placeholder="Your TradeLocker email" autocomplete="off" style="margin-bottom:8px">
+        <input class="in" id="tl_password" type="password" placeholder="Your TradeLocker password" autocomplete="off" style="margin-bottom:8px">
+        <input class="in" id="tl_server" placeholder="Server name (from your TradeLocker login)" autocomplete="off" style="margin-bottom:8px">
+        <label style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:12px;margin-bottom:12px"><input type="checkbox" id="tl_demo"> This is a demo account (e.g. a Genesis demo)</label>
         <button class="btn full" id="linkBtn" onclick="connectBroker()">🔗 Link my account</button>
         <div class="err" id="brokerErr"></div>
       </div>
@@ -231,7 +236,8 @@
     const tl_server=document.getElementById('tl_server').value.trim();
     if(!tl_email||!tl_password||!tl_server){err.textContent='Enter your email, password, and server.';return;}
     btn.disabled=true;btn.textContent='Linking…';
-    const {data,error}=await sb.functions.invoke('tradelocker-connect',{body:{member_email:email,tl_email,tl_password,tl_server,demo:document.getElementById('tl_demo').checked}});
+    const broker=document.getElementById('tl_broker').value;
+    const {data,error}=await sb.functions.invoke('tradelocker-connect',{body:{member_email:email,broker,tl_email,tl_password,tl_server,demo:document.getElementById('tl_demo').checked}});
     btn.disabled=false;btn.textContent='🔗 Link my account';
     if(error||!data||data.ok===false){err.textContent=(data&&data.error)||'Link failed — check your details.';return;}
     document.getElementById('tl_password').value='';

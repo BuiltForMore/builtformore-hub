@@ -157,7 +157,7 @@
         <label class="gl">Your Crucial broker ID</label>
         <input class="gi" id="f_broker_id" placeholder="your Crucial account ID">
         <div class="grow">
-          <button class="btn" id="brokerBtn" onclick="submitBroker()">Submit for verification</button>
+          <button class="btn" id="brokerBtn" onclick="submitBroker()">Verify & unlock</button>
           <button class="btn ghost" onclick="gateBack()">Back</button>
           <span id="brokerMsg" style="font-size:13px"></span>
         </div>
@@ -206,6 +206,7 @@
     <div class="grid">
       <a class="tile" id="tileSignals"><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
       <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
+      <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile" id="tileEdu"><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tileBoard"><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
@@ -216,6 +217,23 @@
     </div>
 
     <div class="foot">ITZ — a brand of Built For More Enterprises LLC · builtformore.xyz</div>
+  </div>
+</div>
+
+<!-- ITZ Indicator access modal -->
+<div id="indModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">📈 ITZ INDICATOR</div>
+      <button onclick="closeIndicator()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p id="indStatus" style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 16px"></p>
+    <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Your TradingView username</label>
+    <input id="tvUser" placeholder="e.g. coachcowden" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px;margin-bottom:6px">
+    <p style="color:var(--dim);font-size:11.5px;margin:0 0 12px">Find it on TradingView → your avatar → the name under your profile. Not your email.</p>
+    <button class="btn full" id="tvBtn" onclick="submitTv()" style="width:100%">Request access →</button>
+    <p id="indMsg" style="color:var(--green);font-size:13px;margin-top:10px;min-height:16px"></p>
+    <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">The indicator lives on TradingView as an invite-only script. Run your broker account on TradeLocker as usual — the indicator is for charting and learning the zones.</p>
   </div>
 </div>
 
@@ -290,6 +308,8 @@
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
     setTileLock('tileTapTrade',window.GOAI_UNLOCKED);
+    setTileLock('tileIndicator',window.GOAI_UNLOCKED);
+    window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }
 
@@ -303,6 +323,32 @@
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
   function tileCommunityClick(){ if(window.GOAI_UNLOCKED){ GOKOLAB_URL!=='#' ? window.open(GOKOLAB_URL,'_blank') : alert('GOKOLAB is launching soon.'); } else openGate(); }
   function tileTapTradeClick(){ if(window.GOAI_UNLOCKED){ location.href='/trades'; } else openGate(); }
+  function tileIndicatorClick(){ if(window.GOAI_UNLOCKED){ openIndicator(); } else openGate(); }
+  function openIndicator(){
+    const o=document.getElementById('indModal');
+    const inp=document.getElementById('tvUser'); inp.value=window.TV_USERNAME||'';
+    document.getElementById('indMsg').textContent='';
+    document.getElementById('indMsg').style.color='var(--green)';
+    const st=document.getElementById('indStatus');
+    if(window.TV_GRANTED){ st.innerHTML='✅ <b>Access granted.</b> Open TradingView → Indicators → <b>Invite-only scripts</b> to find <b>ITZ Zone + 60 EMA Bias</b>.'; }
+    else if(window.TV_USERNAME){ st.innerHTML='⏳ <b>Request received</b> for <b>@'+window.TV_USERNAME+'</b>. We add members to the invite-only script daily — you\'ll get a TradingView notification when you\'re in. Need to fix your username? Update it below.'; }
+    else { st.innerHTML='The ITZ indicator is an <b>invite-only</b> TradingView script. Drop your TradingView username and we\'ll grant you access — then it shows up under your <b>Invite-only scripts</b>.'; }
+    o.style.display='flex';
+  }
+  function closeIndicator(){ document.getElementById('indModal').style.display='none'; }
+  async function submitTv(){
+    const u=document.getElementById('tvUser').value.trim().replace(/^@/,'');
+    const msg=document.getElementById('indMsg');
+    if(u.length<2){ msg.style.color='var(--red)'; msg.textContent='Enter your TradingView username.'; return; }
+    const btn=document.getElementById('tvBtn'); btn.disabled=true; btn.textContent='Submitting…';
+    const {data,error}=await sb.rpc('submit_tv_username',{p_email:getCookie('itz_email'),p_username:u});
+    btn.disabled=false; btn.textContent='Request access →';
+    if(error||!data||data.ok===false){ msg.style.color='var(--red)'; msg.textContent=(data&&data.error)||'Try again.'; return; }
+    window.TV_USERNAME=data.username; window.TV_GRANTED=!!data.granted;
+    msg.style.color='var(--green)';
+    msg.textContent='✅ Got it! You\'re on the list as @'+data.username+'. Watch for a TradingView notification when access is granted.';
+    document.getElementById('indStatus').innerHTML='⏳ <b>Request received</b> for <b>@'+data.username+'</b>. We add members to the invite-only script daily.';
+  }
 
   // ---- ITZ Signals gate ----
   function gatePick(which){
@@ -319,12 +365,20 @@
   async function submitBroker(){
     const email=getCookie('itz_email');
     const btn=document.getElementById('brokerBtn'), msg=document.getElementById('brokerMsg');
-    btn.disabled=true;btn.textContent='Submitting…';msg.textContent='';
-    const {data,error}=await sb.rpc('submit_broker_id',{p_email:email,p_broker_id:document.getElementById('f_broker_id').value});
-    btn.disabled=false;btn.textContent='Submit for verification';
+    const acct=document.getElementById('f_broker_id').value.trim();
+    if(!acct){msg.style.color='#ff6b6b';msg.textContent='Enter your Crucial account number.';return;}
+    btn.disabled=true;btn.textContent='Verifying…';msg.textContent='';
+    const {data,error}=await sb.functions.invoke('crucial-verify',{body:{member_email:email,account:acct}});
+    btn.disabled=false;btn.textContent='Verify & unlock';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
-    msg.style.color='var(--green)';msg.textContent='Submitted — verifying with the broker ✓';
-    await loadHub(email);
+    if(data.verified){
+      msg.style.color='var(--green)';
+      msg.textContent='✅ Verified — $'+Number(data.deposited).toLocaleString()+' funded. Unlocking your signals…';
+      await loadHub(email);
+    } else {
+      msg.style.color='#ff6b6b';
+      msg.textContent=data.message||'Not verified yet — fund a live Crucial account and try again.';
+    }
   }
   function signalsTileClick(){
     if(window.SIGNALS_UNLOCKED){ window.open(window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh','_blank'); }

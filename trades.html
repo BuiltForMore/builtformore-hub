@@ -148,6 +148,17 @@
       </div>
     </div>
 
+    <div class="card" id="lotBar" style="padding:14px 18px">
+      <div class="ll" style="margin-bottom:6px">📏 Your lot size</div>
+      <p style="color:var(--dim);font-size:12px;margin:0 0 10px">This is the size used when you tap to copy a trade. Set it to fit your account and your risk.</p>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn ghost" style="width:52px;padding:10px 0;font-size:20px;margin:0" onclick="bumpLot(-1)">−</button>
+        <input class="in" id="lotSize" inputmode="decimal" value="0.01" style="text-align:center;font-size:18px;font-weight:700;max-width:120px;margin:0" onchange="saveLot()">
+        <button class="btn ghost" style="width:52px;padding:10px 0;font-size:20px;margin:0" onclick="bumpLot(1)">+</button>
+        <span style="color:var(--dim);font-size:12px">lots / trade</span>
+      </div>
+    </div>
+
     <div id="tradeList"></div>
     <div class="note">Trades show while they're still active. Once a trade hits TP1 or its stop, it drops off — that's when it's no longer copyable.</div>
   </div>
@@ -167,6 +178,20 @@
 
   let agreed=false;
   function toggleAgree(){agreed=!agreed;const b=document.getElementById('box');b.classList.toggle('on',agreed);b.textContent=agreed?'✓':'';document.getElementById('agreeBtn').disabled=!agreed;}
+
+  // ── lot size (saved per device) ──────────────────────────────
+  const LOT_KEY='itz_lot', TAKEN_KEY='itz_taken';
+  function normSig(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
+  function fmtLot(v){return (Math.round(v*100)/100).toFixed(2);}
+  function getLot(){let v=parseFloat(localStorage.getItem(LOT_KEY));if(!isFinite(v)||v<=0)v=0.01;return v;}
+  function saveLot(){let v=parseFloat(document.getElementById('lotSize').value);if(!isFinite(v)||v<=0)v=0.01;v=Math.min(Math.round(v*100)/100,100);localStorage.setItem(LOT_KEY,fmtLot(v));document.getElementById('lotSize').value=fmtLot(v);}
+  function bumpLot(dir){let v=getLot()+dir*0.01;if(v<0.01)v=0.01;v=Math.min(Math.round(v*100)/100,100);document.getElementById('lotSize').value=fmtLot(v);saveLot();}
+  function initLot(){document.getElementById('lotSize').value=fmtLot(getLot());}
+
+  // ── which trades you're already in (per device) ──────────────
+  function takenKey(t){return normSig(t.asset)+'|'+(t.direction||'')+'|'+(t.opened_at||'');}
+  function getTaken(){try{return JSON.parse(localStorage.getItem(TAKEN_KEY)||'{}');}catch(e){return {};}}
+  function markTaken(sig,qty){const m=getTaken();m[sig]=Math.round(((m[sig]||0)+qty)*100)/100;localStorage.setItem(TAKEN_KEY,JSON.stringify(m));}
 
   async function route(email){
     const {data,error}=await sb.rpc('get_copy_state',{p_email:email});
@@ -228,9 +253,17 @@
     const trades=Array.isArray(data)?data:[];
     document.getElementById('refreshedAt').textContent='updated '+new Date().toLocaleTimeString();
     if(trades.length===0){ list.innerHTML='<div class="card" style="text-align:center;color:var(--dim)">No live trades right now. Check back when the next play fires. ☕</div>'; return; }
+    const taken=getTaken();
     list.innerHTML=trades.map(t=>{
       const sell=t.direction==='SELL';
       const peak = (t.peak_pts!=null)?('peaked <b>+'+Number(t.peak_pts).toFixed(1)+' pts</b>'):'';
+      const sig=takenKey(t);
+      const inQty=taken[sig];
+      const inTrade=!!inQty;
+      const badge = inTrade ? `<span style="display:inline-block;margin-top:6px;color:var(--green);font-weight:700;font-size:12.5px;letter-spacing:.3px">✅ You're in this trade · ${fmtLot(inQty)} lots</span>` : '';
+      const btnLabel = inTrade ? '➕ Take again / add to position' : '✅ Copy this trade to my account';
+      const btnClass = inTrade ? 'btn ghost full' : 'btn full';
+      const aEsc=(t.asset||'').replace(/'/g,"\\'");
       return `<div class="trade">
         <div class="trow">
           <div style="display:flex;align-items:center;gap:10px"><span class="asset">${t.asset||''}</span><span class="dir ${sell?'sell':'buy'}">${t.direction||''}</span>${t.grade?`<span class="grade">${t.grade}</span>`:''}</div>
@@ -242,23 +275,32 @@
           <div class="lv"><div class="k">TP1</div><div class="v" style="color:var(--green)">${fmt(t.tp1)}</div></div>
         </div>
         <div class="meta">Opened ${ago(t.opened_at)}${peak?' · '+peak:''}</div>
-        <button class="btn full" onclick="approveTrade('${t.asset}')">✅ Copy this trade to my account</button>
+        ${badge?`<div>${badge}</div>`:''}
+        <button class="${btnClass}" onclick="approveTrade('${aEsc}','${sig}')">${btnLabel}</button>
       </div>`;
     }).join('');
   }
-  async function approveTrade(asset){
+  async function approveTrade(asset,sig){
     if(!window._linked){ alert('Link your broker in the card above first, then tap to copy.'); return; }
-    if(!confirm('Copy '+asset+' to your account now? This places a real order on your linked account.')) return;
-    const {data,error}=await sb.functions.invoke('tradelocker-copy',{body:{session_token:getCookie('itz_session'),asset}});
+    const lot=getLot();
+    const already=sig?getTaken()[sig]:0;
+    const msg = already
+      ? `You're already in ${asset} (${fmtLot(already)} lots).\n\nTake it AGAIN for ${fmtLot(lot)} more lots? This adds to your position.`
+      : `Copy ${asset} to your account now for ${fmtLot(lot)} lots?\n\nThis places a real order on your linked account.`;
+    if(!confirm(msg)) return;
+    const {data,error}=await sb.functions.invoke('tradelocker-copy',{body:{session_token:getCookie('itz_session'),asset,qty:lot}});
     if(error||!data||data.ok===false){
       if(data&&/session/i.test(data.error||'')){ showScreen('login'); backToEmail(); document.getElementById('loginErr').textContent='Please log in again.'; return; }
       alert('Copy failed: '+((data&&data.error)||'try again')+((data&&data.detail)?('\n\n'+data.detail):''));
       return;
     }
+    if(sig) markTaken(sig, data.qty||lot);
+    loadTrades();
     alert('✅ Copied '+asset+' ('+data.side+' '+data.qty+' lots) to your account! Check TradeLocker.');
   }
   function startTrades(){
     showScreen('app');
+    initLot();
     if(window._linked) showLinked(null,'');
     loadTrades();
     clearInterval(window._t); window._t=setInterval(loadTrades, 30000);

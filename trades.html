@@ -134,7 +134,9 @@
       <div class="ll" style="margin-bottom:6px">🔗 Your broker</div>
       <div id="brokerLinked" style="display:none">
         <p style="color:var(--green);font-size:15px;font-weight:600;margin:2px 0">✅ TradeLocker linked<span id="balLine" style="color:#ddd;font-weight:400"></span></p>
-        <p style="color:var(--dim);font-size:12px;margin:6px 0 0">You're connected. Tap any live trade below to copy it to your account.</p>
+        <p style="color:var(--dim);font-size:12px;margin:6px 0 10px">You're connected. Tap any live trade below to copy it to your account.</p>
+        <button class="btn ghost" style="padding:8px 16px;font-size:12.5px;margin:0;width:auto" id="unlinkBtn" onclick="disconnectBroker()">🔌 Disconnect this account</button>
+        <div class="err" id="unlinkErr"></div>
       </div>
       <div id="brokerForm">
         <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:10px">Link your <b style="color:#fff">Crucial or Genesis</b> account — both run on TradeLocker. Use the same login you use for TradeLocker; we store a secure token, <b style="color:#fff">never your password</b>.</p>
@@ -324,6 +326,19 @@
     if(window._linked) showLinked(null,'');
     loadTrades();
     clearInterval(window._t); window._t=setInterval(loadTrades, 30000);
+  }
+  async function disconnectBroker(){
+    if(!confirm('Disconnect your TradeLocker account?\n\nYou can re-link it anytime. This does not close any open trades on your broker.')) return;
+    const btn=document.getElementById('unlinkBtn'), err=document.getElementById('unlinkErr');
+    err.textContent=''; btn.disabled=true; btn.textContent='Disconnecting…';
+    const {data,error}=await sb.functions.invoke('tradelocker-disconnect',{body:{session_token:getCookie('itz_session')}});
+    btn.disabled=false; btn.textContent='🔌 Disconnect this account';
+    if(error||!data||data.ok===false){
+      if(data&&/session/i.test(data.error||'')){ showScreen('login'); backToEmail(); document.getElementById('loginErr').textContent='Please log in again.'; return; }
+      err.textContent=(data&&data.error)||'Try again.'; return;
+    }
+    window._linked=false;
+    resetBrokerUI();
   }
   function showLinked(bal,cur){
     document.getElementById('brokerForm').style.display='none';

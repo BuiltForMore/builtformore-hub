@@ -182,7 +182,7 @@
       <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
-      <a class="tile" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
+      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
       <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile locked" id="tileBoard"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
@@ -388,8 +388,10 @@
     document.getElementById('s_rank').textContent=d.rank?('#'+d.rank):'—';
     document.getElementById('s_refs').textContent=d.referrals||0;
     document.getElementById('s_broker').textContent=d.has_broker_links?'✓':'Set up';
-    const link=`${location.origin}/start/${d.referral_code}`;
+    // referral link is domain-aware: go.itztime.trade uses /start, itztime.trade uses /join
+    const link = GOAI_SITE ? `${location.origin}/start/${d.referral_code}` : `${location.origin}/join?ref=${d.referral_code}`;
     document.getElementById('startLink').value=link;
+    document.getElementById('tileStart').href = GOAI_SITE ? '/start' : '/join';
     let up='';
     if(d.sponsor_name) up=`Your sponsor: <b>${d.sponsor_name}</b>`;
     else if(d.sponsor_code) up=`Your sponsor: <b>${d.sponsor_code}</b>`;
@@ -698,7 +700,7 @@
     let v=(el.value||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'');
     el.value=v;
     document.getElementById('handleHint').innerHTML = v.length>=3
-      ? `Your link: <span style="color:var(--green)">${location.host}/start/${v}</span>`
+      ? `Your link: <span style="color:var(--green)">${location.host}${GOAI_SITE?'/start/':'/join?ref='}${v}</span>`
       : 'At least 3 characters — letters, numbers, - and _.';
   }
 

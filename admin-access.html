@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITZ Admin — Grant Access</title>
+<link rel="icon" type="image/png" href="https://itztime.trade/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#39FF14;--red:#ff5b5b;--dim:rgba(255,255,255,.55);--border:rgba(57,255,20,.22)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Barlow',sans-serif;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+    background:radial-gradient(1000px 500px at 50% -10%,rgba(57,255,20,.10),transparent 60%),#030503}
+  .card{background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:26px 24px}
+  .logo{width:56px;height:56px;border-radius:50%;border:1px solid var(--green);overflow:hidden;margin:0 auto 12px;box-shadow:0 0 26px rgba(57,255,20,.35)}
+  .logo img{width:100%;height:100%;object-fit:cover}
+  h1{font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;text-align:center;color:var(--green)}
+  .sub{color:var(--dim);font-size:12.5px;text-align:center;margin-bottom:20px}
+  label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+  input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px}
+  .row{display:flex;gap:10px;margin-top:18px}
+  .btn{flex:1;padding:13px;border-radius:10px;border:none;font-family:'Barlow';font-weight:700;font-size:14px;cursor:pointer}
+  .grant{background:var(--green);color:#000}
+  .revoke{background:transparent;color:var(--red);border:1px solid var(--red)}
+  .btn:disabled{opacity:.5;cursor:default}
+  #msg{margin-top:16px;font-size:13.5px;line-height:1.6;min-height:18px}
+  .foot{color:var(--dim);font-size:11px;text-align:center;margin-top:18px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><img src="https://itztime.trade/logo.png" alt="ITZ"></div>
+    <h1>GRANT ACCESS</h1>
+    <div class="sub">Unlock or lock any ITZ account by email — for main account holders &amp; leaders who can't self-verify.</div>
+
+    <label>Admin password</label>
+    <input id="pw" type="password" placeholder="admin password" autocomplete="off">
+
+    <label>Member email</label>
+    <input id="email" type="email" placeholder="their@email.com" autocomplete="off">
+
+    <div class="row">
+      <button class="btn grant" id="grantBtn" onclick="doAction('grant')">✅ Grant full access</button>
+      <button class="btn revoke" id="revokeBtn" onclick="doAction('revoke')">Revoke</button>
+    </div>
+    <div id="msg"></div>
+    <div class="foot">Grant = GO AI + funded broker + Goldielots, all unlocked. Revoke = clears those.</div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const sb=supabase.createClient('https://lugawieckrducycfeeql.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1Z2F3aWVja3JkdWN5Y2ZlZXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTkzMDQsImV4cCI6MjA5NjM3NTMwNH0.IP18N9yHclow9OkPQyt7seRYViVyBkfw4Gkw5TMZNqg');
+  async function doAction(action){
+    const pw=document.getElementById('pw').value;
+    const email=document.getElementById('email').value.trim().toLowerCase();
+    const msg=document.getElementById('msg');
+    if(!pw){msg.style.color='#ff5b5b';msg.textContent='Enter the admin password.';return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.style.color='#ff5b5b';msg.textContent='Enter a valid email.';return;}
+    const gb=document.getElementById('grantBtn'), rb=document.getElementById('revokeBtn');
+    gb.disabled=true;rb.disabled=true;msg.style.color='var(--dim)';msg.textContent='Working…';
+    const {data,error}=await sb.functions.invoke('admin-access',{body:{admin_password:pw,email,action}});
+    gb.disabled=false;rb.disabled=false;
+    if(error||!data||data.ok===false){msg.style.color='#ff5b5b';msg.textContent=(data&&data.error)||'Something went wrong.';return;}
+    msg.style.color='var(--green)';
+    if(action==='grant'){
+      msg.innerHTML='✅ <b>'+(data.name||email)+'</b> now has full access — GO AI, ITZTAP &amp; Goldielots all unlocked. Have them refresh their hub.';
+    } else {
+      msg.innerHTML='🔒 Access revoked for <b>'+(data.name||email)+'</b>.';
+    }
+  }
+</script>
+</body>
+</html>

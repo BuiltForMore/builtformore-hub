@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="ITZTAP">
 <meta name="theme-color" content="#050805">
 <link rel="apple-touch-icon" href="/itz-icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/itz-icon-192.png">
+<link rel="icon" type="image/png" href="https://itztime.trade/logo.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -222,10 +222,20 @@
     location.reload();
   }
 
-  async function route(email){
-    const {data,error}=await sb.rpc('get_copy_state',{p_email:email});
-    if(error||!data||data.ok===false){ showScreen('login'); document.getElementById('loginErr').textContent="We couldn't find that email."; return; }
-    setCookie('itz_email',email.toLowerCase(),365);
+  // Everything is derived from the SESSION token (server-resolved), never a client-supplied email —
+  // so a member can only ever see and act on their own account.
+  async function routeMe(){
+    const sess=getCookie('itz_session');
+    if(!sess){ showScreen('login'); return; }
+    const {data,error}=await sb.functions.invoke('trades-me',{body:{session_token:sess}});
+    if(error||!data||data.ok===false){
+      setCookie('itz_session','',-1); setCookie('itz_email','',-1);
+      showScreen('login'); backToEmail();
+      document.getElementById('loginErr').textContent='Please log in again.';
+      return;
+    }
+    window._email=data.email;
+    setCookie('itz_email',(data.email||'').toLowerCase(),30);
     if(!(data.go_ai_ok||data.broker_ok)){ showScreen('notgoai'); return; }
     if(!data.disclaimer_ok){ showScreen('disc'); return; }
     window._linked = !!data.broker_linked;
@@ -262,10 +272,10 @@
     if(error||!data||data.ok===false){ err.textContent=(data&&data.error)||'That code is wrong or expired.'; return; }
     setCookie('itz_session',data.token,30);
     setCookie('itz_email',(data.email||_pendingEmail).toLowerCase(),30);
-    await route(data.email||_pendingEmail);
+    await routeMe();
   }
   async function doAgree(){
-    const email=getCookie('itz_email');
+    const email=window._email||getCookie('itz_email');
     document.getElementById('agreeBtn').disabled=true;
     const {data,error}=await sb.rpc('agree_copy_trading',{p_email:email});
     if(error||!data||data.ok===false){document.getElementById('discErr').textContent=(data&&data.error)||'Try again.';document.getElementById('agreeBtn').disabled=false;return;}
@@ -380,8 +390,8 @@
   }
 
   (function init(){
-    const email=getCookie('itz_email'); const sess=getCookie('itz_session');
-    if(email && sess){ route(email); } else { showScreen('login'); }
+    const sess=getCookie('itz_session');
+    if(sess){ routeMe(); } else { showScreen('login'); }
   })();
 </script>
 </body>

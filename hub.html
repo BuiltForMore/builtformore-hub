@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ITZ Hub — Built For More</title>
+<link rel="icon" type="image/png" href="https://itztime.trade/logo.png">
+<link rel="apple-touch-icon" href="https://itztime.trade/logo.png">
+<meta name="theme-color" content="#050805">
+<meta property="og:title" content="ITZ — In The Zone">
+<meta property="og:description" content="Your ITZ hub — signals, tools, education & your team. In and out the markets like we making tea. ☕">
+<meta property="og:image" content="https://itztime.trade/desktop-hero.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://itztime.trade/desktop-hero.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{--green:#39FF14;--dim:rgba(255,255,255,0.55);--card:rgba(255,255,255,0.03);--border:rgba(57,255,20,0.22)}
@@ -180,6 +188,8 @@
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
       <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
       <a class="tile locked" id="tileChat"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
+      <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
+      <a class="tile" id="tileDownline" onclick="openDownline()"><span class="arrow">&#8594;</span><div class="ic">👥</div><h3>My Downline</h3><p>Everyone in your network, all the way down — tagged by level.</p></a>
       <a class="tile" onclick="openSetup()"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Edit your start link, broker links &amp; video.</p></a>
     </div>
 
@@ -215,7 +225,7 @@
 
     <!-- STEP 1: confirm they have a Crucial account (locked state) -->
     <div id="pammVerify">
-      <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 10px">You need a <b style="color:#fff">Crucial account</b> to join the PAMM. Confirm yours below — your Crucial email must be the <b style="color:#fff">same email you registered with ITZ</b>.</div>
+      <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 10px">Goldielots runs on <b style="color:#fff">Crucial</b> and needs a <b style="color:var(--green)">$100+ funded</b> account, using the <b style="color:#fff">same email you registered with ITZ</b>. Confirm yours below to unlock.</div>
       <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Your Crucial account email</label>
       <input id="pammEmail" placeholder="the email on your Crucial account" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px;margin-bottom:5px">
       <div style="color:var(--dim);font-size:11.5px;margin:0 0 12px">Must match your ITZ email: <b id="pammItzEmail" style="color:var(--green)">—</b></div>
@@ -233,6 +243,43 @@
   </div>
 </div>
 
+<!-- EDUCATION modal (pulls published lessons from the DB — same source as the portal) -->
+<div id="eduModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">🎓 EDUCATION</div>
+      <button onclick="closeEducation()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p style="color:var(--dim);font-size:12.5px;margin:0 0 16px">The ITZ strategy, step by step. Learn the system, trade it with confidence. ☕</p>
+    <div id="eduList"><div style="color:var(--dim);font-size:13px">Loading lessons…</div></div>
+  </div>
+</div>
+
+<!-- RESULTS modal (live signal track record) -->
+<div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:560px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">📊 RESULTS</div>
+      <button onclick="closeResults()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p style="color:var(--dim);font-size:12.5px;margin:0 0 16px">The live track record of every ITZ signal — tracked automatically. Show these numbers when you promote. ☕</p>
+    <div id="perfBody"><div style="color:var(--dim);font-size:13px">Loading results…</div></div>
+  </div>
+</div>
+
+<!-- DOWNLINE modal (full-depth referral tree) -->
+<div id="downlineModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
+  <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">👥 MY DOWNLINE</div>
+      <button onclick="closeDownline()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <p style="color:var(--dim);font-size:12.5px;margin:0 0 6px">Everyone in your network, all the way down — their referrals, and so on. Each is tagged with its level (L1, L2, L3…).</p>
+    <p id="dlSummary" style="color:var(--green);font-size:12.5px;font-weight:600;margin:0 0 14px"></p>
+    <div id="dlBody"><div style="color:var(--dim);font-size:13px">Loading…</div></div>
+  </div>
+</div>
+
 <!-- UNLOCK ACCESS popup (two ways in) -->
 <div id="unlockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -245,7 +292,7 @@
       <!-- BOX: $22.22 Membership -->
       <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">💳 $22.22 MEMBERSHIP</div>
-        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 12px">Monthly. Unlocks <b style="color:#fff">signals, education, points &amp; Goldielots</b>.</p>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 12px">Monthly. Unlocks <b style="color:#fff">signals, education &amp; points</b>. (ITZTAP &amp; Goldielots need a funded broker.)</p>
         <a href="#" onclick="window.open(MEMBERSHIP_URL,'_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Join for $22.22/mo →</a>
         <p style="color:var(--dim);font-size:11px;margin-top:8px">Already paid? Refresh after checkout — it unlocks automatically.</p>
       </div>
@@ -385,8 +432,9 @@
     // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
     setTileLock('tileTapTrade',trade);
-    setTileLock('tilePamm',member);
-    lockOrLink('tileEdu',member,EDU_URL);
+    setTileLock('tilePamm',window.GOAI_UNLOCKED||window.HAS_CRUCIAL);  // Goldielots: locked until Crucial $100+ verified
+    setTileLock('tileEdu',member);
+    { const _e=document.getElementById('tileEdu'); _e.removeAttribute('href'); _e.onclick = member ? openEducation : openGate; }
     lockOrLink('tileBoard',member,BOARD_URL);
     lockOrLink('tileChat',member,CHAT_URL);
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
@@ -458,6 +506,95 @@
     o.style.display='flex';
   }
   function closeIndicator(){ document.getElementById('indModal').style.display='none'; }
+  function openEducation(){ document.getElementById('eduModal').style.display='flex'; loadLessons(); }
+  function closeEducation(){ document.getElementById('eduModal').style.display='none'; }
+  function ytEmbed(url){
+    if(!url) return '';
+    let m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/); if(m) return 'https://www.youtube.com/embed/'+m[1];
+    m=url.match(/vimeo\.com\/(?:video\/)?(\d+)/); if(m) return 'https://player.vimeo.com/video/'+m[1];
+    if(/^[\w-]{11}$/.test(url.trim())) return 'https://www.youtube.com/embed/'+url.trim();
+    return url;
+  }
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  let _eduLoaded=false;
+  async function loadLessons(){
+    if(_eduLoaded) return;
+    const el=document.getElementById('eduList');
+    const {data,error}=await sb.from('lessons').select('title,category,video_url,description,sort_order,is_published').eq('is_published',true).order('sort_order',{nullsFirst:false});
+    if(error){ el.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load lessons — try again.</div>'; return; }
+    const lessons=(data||[]).filter(l=>l.video_url);
+    if(!lessons.length){ el.innerHTML='<div style="color:var(--dim);font-size:13px">Lessons coming soon.</div>'; return; }
+    el.innerHTML=lessons.map(l=>{
+      const emb=ytEmbed(l.video_url);
+      return `<div style="margin-bottom:24px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:#fff;letter-spacing:.5px;margin-bottom:8px">${esc(l.title)}</div>
+        <div style="position:relative;width:100%;padding-bottom:56.25%;height:0;border-radius:10px;overflow:hidden;background:#000">
+          <iframe src="${esc(emb)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        ${l.description?`<p style="color:var(--dim);font-size:12.5px;line-height:1.65;margin-top:9px">${esc(l.description)}</p>`:''}
+      </div>`;
+    }).join('');
+    _eduLoaded=true;
+  }
+  // ── RESULTS (live signal track record) ──
+  function openResults(){ document.getElementById('resultsModal').style.display='flex'; loadPerformance(); }
+  function closeResults(){ document.getElementById('resultsModal').style.display='none'; }
+  let _perfLoaded=false;
+  async function loadPerformance(){
+    if(_perfLoaded) return;
+    const el=document.getElementById('perfBody');
+    try{
+      const {data,error}=await sb.from('signals').select('outcome,points').limit(2000);
+      if(error||!data){ el.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load results — try again.</div>'; return; }
+      const closed=data.filter(s=>s.outcome&&s.outcome!=='OPEN');
+      const w=closed.filter(s=>s.outcome==='WIN').length, l=closed.filter(s=>s.outcome==='LOSS').length, be=closed.filter(s=>s.outcome==='BE').length;
+      const pts=closed.reduce((a,s)=>a+Number(s.points||0),0);
+      const denom=w+l+be, wr=denom?Math.round((w+be)/denom*100):0;
+      const card=(n,lbl,c)=>`<div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 6px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:${c}">${n}</div><div style="color:var(--dim);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase">${lbl}</div></div>`;
+      el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:9px;margin-bottom:12px">${card(w,'Wins','var(--green)')}${card(l,'Losses','var(--red)')}${card(be,'Break-Even','#ffd84d')}${card(wr+'%','Win Rate','#4dd2ff')}${card(data.length,'Total','#b48bff')}</div><div style="background:rgba(57,255,20,.06);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:${pts>=0?'#ffd84d':'var(--red)'}">${(pts>=0?'+':'')+pts.toFixed(1)}</div><div style="color:var(--dim);font-size:11px;letter-spacing:.5px;text-transform:uppercase;margin-top:4px">Total Points</div></div>`;
+      _perfLoaded=true;
+    }catch(e){ el.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load results.</div>'; }
+  }
+
+  // ── MY DOWNLINE (infinite-level referral tree) ──
+  function openDownline(){ document.getElementById('downlineModal').style.display='flex'; loadDownline(); }
+  function closeDownline(){ document.getElementById('downlineModal').style.display='none'; }
+  let _dlLoaded=false;
+  async function loadDownline(){
+    if(_dlLoaded) return;
+    const tb=document.getElementById('dlBody');
+    const myCode=(window.DATA&&window.DATA.referral_code)||'';
+    if(!myCode){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">Sign in to see your downline.</div>'; return; }
+    tb.innerHTML='<div style="color:var(--dim);font-size:13px">Building your network… 👥</div>';
+    const maxLevels=25, seen=new Set([myCode]); let frontier=[myCode], level=0; const rows=[];
+    try{
+      while(frontier.length && level<maxLevels){
+        level++;
+        const [memLevel,paidLevel]=await Promise.all([
+          sb.from('members').select('name,telegram,status,created_at,referred_by').in('referred_by',frontier).order('created_at',{ascending:false}),
+          sb.from('paid_members').select('name,telegram,sub_status,created_at,referred_by').in('referred_by',frontier).order('created_at',{ascending:false}),
+        ]);
+        for(const m of (memLevel.data||[])) rows.push({level,m:{...m,status:m.status||'pending'}});
+        for(const p of (paidLevel.data||[])) rows.push({level,m:{name:p.name,telegram:p.telegram,referred_by:p.referred_by,created_at:p.created_at,status:p.sub_status==='active'?'approved':(p.sub_status==='pending_payment'?'pending':(p.sub_status||'pending'))}});
+        const {data:nextAffs}=await sb.from('affiliates').select('referral_code').in('referred_by',frontier);
+        const nf=[]; for(const a of (nextAffs||[])){ const c=a.referral_code; if(c&&!seen.has(c)){seen.add(c);nf.push(c);} }
+        frontier=nf;
+      }
+    }catch(e){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load your network right now — try again.</div>'; return; }
+    if(!rows.length){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">No downline yet — when your referrals start referring people, every level shows here. 👥</div>'; document.getElementById('dlSummary').textContent=''; _dlLoaded=true; return; }
+    rows.sort((a,b)=>a.level-b.level||new Date(b.m.created_at)-new Date(a.m.created_at));
+    const colors=['#39FF14','#2ecc71','#27ae60','#16a085','#1abc9c'];
+    const body=rows.map(({level,m})=>{
+      const col=colors[Math.min(level-1,colors.length-1)];
+      const lvl=`<span style="display:inline-block;background:${col}22;color:${col};border:1px solid ${col}55;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:700;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">L${level}</span>`;
+      return `<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:7px 6px;color:var(--dim);white-space:nowrap;font-size:11.5px">${new Date(m.created_at).toLocaleDateString()}</td><td style="padding:7px 6px">${esc(m.name||'')} ${lvl}</td><td style="padding:7px 6px;color:rgba(255,255,255,.5);font-size:11px">${esc(m.referred_by||'—')}</td><td style="padding:7px 6px;color:var(--green);font-size:11.5px">${esc(m.telegram||'')}</td><td style="padding:7px 6px;font-size:11px">${esc(m.status)}</td></tr>`;
+    }).join('');
+    tb.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr style="color:var(--dim);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px"><th style="padding:6px">Date</th><th style="padding:6px">Name</th><th style="padding:6px">Ref By</th><th style="padding:6px">Telegram</th><th style="padding:6px">Status</th></tr></thead><tbody>${body}</tbody></table></div>`;
+    const perLevel={}; rows.forEach(r=>perLevel[r.level]=(perLevel[r.level]||0)+1);
+    document.getElementById('dlSummary').textContent='Total '+rows.length+' · '+Object.keys(perLevel).sort((a,b)=>a-b).map(k=>'L'+k+': '+perLevel[k]).join(' · ');
+    _dlLoaded=true;
+  }
+
   function openPamm(){
     const unlocked=!!window.HAS_CRUCIAL;
     document.getElementById('pammVerify').style.display = unlocked ? 'none':'block';

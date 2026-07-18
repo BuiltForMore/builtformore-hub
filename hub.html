@@ -313,6 +313,11 @@
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
   const MEMBERSHIP_URL='https://itztime.trade/join';   // $22.22/mo ITZ Membership checkout (confirm exact path)
+  // Which line is this? go.itztime.trade = GO AI + ITZ. itztime.trade = ITZ-only (GO AI never shown).
+  // Override for testing: ?goai=1 forces GO AI on, ?itz=1 forces it off.
+  const GOAI_SITE = location.search.includes('itz=1') ? false
+                  : (location.search.includes('goai=1') ? true
+                  : /(^|\.)go\./i.test(location.hostname));
   const sb=supabase.createClient(SB_URL,SB_KEY);
 
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
@@ -354,7 +359,7 @@
     window.SIGNALS_UNLOCKED=!!d.signals_unlocked;
     window.SIGNALS_LINK=d.signals_link||'https://t.me/+o0ntth5T7YtkMThh';
     window.HAS_CRUCIAL=!!d.has_crucial;
-    window.SHOW_GOAI=!!d.show_goai;                                 // is GO AI relevant to this person?
+    window.SHOW_GOAI=GOAI_SITE;                                     // GO AI only exists on the go.itztime.trade line
     window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
     const member = window.IS_PAID || window.BROKER_UNLOCKED || window.GOAI_UNLOCKED;  // base perks
     const trade  = window.BROKER_UNLOCKED || window.GOAI_UNLOCKED;                    // ITZTAP (needs broker)

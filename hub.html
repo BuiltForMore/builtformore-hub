@@ -241,18 +241,15 @@
       <button onclick="closeGate()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
     <p style="color:var(--dim);font-size:12.5px;margin:0 0 14px">Two ways in — use whichever fits you.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
-      <!-- BOX 1: GO AI -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px">
+      <!-- BOX: $22.22 Membership -->
       <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
-        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — signals, ITZTAP, indicator, PAMM, community &amp; back office.</p>
-        <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
-        <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
-        <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>
-        <button class="btn full" id="goaiBtn" onclick="submitGoAiBox()" style="width:100%">🔓 Unlock everything</button>
-        <p id="goaiMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">💳 $22.22 MEMBERSHIP</div>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 12px">Monthly. Unlocks <b style="color:#fff">signals, education, points &amp; Goldielots</b>.</p>
+        <a href="#" onclick="window.open(MEMBERSHIP_URL,'_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Join for $22.22/mo →</a>
+        <p style="color:var(--dim);font-size:11px;margin-top:8px">Already paid? Refresh after checkout — it unlocks automatically.</p>
       </div>
-      <!-- BOX 2: Funded on Crucial -->
+      <!-- BOX: Funded on Crucial -->
       <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">📈 FUNDED ON CRUCIAL</div>
         <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">$125+ funded</b> on Crucial unlocks <b style="color:#fff">signals, ITZTAP &amp; PAMM</b>.</p>
@@ -260,6 +257,16 @@
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
         <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
         <p id="brokerMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+      </div>
+      <!-- BOX: GO AI (only shown to GO AI members / GO-AI-track referrals) -->
+      <div id="goaiUnlockBox" style="border:1px solid var(--border);border-radius:12px;padding:15px;display:none">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — plus the GO AI community &amp; back office.</p>
+        <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
+        <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
+        <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>
+        <button class="btn full" id="goaiBtn" onclick="submitGoAiBox()" style="width:100%">🔓 Unlock everything</button>
+        <p id="goaiMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
       </div>
     </div>
   </div>
@@ -305,6 +312,7 @@
   const GOKOLAB_URL='#';   // set when GOKOLAB is live
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
+  const MEMBERSHIP_URL='https://itztime.trade/join';   // $22.22/mo ITZ Membership checkout (confirm exact path)
   const sb=supabase.createClient(SB_URL,SB_KEY);
 
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
@@ -340,41 +348,47 @@
     // ---- access flags ----
     const gs=d.go_ai_status, bs=d.broker_status;
     const itz=(getCookie('itz_email')||'').toLowerCase();
-    window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');       // unlocks EVERYTHING
+    window.GOAI_UNLOCKED=(gs==='submitted'||gs==='verified');       // full ecosystem
     window.BROKER_UNLOCKED=(bs==='verified');                       // funded Crucial
+    window.IS_PAID=!!d.is_paid;                                     // $22.22 membership
     window.SIGNALS_UNLOCKED=!!d.signals_unlocked;
     window.SIGNALS_LINK=d.signals_link||'https://t.me/+o0ntth5T7YtkMThh';
     window.HAS_CRUCIAL=!!d.has_crucial;
+    window.SHOW_GOAI=!!d.show_goai;                                 // is GO AI relevant to this person?
     window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
-    const shared = window.GOAI_UNLOCKED || window.BROKER_UNLOCKED;   // signals, ITZTAP, PAMM
+    const member = window.IS_PAID || window.BROKER_UNLOCKED || window.GOAI_UNLOCKED;  // base perks
+    const trade  = window.BROKER_UNLOCKED || window.GOAI_UNLOCKED;                    // ITZTAP (needs broker)
 
-    // ---- unlock card (two separate boxes) ----
+    // ---- unlock card ----
     document.getElementById('goaiCard').style.display='block';
     document.getElementById('goaiItzEmail').textContent=itz||'your ITZ email';
     document.getElementById('brokerItzEmail').textContent=itz||'your ITZ email';
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
     document.getElementById('f_goai_email').value=itz;
-    if(shared){
-      const bits=['Signals','ITZTAP']; if(window.GOAI_UNLOCKED||window.HAS_CRUCIAL)bits.push('PAMM'); if(window.GOAI_UNLOCKED)bits.push('Community + Back Office');
-      document.getElementById('goaiTitle').textContent="✅ You're unlocked";
-      document.getElementById('goaiText').textContent='You have access to: '+bits.join(', ')+'.';
+    document.getElementById('goaiUnlockBox').style.display = window.SHOW_GOAI ? '' : 'none';
+    if(member){
+      document.getElementById('goaiTitle').textContent="✅ You're in";
+      document.getElementById('goaiText').textContent='Your ITZ tools are unlocked below.';
       document.getElementById('unlockOpenBtn').style.display='none';
       closeGate();
     } else {
       document.getElementById('goaiTitle').textContent='🔒 Unlock your access';
-      document.getElementById('goaiText').textContent='Two ways in — GO AI or a funded Crucial account.';
+      document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Three ways in — membership, funded Crucial, or GO AI.' : 'Two ways in — the $22.22 membership or a funded Crucial account.';
       document.getElementById('unlockOpenBtn').style.display='';
     }
 
-    // ---- tiles: everything gated until they unlock one way or the other ----
+    // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
-    setTileLock('tileTapTrade',shared);
-    setTileLock('tilePamm',window.GOAI_UNLOCKED||window.HAS_CRUCIAL);
+    setTileLock('tileTapTrade',trade);
+    setTileLock('tilePamm',member);
+    lockOrLink('tileEdu',member,EDU_URL);
+    lockOrLink('tileBoard',member,BOARD_URL);
+    lockOrLink('tileChat',member,CHAT_URL);
+    // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
+    document.getElementById('tileGoai').style.display = window.SHOW_GOAI ? '' : 'none';
+    document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
-    lockOrLink('tileEdu',shared,EDU_URL);
-    lockOrLink('tileBoard',shared,BOARD_URL);
-    lockOrLink('tileChat',shared,CHAT_URL);
     // ITZ Indicator stays locked — Coming Soon (not unlockable yet)
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
   }

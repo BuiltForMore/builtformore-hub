@@ -187,7 +187,7 @@
       <a class="tile locked" id="tileBoard"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
       <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
-      <a class="tile locked" id="tileChat"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
+      <a class="tile locked" id="tileChat" onclick="tileChatClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
       <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
       <a class="tile" id="tileDownline" onclick="openDownline()"><span class="arrow">&#8594;</span><div class="ic">👥</div><h3>My Downline</h3><p>Everyone in your network, all the way down — tagged by level.</p></a>
       <a class="tile" onclick="openSetup()"><span class="arrow">&#8594;</span><div class="ic">🔗</div><h3>Your Links &amp; Upline</h3><p>Edit your start link, broker links &amp; video.</p></a>
@@ -436,7 +436,7 @@
     setTileLock('tileEdu',member);
     { const _e=document.getElementById('tileEdu'); _e.removeAttribute('href'); _e.onclick = member ? openEducation : openGate; }
     lockOrLink('tileBoard',member,BOARD_URL);
-    lockOrLink('tileChat',member,CHAT_URL);
+    // Daily Chat stays locked (Coming Soon) until the chat exists — see tileChatClick
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
     document.getElementById('tileGoai').style.display = window.SHOW_GOAI ? '' : 'none';
     document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';
@@ -494,6 +494,7 @@
   }
   function tileTapTradeClick(){ if(window.GOAI_UNLOCKED||window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
+  function tileChatClick(){ alert('💬 Daily Chat is coming soon — hang tight!'); }
   function openIndicator(){
     const o=document.getElementById('indModal');
     const inp=document.getElementById('tvUser'); inp.value=window.TV_USERNAME||'';

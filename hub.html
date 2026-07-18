@@ -179,10 +179,10 @@
     <div class="section-label">Jump In</div>
     <div class="grid">
       <a class="tile locked" id="tileSignals"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
-      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Approve live signals — copy them to your broker.</p></a>
+      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Fund a broker → auto-copy our live trades to your account, one tap.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
-      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your onboarding steps — brokers, funding, TradeLocker.</p></a>
+      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Open &amp; fund your broker, link TradeLocker — start trading with us.</p></a>
       <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile locked" id="tileBoard"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
@@ -299,7 +299,7 @@
       <!-- BOX: Funded on Crucial -->
       <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">📈 FUNDED ON CRUCIAL</div>
-        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">$125+ funded</b> on Crucial unlocks <b style="color:#fff">signals, ITZTAP &amp; PAMM</b>.</p>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px"><b style="color:var(--green)">Fund a live Crucial account ($125+)</b> and unlock <b style="color:#fff">live copy-trading (ITZTAP)</b> + your signals.</p>
         <input class="gi" id="f_broker_email" placeholder="your Crucial email (same as ITZ)" style="margin-bottom:4px">
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
         <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
@@ -308,7 +308,7 @@
       <!-- BOX: GO AI (only shown to GO AI members / GO-AI-track referrals) -->
       <div id="goaiUnlockBox" style="border:1px solid var(--border);border-radius:12px;padding:15px;display:none">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">🚀 GO AI MEMBER</div>
-        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Unlocks <b style="color:#fff">everything</b> — plus the GO AI community &amp; back office.</p>
+        <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 10px">Already in GO AI? Confirm your account and get <b style="color:#fff">all of ITZ free</b> — plus your community &amp; back office.</p>
         <input class="gi" id="f_goai_id" placeholder="your GO AI username" style="margin-bottom:8px">
         <input class="gi" id="f_goai_email" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="goaiItzEmail" style="color:var(--green)">—</b></div>

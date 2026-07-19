@@ -466,7 +466,7 @@
     { const _e=document.getElementById('tileEdu'); _e.removeAttribute('href'); _e.onclick = member ? openEducation : openGate; }
     lockOrLink('tileBoard',member,BOARD_URL);
     lockOrLink('tileChat',member,CHAT_URL);
-    window.NOMAD_COUNT=d.referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;
+    window.NOMAD_COUNT=d.goai_referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;  // GO AI recruits only
     setTileLock('tileNomad',window.NOMAD_OK);
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
     document.getElementById('tileGoai').style.display = window.SHOW_GOAI ? '' : 'none';
@@ -572,7 +572,7 @@
     if(!user){msg.style.color='#ff6b6b';msg.textContent='Enter your GO AI username.';return;}
     if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
     const btn=document.getElementById('ob_btn'); btn.disabled=true; btn.textContent='Connecting…';
-    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user}});
+    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user,goai_sponsor:getCookie('goai_ref')}});
     btn.disabled=false; btn.textContent='🔓 Connect & continue';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     await loadHub(itz);
@@ -602,7 +602,7 @@
     if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your email.';return;}
     if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
     const btn=document.getElementById('gokBtn'); btn.disabled=true; btn.textContent='Unlocking…';
-    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user}});
+    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user,goai_sponsor:getCookie('goai_ref')}});
     btn.disabled=false; btn.textContent='Unlock GOKOLAB →';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     window.GOAI_UNLOCKED=true;
@@ -790,7 +790,7 @@
     if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your email.';return;}
     if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
     btn.disabled=true;btn.textContent='Unlocking…';msg.textContent='';
-    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user}});
+    const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user,goai_sponsor:getCookie('goai_ref')}});
     btn.disabled=false;btn.textContent='🔓 Unlock everything';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     msg.style.color='var(--green)';msg.textContent='✅ Unlocked! Loading your access…';

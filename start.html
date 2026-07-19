@@ -145,29 +145,19 @@
 
     <div class="step">
       <div class="num">STEP 2</div>
-      <h3>Open your account</h3>
-      <p>New to this? Start on <b>Genesis (demo)</b> to practice risk-free. Ready for real? Open <b>Crucial (live)</b>. Open it through the link below so you're plugged into the ITZ ecosystem.</p>
-      <div class="brokers">
-        <div class="broker">
-          <div class="bn">GENESIS</div>
-          <div class="bt">🎓 Demo / practice account</div>
-          <a class="btn ghost" id="genesisBtn" href="#" target="_blank" rel="noopener">Start Demo →</a>
-        </div>
-        <div class="broker">
-          <div class="bn">CRUCIAL</div>
-          <div class="bt">💸 Live / funded account</div>
-          <a class="btn" id="crucialBtn" href="#" target="_blank" rel="noopener">Go Live →</a>
-        </div>
-      </div>
+      <h3>Open your Crucial account</h3>
+      <p>This is your trading account — open it through the link below so you're plugged into the ITZ ecosystem. Your <b>Crucial account is what unlocks your hub</b> — signals, copy-trading &amp; everything else.</p>
+      <div style="margin:6px 0 4px"><a class="btn full" id="crucialBtn" href="#" target="_blank" rel="noopener">Open my Crucial account →</a></div>
+      <p style="color:var(--dim);font-size:12px;margin-top:12px">🎓 New and want to practice first? <b style="color:var(--green)">Demo accounts on Crucial are launching any day</b> — you'll practice risk-free right here on the same account. For now, open yours and fund when you're ready.</p>
     </div>
 
     <div class="step">
       <div class="num">STEP 3</div>
       <h3>Set up your account</h3>
-      <p>Whether you went demo (Genesis) or live (Crucial), get it dialed in so it's ready to trade:</p>
+      <p>Get your Crucial account dialed in so it's ready to trade:</p>
       <ul class="checklist">
-        <li>Log into your new broker dashboard</li>
-        <li><b>Genesis</b> → create your demo balance to practice · <b>Crucial</b> → fund your live account</li>
+        <li>Log into your Crucial dashboard</li>
+        <li>Fund your live account (or open a demo balance once Crucial demos launch)</li>
         <li>Set your account currency + leverage (we'll guide you)</li>
         <li>Note your login, password + server — you'll need it in Step 4</li>
       </ul>
@@ -179,7 +169,7 @@
       <p>Connect your broker account to TradeLocker so you can trade the ITZ setups:</p>
       <ul class="checklist">
         <li>Open TradeLocker → Add Account</li>
-        <li>Select your broker — Genesis (demo) or Crucial (live)</li>
+        <li>Select <b>Crucial</b> as your broker</li>
         <li>Enter your login, password + server</li>
         <li>You're live — now hop into the ITZ signals 🚀</li>
       </ul>
@@ -253,8 +243,7 @@
     const cs=PROFILE.custom_steps||{};
     if(cs.step1) document.getElementById('s1title').textContent=cs.step1;
     if(cs.step4) document.getElementById('s4title').textContent=cs.step4;
-    // broker links
-    document.getElementById('genesisBtn').href=PROFILE.genesis_link||'#';
+    // broker link (Crucial only — Genesis retired; Crucial demos launching soon)
     document.getElementById('crucialBtn').href=PROFILE.crucial_link||'#';
     // video
     const v=PROFILE.custom_video_url;

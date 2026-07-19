@@ -219,6 +219,9 @@
     if(existing){ REF=existing; }                          // first-touch wins
     else if(fresh){ REF=fresh; setCookie('itz_ref',fresh,90); }
     else { REF=HOUSE_CODE; }                                // no referrer → ITZ house
+    // On the GO AI site, also stamp a SEPARATE GO AI recruiter cookie (distinct from the ITZ sponsor).
+    // First-touch: whoever brought them to GO AI first sticks.
+    if(/(^|\.)go\./i.test(location.hostname) && fresh && !getCookie('goai_ref')){ setCookie('goai_ref',fresh,365); }
   })();
 
   let PROFILE=null;

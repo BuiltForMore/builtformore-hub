@@ -568,7 +568,9 @@
     const phase = !goaiDone?0:(!appsDone?1:(!crucialDone?2:(!chDone?3:4)));
     // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
     // NOTE: don't include HAS_CRUCIAL here — that gets set mid-wizard at the Crucial step.
-    const alreadySetUp = window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member;
+    // On go.itztime.trade EVERYONE runs the GO AI onboarding fresh (ITZ membership does NOT skip it).
+    // On itztime.trade the wizard never gates anyway; keep the member-skip there for safety.
+    const alreadySetUp = GOAI_SITE ? false : (window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member);
     const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
     window.ONBOARDED = ((phase>=4) || alreadySetUp) && !forcePreview;
     const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;

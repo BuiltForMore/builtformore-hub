@@ -262,6 +262,7 @@
       <div style="color:var(--dim);font-size:11.5px;margin:0 0 12px">Must match your ITZ email: <b id="pammItzEmail" style="color:var(--green)">—</b></div>
       <button class="btn full" id="pammVerifyBtn" onclick="submitPammVerify()" style="width:100%">Confirm my Crucial account →</button>
       <p id="pammMsg" style="color:var(--green);font-size:13px;margin-top:10px;min-height:16px"></p>
+      <div id="pammAltMount"></div>
       <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:6px">Don't have a Crucial account yet? Set it up in <b>Getting Started</b> first, then come back.</p>
     </div>
 
@@ -347,6 +348,7 @@
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Match your ITZ email: <b id="brokerItzEmail" style="color:var(--green)">—</b></div>
         <button class="btn full" id="brokerBtn" onclick="submitBroker()" style="width:100%">Verify &amp; unlock</button>
         <p id="brokerMsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+        <div id="unlockAltMount"></div>
       </div>
       <!-- BOX: GO AI (only shown to GO AI members / GO-AI-track referrals) -->
       <div id="goaiUnlockBox" style="border:1px solid var(--border);border-radius:12px;padding:15px;display:none">
@@ -592,7 +594,7 @@
         <input class="gi" id="ob_cru_email" value="${itz}" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Must match your ITZ email: <b style="color:var(--green)">${itz}</b></div>
         <button class="btn full" id="ob_cru_btn" onclick="obVerifyCrucial()" style="width:100%">Verify my Crucial account →</button>
-        <p id="ob_cru_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
+        <p id="ob_cru_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`+altBlockHTML('pamm','ob');
     } else if(phase===3){
       label.textContent='PHASE 3 OF 3 · CHANNELS';
       body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Join all three. The <b style="color:#fff">ITZ bot</b> will DM you to verify your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
@@ -601,6 +603,45 @@
       }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Once you're in all three, everything unlocks. 🚀</p>`;
     }
   }
+  // ── Alt Crucial email (different email than ITZ) — emailed OTP proves ownership ──
+  function altBlockHTML(mode, ns){
+    return `<div style="text-align:center;margin-top:12px"><a href="#" id="${ns}_altlink" onclick="document.getElementById('${ns}_altwrap').style.display='block';this.parentNode.style.display='none';return false;" style="color:var(--green);font-size:12px">My Crucial account is under a different email →</a></div>
+    <div id="${ns}_altwrap" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-bottom:8px">No problem — enter the email on your <b style="color:#fff">Crucial account</b>. We'll email a 6-digit code there to confirm it's yours.</div>
+      <input class="gi" id="${ns}_altemail" placeholder="the email on your Crucial account" style="margin-bottom:8px">
+      <button class="btn full" id="${ns}_altsend" onclick="altSend('${mode}','${ns}')" style="width:100%">Email me a code →</button>
+      <div id="${ns}_altcoderow" style="display:none;margin-top:10px">
+        <input class="gi" id="${ns}_altcode" inputmode="numeric" placeholder="6-digit code" style="margin-bottom:8px">
+        <button class="btn full" id="${ns}_altverify" onclick="altVerify('${mode}','${ns}')" style="width:100%">Verify code &amp; unlock →</button>
+      </div>
+      <p id="${ns}_altmsg" style="font-size:12px;margin-top:8px;min-height:14px"></p>
+    </div>`;
+  }
+  async function altSend(mode, ns){
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    const alt=(document.getElementById(ns+'_altemail').value||'').trim().toLowerCase();
+    const msg=document.getElementById(ns+'_altmsg');
+    if(!alt||!alt.includes('@')){msg.style.color='#ff6b6b';msg.textContent='Enter the email on your Crucial account.';return;}
+    const btn=document.getElementById(ns+'_altsend'); btn.disabled=true; btn.textContent='Sending…';
+    const {data,error}=await sb.functions.invoke('crucial-alt',{body:{step:'send',member_email:itz,alt_email:alt,mode}});
+    btn.disabled=false; btn.textContent='Email me a code →';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    if(data.sent){ msg.style.color='var(--green)'; msg.textContent='📧 Code sent to '+alt+' — check that inbox (and spam).'; document.getElementById(ns+'_altcoderow').style.display='block'; }
+    else { msg.style.color='#ff6b6b'; msg.textContent=data.message||'Couldn\'t verify that account.'; }
+  }
+  async function altVerify(mode, ns){
+    const itz=(getCookie('itz_email')||'').toLowerCase();
+    const alt=(document.getElementById(ns+'_altemail').value||'').trim().toLowerCase();
+    const code=(document.getElementById(ns+'_altcode').value||'').trim();
+    const msg=document.getElementById(ns+'_altmsg');
+    const btn=document.getElementById(ns+'_altverify'); btn.disabled=true; btn.textContent='Verifying…';
+    const {data,error}=await sb.functions.invoke('crucial-alt',{body:{step:'verify',member_email:itz,alt_email:alt,code,mode}});
+    btn.disabled=false; btn.textContent='Verify code & unlock →';
+    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    if(data.verified){ msg.style.color='var(--green)'; msg.textContent='✅ Verified — unlocking…'; await loadHub(itz); }
+    else { msg.style.color='#ff6b6b'; msg.textContent=data.message||'That code isn\'t right.'; }
+  }
+
   async function obVerifyCrucial(){
     const itz=(getCookie('itz_email')||'').toLowerCase();
     const typed=document.getElementById('ob_cru_email').value.trim().toLowerCase();
@@ -634,7 +675,7 @@
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     await loadHub(itz);
   }
-  function openGate(){ document.getElementById('unlockModal').style.display='flex'; }
+  function openGate(){ const m=document.getElementById('unlockAltMount'); if(m&&!m.innerHTML) m.innerHTML=altBlockHTML('signals','unlock'); document.getElementById('unlockModal').style.display='flex'; }
   function closeGate(){ document.getElementById('unlockModal').style.display='none'; }
   function tileGoAiClick(){ if(window.GOAI_UNLOCKED){ GOAI_URL!=='#' ? window.open(GOAI_URL,'_blank') : alert('GO AI Back Office link coming soon.'); } else openGate(); }
   function tileCommunityClick(){ openGokolab(); }
@@ -804,6 +845,7 @@
     document.getElementById('pammOpen').style.display = unlocked ? 'block':'none';
     document.getElementById('pammItzEmail').textContent=(getCookie('itz_email')||'').toLowerCase()||'your ITZ email';
     document.getElementById('pammMsg').textContent='';
+    { const m=document.getElementById('pammAltMount'); if(m) m.innerHTML = unlocked ? '' : altBlockHTML('signals','pamm'); }
     document.getElementById('pammModal').style.display='flex';
   }
   function closePamm(){ document.getElementById('pammModal').style.display='none'; }

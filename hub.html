@@ -418,11 +418,15 @@
 
   // ── GO AI phased-onboarding links ──
   const APP_LINKS = {
-    tradelocker: {name:'TradeLocker', url:'https://apps.apple.com/app/id6447196449'},
-    tradingview: {name:'TradingView', url:'https://apps.apple.com/app/id1205990992'},
-    telegram:    {name:'Telegram',    url:'https://telegram.org/dl'},
-    goai:        {name:'GO AI app',   url:'https://apps.apple.com/us/app/go-ai-os/id6756324129'}
+    tradelocker: {name:'TradeLocker', ios:'https://apps.apple.com/app/id6447196449', android:'https://play.google.com/store/apps/details?id=com.tradelocker.mobile'},
+    tradingview: {name:'TradingView', ios:'https://apps.apple.com/app/id1205990992', android:'https://play.google.com/store/apps/details?id=com.tradingview.tradingviewapp'},
+    telegram:    {name:'Telegram',    ios:'https://telegram.org/dl', android:'https://telegram.org/dl'},
+    goai:        {name:'GO AI app',   ios:'https://apps.apple.com/us/app/go-ai-os/id6756324129', android:'https://play.google.com/store/apps/details?id=com.iosstore.osgo'},
+    gokollab:    {name:'GoKollab (community)', ios:'https://apps.apple.com/us/app/gokollab/id6484272411', android:'https://play.google.com/store/apps/details?id=net.clientclub.app.kollab'}
   };
+  // pick the right store by device (Android vs iPhone/default)
+  function isAndroid(){ return /android/i.test(navigator.userAgent||''); }
+  function appUrl(k){ const a=APP_LINKS[k]; if(!a) return '#'; return isAndroid() ? (a.android||a.ios) : (a.ios||a.android); }
   const CH_LINKS = {
     itz_signals: {name:'ITZ Signals',   get url(){return window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh';} },
     itz_team:    {name:'ITZ Team Chat', url:'https://t.me/+UzudxdlZYKlmYzAx'},
@@ -507,8 +511,9 @@
 
     // ---- persistent apps strip (re-download anytime; GO AI app only on the GO AI line) ----
     { const strip=document.getElementById('appStrip');
-      if(strip){ const order=['tradelocker','tradingview','telegram','goai'];
-        strip.innerHTML=order.filter(k=>APP_LINKS[k]&&APP_LINKS[k].url&&(k!=='goai'||GOAI_SITE))
+      if(strip){ const order=['tradelocker','tradingview','telegram','goai','gokollab'];
+        const goaiOnly={goai:1,gokollab:1};
+        strip.innerHTML=order.filter(k=>APP_LINKS[k]&&(!goaiOnly[k]||GOAI_SITE))
           .map(k=>`<a class="appbtn" onclick="hubOpenApp('${k}')">📱 ${APP_LINKS[k].name}</a>`).join(''); } }
 
     // ---- tiles ----
@@ -557,7 +562,7 @@
     d=d||window.DATA||{}; const ob=d.onboarding||{};
     const apps=ob.apps||{}, ch=ob.channels||{};
     const goaiDone = window.GOAI_UNLOCKED;
-    const appsDone   = ['tradelocker','tradingview','telegram','goai'].every(k=>apps[k]);  // GO AI app now required
+    const appsDone   = ['tradelocker','tradingview','telegram','goai','gokollab'].every(k=>apps[k]);  // GO AI app + GoKollab required
     const crucialDone= !!window.HAS_CRUCIAL;   // set once they verify their Crucial account
     const chDone     = ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
     const phase = !goaiDone?0:(!appsDone?1:(!crucialDone?2:(!chDone?3:4)));
@@ -591,7 +596,7 @@
         const a=APP_LINKS[k], done=!!apps[k];
         if(a.soon) return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px;opacity:.55"><span style="font-size:13.5px">📱 ${a.name}</span><span style="font-size:11px;color:var(--dim)">Coming soon</span></div>`;
         return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'📱'} ${a.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obGetApp('${k}')">${done?'Got it':'Download →'}</button></div>`;
-      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap each to download — it checks off automatically. (App Store links.)</p>`;
+      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap each to download — it checks off automatically. Opens the right store for your phone (iPhone or Android). <b style="color:#fff">GoKollab</b> is your community — you're auto-added when you connect GO AI.</p>`;
     } else if(phase===2){
       label.textContent='PHASE 2 OF 3 · BROKER';
       const cru=(window.DATA&&window.DATA.sponsor_crucial_link)||'https://dashboard.crucialmarkets.com/register?ref=3963';
@@ -666,8 +671,8 @@
     const {data}=await sb.rpc('upsert_onboarding',{p_email:itz,p_patch:patch});
     if(data&&data.ok&&window.DATA){ window.DATA.onboarding=data.onboarding; renderOnboarding(); }
   }
-  function obGetApp(k){ const a=APP_LINKS[k]; if(a&&a.url) window.open(a.url,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
-  function hubOpenApp(k){ const a=APP_LINKS[k]; if(a&&a.url) window.open(a.url,'_blank'); }  // persistent re-download from the hub
+  function obGetApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
+  function hubOpenApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); }  // persistent re-download from the hub (device-aware)
   function obJoin(k){ const c=CH_LINKS[k]; if(c&&c.url) window.open(c.url,'_blank'); const channels=Object.assign({},((window.DATA.onboarding||{}).channels)||{},{[k]:true}); obPatch({channels}); }
   async function obConnectGoAi(){
     const itz=(getCookie('itz_email')||'').toLowerCase();

@@ -238,7 +238,7 @@
 
     <!-- STEP 1: confirm they have a Crucial account (locked state) -->
     <div id="pammVerify">
-      <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 10px">Goldielots runs on <b style="color:#fff">Crucial</b>. Confirm you have a Crucial account under the <b style="color:#fff">same email you registered with ITZ</b> to unlock. (Crucial's own deposit minimum applies when you allocate.)</div>
+      <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 10px">Goldielots runs on <b style="color:#fff">Crucial</b>. <b style="color:var(--green)">Fund a live Crucial account ($125+)</b> under the <b style="color:#fff">same email you registered with ITZ</b> to unlock. (Same funded account also unlocks ITZTAP copy-trading.)</div>
       <label style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:11px;color:var(--dim);margin:0 0 6px">Your Crucial account email</label>
       <input id="pammEmail" placeholder="the email on your Crucial account" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:#fff;font-size:15px;margin-bottom:5px">
       <div style="color:var(--dim);font-size:11.5px;margin:0 0 12px">Must match your ITZ email: <b id="pammItzEmail" style="color:var(--green)">—</b></div>
@@ -314,8 +314,8 @@
     </div>
     <p style="color:var(--dim);font-size:12.5px;margin:0 0 14px">Two ways in — use whichever fits you.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px">
-      <!-- BOX: $22.22 Membership -->
-      <div style="border:1px solid var(--border);border-radius:12px;padding:15px">
+      <!-- BOX: $22.22 Membership (ITZ-only side; hidden on GO AI side) -->
+      <div id="membershipBox" style="border:1px solid var(--border);border-radius:12px;padding:15px">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--green)">💳 $22.22 MEMBERSHIP</div>
         <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin:4px 0 12px">Monthly. Unlocks <b style="color:#fff">signals, education &amp; points</b>. (ITZTAP &amp; Goldielots need a funded broker.)</p>
         <a href="#" onclick="window.open(MEMBERSHIP_URL,'_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box">Join for $22.22/mo →</a>
@@ -398,7 +398,7 @@
     tradelocker: {name:'TradeLocker', url:'https://apps.apple.com/app/id6447196449'},
     tradingview: {name:'TradingView', url:'https://apps.apple.com/app/id1205990992'},
     telegram:    {name:'Telegram',    url:'https://telegram.org/dl'},
-    goai:        {name:'GO AI app',   url:'', soon:true}
+    goai:        {name:'GO AI app',   url:'https://apps.apple.com/us/app/go-ai-os/id6756324129'}
   };
   const CH_LINKS = {
     itz_signals: {name:'ITZ Signals',   get url(){return window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh';} },
@@ -460,7 +460,7 @@
     window.SHOW_GOAI=GOAI_SITE;                                     // GO AI only exists on the go.itztime.trade line
     window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
     const member = window.SIGNALS_UNLOCKED;                        // base tier: in-system, paid, funded, or GO AI
-    const trade  = window.BROKER_UNLOCKED || window.GOAI_UNLOCKED;  // ITZTAP (needs a funded broker)
+    const trade  = window.BROKER_UNLOCKED;  // ITZTAP: funded Crucial only (GO AI membership does NOT unlock it)
 
     // ---- unlock card ----
     document.getElementById('goaiCard').style.display='block';
@@ -469,6 +469,8 @@
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
     document.getElementById('f_goai_email').value=itz;
     document.getElementById('goaiUnlockBox').style.display = window.SHOW_GOAI ? '' : 'none';
+    // GO AI side: no $22.22 membership — you get ITZ free via GO AI. Hide that box.
+    document.getElementById('membershipBox').style.display = window.SHOW_GOAI ? 'none' : '';
     if(member){
       document.getElementById('goaiTitle').textContent="✅ You're in";
       document.getElementById('goaiText').textContent='Your ITZ tools are unlocked below.';
@@ -476,14 +478,14 @@
       closeGate();
     } else {
       document.getElementById('goaiTitle').textContent='🔒 Unlock your access';
-      document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Three ways in — membership, funded Crucial, or GO AI.' : 'Two ways in — the $22.22 membership or a funded Crucial account.';
+      document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Connect your GO AI login to unlock ITZ free — fund a Crucial account for ITZTAP & Goldielots.' : 'Two ways in — the $22.22 membership or a funded Crucial account.';
       document.getElementById('unlockOpenBtn').style.display='';
     }
 
     // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
     setTileLock('tileTapTrade',trade);
-    setTileLock('tilePamm',window.GOAI_UNLOCKED||window.HAS_CRUCIAL);  // Goldielots: locked until Crucial $100+ verified
+    setTileLock('tilePamm',window.BROKER_UNLOCKED);  // Goldielots: funded Crucial only
     setTileLock('tileEdu',member);
     { const _e=document.getElementById('tileEdu'); _e.removeAttribute('href'); _e.onclick = member ? openEducation : openGate; }
     if(GOAI_SITE){
@@ -640,7 +642,7 @@
     document.getElementById('gokVerify').style.display='none';
     document.getElementById('gokOpen').style.display='block';
   }
-  function tileTapTradeClick(){ if(window.GOAI_UNLOCKED||window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
+  function tileTapTradeClick(){ if(window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
   function tileChatClick(){ alert('💬 Daily Chat is coming soon — hang tight!'); }
   function tileNomadClick(){ if(window.NOMAD_OK){ window.open(NOMAD_URL,'_blank'); } else { alert('👑 Nomad Leaders unlocks once you\'ve onboarded 4 people. You\'re at '+(window.NOMAD_COUNT||0)+' — keep bringing people in!'); } }
@@ -772,7 +774,7 @@
   }
 
   function openPamm(){
-    const unlocked=!!window.HAS_CRUCIAL;
+    const unlocked=!!window.BROKER_UNLOCKED;  // Goldielots needs a FUNDED Crucial account
     document.getElementById('pammVerify').style.display = unlocked ? 'none':'block';
     document.getElementById('pammOpen').style.display = unlocked ? 'block':'none';
     document.getElementById('pammItzEmail').textContent=(getCookie('itz_email')||'').toLowerCase()||'your ITZ email';
@@ -787,11 +789,14 @@
     if(!typed){msg.style.color='#ff6b6b';msg.textContent='Enter your Crucial account email.';return;}
     if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
     const btn=document.getElementById('pammVerifyBtn'); btn.disabled=true; btn.textContent='Checking…';
-    const {data,error}=await sb.functions.invoke('crucial-verify',{body:{member_email:itz,mode:'pamm'}});
+    // Goldielots requires a FUNDED Crucial account — verify funding (signals mode), same gate as ITZTAP.
+    const {data,error}=await sb.functions.invoke('crucial-verify',{body:{member_email:itz,mode:'signals'}});
     btn.disabled=false; btn.textContent='Confirm my Crucial account →';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     if(data.verified){
-      window.HAS_CRUCIAL=true; setTileLock('tilePamm',true);
+      // funded confirmed — unlocks BOTH Goldielots and ITZTAP
+      window.BROKER_UNLOCKED=true; window.HAS_CRUCIAL=true;
+      setTileLock('tilePamm',true); setTileLock('tileTapTrade',true);
       document.getElementById('pammVerify').style.display='none';
       document.getElementById('pammOpen').style.display='block';
     } else {

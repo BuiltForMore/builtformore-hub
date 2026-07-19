@@ -159,6 +159,9 @@
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Crucial — your LIVE-account referral link</label>
       <input class="fld-in" id="f_crucial" placeholder="https://dashboard.crucialmarkets.com/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
 
+      <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">GO AI — your referral / signup link <span style="color:var(--green)">(recruits sign up under you)</span></label>
+      <input class="fld-in" id="f_goai_ref" placeholder="https://goai.global/...your GO AI referral link..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
+
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Genesis — your DEMO-account referral link</label>
       <input class="fld-in" id="f_genesis" placeholder="https://dashboard.genesisfxmarkets.com/auth/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
 
@@ -571,12 +574,16 @@
     const label=document.getElementById('onboardPhase');
     const body=document.getElementById('onboardBody');
     if(phase===0){
-      label.textContent='GET STARTED';
-      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">First, connect your <b style="color:#fff">GO AI account</b> to begin.</div>
+      label.textContent='GET STARTED · GO AI';
+      const goaiSignup=(window.DATA&&window.DATA.sponsor_goai_link)||'https://goai.global/';
+      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">First, get your <b style="color:#fff">GO AI account</b> through your team's link — then drop your info below to connect. Use the <b style="color:#fff">same email you register with ITZ</b>.</div>
+        <a href="#" onclick="window.open('${goaiSignup}','_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box;margin-bottom:14px">① Create my GO AI account →</a>
+        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:0 0 6px">② Connect the account you made</label>
         <input class="gi" id="ob_user" placeholder="your GO AI username" style="margin-bottom:8px">
         <input class="gi" id="ob_email" value="${itz}" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Must match your ITZ email: <b style="color:var(--green)">${itz}</b></div>
         <button class="btn full" id="ob_btn" onclick="obConnectGoAi()" style="width:100%">🔓 Connect &amp; continue</button>
+        <p style="color:var(--dim);font-size:11px;margin-top:8px">Already in GO AI? Skip ① — just enter your username + email.</p>
         <p id="ob_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
     } else if(phase===1){
       label.textContent='PHASE 1 OF 3 · APPS';
@@ -955,6 +962,7 @@
     document.getElementById('f_handle').value=d.referral_code||'';
     handlePreview();
     document.getElementById('f_crucial').value=d.crucial_link||'';
+    document.getElementById('f_goai_ref').value=d.goai_ref_link||'';
     document.getElementById('f_genesis').value=d.genesis_link||'';
     document.getElementById('f_video').value=d.custom_video_url||'';
     document.getElementById('f_intro').value=d.custom_intro||'';
@@ -984,6 +992,7 @@
     const {data,error}=await sb.rpc('update_start_setup',{
       p_email:email,
       p_crucial:document.getElementById('f_crucial').value,
+      p_goai_link:document.getElementById('f_goai_ref').value,
       p_genesis:document.getElementById('f_genesis').value,
       p_video:document.getElementById('f_video').value,
       p_intro:document.getElementById('f_intro').value,

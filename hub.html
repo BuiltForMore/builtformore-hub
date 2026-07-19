@@ -497,8 +497,9 @@
     const phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
     // People already set up (funded, paid, legacy, or admin-granted) skip the wizard.
     const alreadySetUp = window.BROKER_UNLOCKED || window.HAS_CRUCIAL || window.IS_PAID || !!d.is_member;
-    window.ONBOARDED = (phase>=3) || alreadySetUp;
-    const gate = GOAI_SITE && !window.ONBOARDED;
+    const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
+    window.ONBOARDED = ((phase>=3) || alreadySetUp) && !forcePreview;
+    const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;
     document.getElementById('onboardCard').style.display = gate?'block':'none';
     document.getElementById('tilesWrap').style.display   = gate?'none':'block';
     if(!gate) return;

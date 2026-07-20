@@ -569,7 +569,7 @@
     const apps=ob.apps||{}, ch=ob.channels||{};
     const goaiDone = window.GOAI_UNLOCKED;
     const appsDone   = ['tradelocker','tradingview','telegram','goai','gokollab'].every(k=>apps[k]);  // GO AI app + GoKollab required
-    const crucialDone= !!window.HAS_CRUCIAL;   // set once they verify their Crucial account
+    const crucialDone= !!window.HAS_CRUCIAL || !!ob.crucial_skipped;   // verified OR chose "do it later"
     const chDone     = ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
     const phase = !goaiDone?0:(!appsDone?1:(!crucialDone?2:(!chDone?3:4)));
     // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
@@ -614,7 +614,8 @@
         <input class="gi" id="ob_cru_email" value="${itz}" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
         <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Must match your ITZ email: <b style="color:var(--green)">${itz}</b></div>
         <button class="btn full" id="ob_cru_btn" onclick="obVerifyCrucial()" style="width:100%">Verify my Crucial account →</button>
-        <p id="ob_cru_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`+altBlockHTML('pamm','ob');
+        <p id="ob_cru_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`+altBlockHTML('pamm','ob')
+        +`<div style="text-align:center;margin-top:14px;border-top:1px solid var(--border);padding-top:12px"><a href="#" onclick="obSkipCrucial();return false;" style="color:var(--dim);font-size:12px">Still opening your account / waiting on the broker? <b style="color:var(--green)">Continue to your hub — verify later →</b></a><div style="color:var(--dim);font-size:11px;margin-top:6px">ITZTAP &amp; Goldielots stay locked until your Crucial account is verified.</div></div>`;
     } else if(phase===3){
       label.textContent='PHASE 3 OF 3 · CHANNELS';
       body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Join all three. The <b style="color:#fff">ITZ bot</b> will DM you to verify your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
@@ -682,6 +683,8 @@
   function obGetApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
   function hubOpenApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); }  // persistent re-download from the hub (device-aware)
   function obJoin(k){ const c=CH_LINKS[k]; if(c&&c.url) window.open(c.url,'_blank'); const channels=Object.assign({},((window.DATA.onboarding||{}).channels)||{},{[k]:true}); obPatch({channels}); }
+  // Failsafe: let them into the hub while their Crucial account is still being sorted. ITZTAP/Goldielots stay locked until verified.
+  function obSkipCrucial(){ obPatch({crucial_skipped:true}); }
   async function obConnectGoAi(){
     const itz=(getCookie('itz_email')||'').toLowerCase();
     const user=document.getElementById('ob_user').value.trim();

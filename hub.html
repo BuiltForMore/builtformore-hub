@@ -537,7 +537,9 @@
     document.getElementById('tileChat').style.display = window.SHOW_GOAI ? '' : 'none';
     if(window.SHOW_GOAI) lockOrLink('tileChat',member,window.TEAM_LINK||'#');
     window.NOMAD_COUNT=d.goai_referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;  // GO AI recruits only
-    setTileLock('tileNomad',window.NOMAD_OK);
+    // Nomad Leaders is a GO AI perk — only on the go. line, never on itztime.trade
+    document.getElementById('tileNomad').style.display = window.SHOW_GOAI ? '' : 'none';
+    if(window.SHOW_GOAI) setTileLock('tileNomad',window.NOMAD_OK);
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
     document.getElementById('tileGoai').style.display = window.SHOW_GOAI ? '' : 'none';
     document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';

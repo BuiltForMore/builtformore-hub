@@ -403,8 +403,8 @@
   const SIGNALS_URL='https://itztime.trade/portal';
   const EDU_URL='https://itztime.trade/portal';
   const BOARD_URL='https://itztime.trade/leaderboard';
-  const CHAT_URL='https://t.me/+UzudxdlZYKlmYzAx';   // ITZ Team Chat (Telegram)
-  const NOMAD_URL='https://t.me/+2PSkS6kij7Y5NGUx';  // Nomad Leaders chat (unlocks at 4 referrals)
+  // Telegram invite links are NOT hardcoded here anymore — they come from get_member_hub
+  // (server-side, only for eligible members) so they never sit in the public page source.
   const GOKOLAB_URL='https://groups.builtformore.xyz/communities/groups/built-for-more/home';   // Built For More community (GoKollab)
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
@@ -428,8 +428,8 @@
   function isAndroid(){ return /android/i.test(navigator.userAgent||''); }
   function appUrl(k){ const a=APP_LINKS[k]; if(!a) return '#'; return isAndroid() ? (a.android||a.ios) : (a.ios||a.android); }
   const CH_LINKS = {
-    itz_signals: {name:'ITZ Signals',   get url(){return window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh';} },
-    itz_team:    {name:'ITZ Team Chat', url:'https://t.me/+UzudxdlZYKlmYzAx'},
+    itz_signals: {name:'ITZ Signals',   get url(){return window.SIGNALS_LINK||'#';} },
+    itz_team:    {name:'ITZ Team Chat', get url(){return window.TEAM_LINK||'#';} },
     goai_bot:    {name:'GO AI channels (message the bot)', url:'https://t.me/GOAILaunchENBOT'}
   };
 
@@ -482,7 +482,9 @@
     window.BROKER_UNLOCKED=(bs==='verified');                       // funded Crucial
     window.IS_PAID=!!d.is_paid;                                     // $22.22 membership
     window.SIGNALS_UNLOCKED=!!d.signals_unlocked;
-    window.SIGNALS_LINK=d.signals_link||'https://t.me/+o0ntth5T7YtkMThh';
+    window.SIGNALS_LINK=d.signals_link||'';   // server only sends this to eligible members
+    window.TEAM_LINK=d.team_link||'';
+    window.NOMAD_LINK=d.nomad_link||'';
     window.HAS_CRUCIAL=!!d.has_crucial;
     window.SHOW_GOAI=GOAI_SITE;                                     // GO AI only exists on the go.itztime.trade line
     window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
@@ -531,7 +533,9 @@
     } else {
       lockOrLink('tileBoard',member,BOARD_URL);
     }
-    lockOrLink('tileChat',member,CHAT_URL);
+    // Subscriber (Team) chat is a GO AI customer perk — only on the go. line, never on itztime.trade
+    document.getElementById('tileChat').style.display = window.SHOW_GOAI ? '' : 'none';
+    if(window.SHOW_GOAI) lockOrLink('tileChat',member,window.TEAM_LINK||'#');
     window.NOMAD_COUNT=d.goai_referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;  // GO AI recruits only
     setTileLock('tileNomad',window.NOMAD_OK);
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
@@ -725,7 +729,7 @@
   function tileTapTradeClick(){ if(window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
   function tileChatClick(){ alert('💬 Daily Chat is coming soon — hang tight!'); }
-  function tileNomadClick(){ if(window.NOMAD_OK){ window.open(NOMAD_URL,'_blank'); } else { alert('👑 Nomad Leaders unlocks once you\'ve onboarded 4 people. You\'re at '+(window.NOMAD_COUNT||0)+' — keep bringing people in!'); } }
+  function tileNomadClick(){ if(window.NOMAD_OK && window.NOMAD_LINK){ window.open(window.NOMAD_LINK,'_blank'); } else { alert('👑 Nomad Leaders unlocks once you\'ve onboarded 4 people. You\'re at '+(window.NOMAD_COUNT||0)+' — keep bringing people in!'); } }
   function openIndicator(){
     const o=document.getElementById('indModal');
     const inp=document.getElementById('tvUser'); inp.value=window.TV_USERNAME||'';
@@ -970,7 +974,7 @@
     }
   }
   function signalsTileClick(){
-    if(window.SIGNALS_UNLOCKED){ window.open(window.SIGNALS_LINK||'https://t.me/+o0ntth5T7YtkMThh','_blank'); }
+    if(window.SIGNALS_UNLOCKED && window.SIGNALS_LINK){ window.open(window.SIGNALS_LINK,'_blank'); }
     else { openGate(); }
   }
   async function submitGoAiBox(){

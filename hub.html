@@ -306,10 +306,10 @@
 <div id="downlineModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">👥 MY DOWNLINE</div>
+      <div id="dlTitle" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">👥 MY DOWNLINE</div>
       <button onclick="closeDownline()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
-    <p style="color:var(--dim);font-size:12.5px;margin:0 0 6px">Everyone in your network, all the way down — their referrals, and so on. Each is tagged with its level (L1, L2, L3…).</p>
+    <p id="dlDesc" style="color:var(--dim);font-size:12.5px;margin:0 0 6px">Everyone in your network, all the way down — their referrals, and so on. Each is tagged with its level (L1, L2, L3…).</p>
     <p id="dlSummary" style="color:var(--green);font-size:12.5px;font-weight:600;margin:0 0 14px"></p>
     <div id="dlBody"><div style="color:var(--dim);font-size:13px">Loading…</div></div>
   </div>
@@ -789,7 +789,18 @@
   }
 
   // ── MY DOWNLINE (infinite-level referral tree) ──
-  function openDownline(){ document.getElementById('downlineModal').style.display='flex'; loadDownline(); }
+  function openDownline(){
+    document.getElementById('downlineModal').style.display='flex';
+    if(GOAI_SITE){
+      document.getElementById('dlTitle').textContent='🚀 MY GO AI DOWNLINE';
+      document.getElementById('dlDesc').textContent='Everyone you’ve pulled into GO AI, all the way down — their GO AI recruits, and so on. Tagged by level. This is separate from your ITZ downline.';
+      loadGoaiDownline();
+    } else {
+      document.getElementById('dlTitle').textContent='👥 MY DOWNLINE';
+      document.getElementById('dlDesc').textContent='Everyone in your network, all the way down — their referrals, and so on. Each is tagged with its level (L1, L2, L3…).';
+      loadDownline();
+    }
+  }
   function closeDownline(){ document.getElementById('downlineModal').style.display='none'; }
   let _dlLoaded=false;
   async function loadDownline(){
@@ -825,6 +836,45 @@
     const perLevel={}; rows.forEach(r=>perLevel[r.level]=(perLevel[r.level]||0)+1);
     document.getElementById('dlSummary').textContent='Total '+rows.length+' · '+Object.keys(perLevel).sort((a,b)=>a-b).map(k=>'L'+k+': '+perLevel[k]).join(' · ');
     _dlLoaded=true;
+  }
+
+  // ── GO AI DOWNLINE (separate lineage — walks goai_sponsor_code, GO-AI-connected only) ──
+  let _gdlLoaded=false;
+  async function loadGoaiDownline(){
+    if(_gdlLoaded) return;
+    const tb=document.getElementById('dlBody');
+    const myCode=(window.DATA&&window.DATA.referral_code)||'';
+    if(!myCode){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">Sign in to see your GO AI downline.</div>'; return; }
+    tb.innerHTML='<div style="color:var(--dim);font-size:13px">Building your GO AI network… 🚀</div>';
+    const maxLevels=25, seen=new Set([myCode.toUpperCase()]); let frontier=[myCode], level=0; const rows=[];
+    try{
+      while(frontier.length && level<maxLevels){
+        level++;
+        const {data:kids}=await sb.from('affiliates')
+          .select('name,telegram,referral_code,goai_sponsor_code,go_ai_status,created_at')
+          .in('goai_sponsor_code',frontier)
+          .in('go_ai_status',['submitted','verified'])
+          .order('created_at',{ascending:false});
+        const nf=[];
+        for(const k of (kids||[])){
+          rows.push({level,m:{name:k.name,telegram:k.telegram,referred_by:k.goai_sponsor_code,created_at:k.created_at,status:k.go_ai_status}});
+          const c=k.referral_code; if(c&&!seen.has(c.toUpperCase())){ seen.add(c.toUpperCase()); nf.push(c); }
+        }
+        frontier=nf;
+      }
+    }catch(e){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load your GO AI network right now — try again.</div>'; return; }
+    if(!rows.length){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">No GO AI downline yet — when the people you recruit into GO AI start bringing others in, every level shows here. 🚀</div>'; document.getElementById('dlSummary').textContent=''; _gdlLoaded=true; return; }
+    rows.sort((a,b)=>a.level-b.level||new Date(b.m.created_at)-new Date(a.m.created_at));
+    const colors=['#39FF14','#2ecc71','#27ae60','#16a085','#1abc9c'];
+    const body=rows.map(({level,m})=>{
+      const col=colors[Math.min(level-1,colors.length-1)];
+      const lvl=`<span style="display:inline-block;background:${col}22;color:${col};border:1px solid ${col}55;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:700;font-family:'Bebas Neue',sans-serif;letter-spacing:1px">L${level}</span>`;
+      return `<tr style="border-bottom:1px solid rgba(255,255,255,.06)"><td style="padding:7px 6px;color:var(--dim);white-space:nowrap;font-size:11.5px">${new Date(m.created_at).toLocaleDateString()}</td><td style="padding:7px 6px">${esc(m.name||'')} ${lvl}</td><td style="padding:7px 6px;color:rgba(255,255,255,.5);font-size:11px">${esc(m.referred_by||'—')}</td><td style="padding:7px 6px;color:var(--green);font-size:11.5px">${esc(m.telegram||'')}</td><td style="padding:7px 6px;font-size:11px">GO AI</td></tr>`;
+    }).join('');
+    tb.innerHTML=`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr style="color:var(--dim);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px"><th style="padding:6px">Date</th><th style="padding:6px">Name</th><th style="padding:6px">GO AI Sponsor</th><th style="padding:6px">Telegram</th><th style="padding:6px">In</th></tr></thead><tbody>${body}</tbody></table></div>`;
+    const perLevel={}; rows.forEach(r=>perLevel[r.level]=(perLevel[r.level]||0)+1);
+    document.getElementById('dlSummary').textContent='Total '+rows.length+' in GO AI · '+Object.keys(perLevel).sort((a,b)=>a-b).map(k=>'L'+k+': '+perLevel[k]).join(' · ');
+    _gdlLoaded=true;
   }
 
   // ── GO AI LEADERBOARD (separate points line) ──

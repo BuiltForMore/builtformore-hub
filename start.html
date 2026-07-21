@@ -143,6 +143,15 @@
       <div class="video" id="videoBox"><span class="play">▶</span> Getting-started video coming soon</div>
     </div>
 
+    <!-- go.itz only: after the video, jump straight to the hub (GO AI / apps / chats set up in there) -->
+    <div id="goHubStep" style="display:none">
+      <div class="step" style="text-align:center;border-color:var(--green)">
+        <a class="btn full" id="goHubBtn" href="/portal">🚀 Go to your hub →</a>
+        <p style="color:var(--dim);font-size:12px;margin-top:12px">That's it here — your GO AI, apps and chats all get set up right inside the hub. Takes about a minute. ☕</p>
+      </div>
+    </div>
+
+    <div id="brokerSteps">
     <div class="step">
       <div class="num">STEP 2</div>
       <h3>Open your Crucial account</h3>
@@ -175,6 +184,7 @@
       </ul>
       <div style="margin-top:16px"><a class="btn full" id="hubBtn" href="/portal">I'm done — take me to the ITZ Hub →</a></div>
     </div>
+    </div><!-- /brokerSteps -->
   </div>
 
   <div class="foot">ITZ — a brand of Built For More Enterprises LLC · itztime.trade</div>
@@ -187,6 +197,17 @@
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1Z2F3aWVja3JkdWN5Y2ZlZXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTkzMDQsImV4cCI6MjA5NjM3NTMwNH0.IP18N9yHclow9OkPQyt7seRYViVyBkfw4Gkw5TMZNqg';
   const HOUSE_CODE = 'SKYLAR0L_E57';           // ITZ house — fallback sponsor + broker links
   const HUB_URL = '/hub';                       // Built For More hub (home base)
+
+  // go.itz keeps the start page simple: account → welcome video → hub. Broker setup lives INSIDE the hub (optional).
+  // itztime.trade keeps the full broker funnel (Crucial → TradeLocker).
+  (function(){
+    if(/(^|\.)go\./i.test(location.hostname)){
+      var bs=document.getElementById('brokerSteps'); if(bs) bs.style.display='none';
+      var gh=document.getElementById('goHubStep');   if(gh) gh.style.display='block';
+      var it=document.getElementById('introText');   if(it) it.textContent='Watch the quick intro, then jump into your hub — your GO AI, apps and chats all get set up right inside. ☕';
+      var pg=document.querySelector('.progress');    if(pg) pg.style.display='none';
+    }
+  })();
   const sb = supabase.createClient(SB_URL, SB_KEY);
 
   // ---- cookie helpers ----

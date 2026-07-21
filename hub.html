@@ -187,13 +187,37 @@
     <div class="linkcard" id="onboardCard" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px">
         <div class="ll" style="margin:0">🚀 Your GO AI setup</div>
-        <span class="pill" id="onboardPhase" style="background:rgba(57,255,20,.12);color:var(--green);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700">PHASE 1 OF 3</span>
+        <span class="pill" id="onboardPhase" style="background:rgba(57,255,20,.12);color:var(--green);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700">STEP 1 OF 3</span>
       </div>
       <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:14px">Finish these steps to unlock everything. It only takes a few minutes.</p>
       <div id="onboardBody"></div>
     </div>
 
     <div id="tilesWrap">
+
+    <!-- TEAM CHAT — front and center for GO AI members -->
+    <a id="teamBanner" href="#" onclick="hubOpenTeam();return false;" style="display:none;text-decoration:none;background:linear-gradient(135deg,rgba(57,255,20,.16),rgba(57,255,20,.03));border:1px solid var(--green);border-radius:14px;padding:16px 20px;margin-bottom:24px;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 0 30px rgba(57,255,20,.12)">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:30px;line-height:1">💬</div>
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:1px;color:#fff">Jump in the Team Chat</div>
+          <div style="color:var(--dim);font-size:12.5px">Live chatter, the daily calls, and the whole crew — this is where it all happens.</div>
+        </div>
+      </div>
+      <span class="btn" style="white-space:nowrap;pointer-events:none">Open Team Chat →</span>
+    </a>
+
+    <!-- OPTIONAL: fund broker to unlock the funded tools (shown to GO AI members who haven't funded) -->
+    <a id="brokerBanner" href="#" onclick="hubOpenBroker();return false;" style="display:none;text-decoration:none;background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:14px;padding:14px 20px;margin-bottom:24px;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:26px;line-height:1">💰</div>
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:#fff">Want ITZTAP &amp; Goldielots?</div>
+          <div style="color:var(--dim);font-size:12.5px">Fund a live Crucial account to turn on auto-copy trading + the hands-off managed strategy. Optional — do it whenever you're ready.</div>
+        </div>
+      </div>
+      <span class="btn ghost" style="white-space:nowrap;pointer-events:none">Fund my broker →</span>
+    </a>
 
     <!-- SECTION 1 · TRADE -->
     <div class="section-label">📈 Trade</div>
@@ -334,7 +358,7 @@
       <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">🔓 UNLOCK YOUR ACCESS</div>
       <button onclick="closeGate()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
-    <p style="color:var(--dim);font-size:12.5px;margin:0 0 14px">Two ways in — use whichever fits you.</p>
+    <p style="color:var(--dim);font-size:12.5px;margin:0 0 14px">Here's how to unlock it:</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px">
       <!-- BOX: $22.22 Membership (ITZ-only side; hidden on GO AI side) -->
       <div id="membershipBox" style="border:1px solid var(--border);border-radius:12px;padding:15px">
@@ -498,8 +522,9 @@
     document.getElementById('f_goai_id').value=d.go_ai_username||'';
     document.getElementById('f_goai_email').value=itz;
     document.getElementById('goaiUnlockBox').style.display = window.SHOW_GOAI ? '' : 'none';
-    // GO AI side: no $22.22 membership — you get ITZ free via GO AI. Hide that box.
-    document.getElementById('membershipBox').style.display = window.SHOW_GOAI ? 'none' : '';
+    // $22.22 is NOT offered inside the hub: GO AI members get ITZ free, and itz members already paid it to get in.
+    // (It's still sold to cold traffic on the public itztime.trade/join page.)
+    document.getElementById('membershipBox').style.display = 'none';
     if(member){
       document.getElementById('goaiTitle').textContent="✅ You're in";
       document.getElementById('goaiText').textContent='Your ITZ tools are unlocked below.';
@@ -507,7 +532,7 @@
       closeGate();
     } else {
       document.getElementById('goaiTitle').textContent='🔒 Unlock your access';
-      document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Connect your GO AI login to unlock ITZ free — fund a Crucial account for ITZTAP & Goldielots.' : 'Two ways in — the $22.22 membership or a funded Crucial account.';
+      document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Connect your GO AI login to unlock ITZ free — fund a Crucial account for ITZTAP & Goldielots.' : 'Fund a live Crucial account ($125+) to unlock ITZTAP & Goldielots.';
       document.getElementById('unlockOpenBtn').style.display='';
     }
 
@@ -536,6 +561,8 @@
     // Subscriber (Team) chat is a GO AI customer perk — only on the go. line, never on itztime.trade
     document.getElementById('tileChat').style.display = window.SHOW_GOAI ? '' : 'none';
     if(window.SHOW_GOAI) lockOrLink('tileChat',member,window.TEAM_LINK||'#');
+    { const tb=document.getElementById('teamBanner'); if(tb) tb.style.display = (window.SHOW_GOAI && member && window.TEAM_LINK) ? 'flex' : 'none'; }
+    { const bb=document.getElementById('brokerBanner'); if(bb) bb.style.display = (window.SHOW_GOAI && member && !window.BROKER_UNLOCKED) ? 'flex' : 'none'; }
     window.NOMAD_COUNT=d.goai_referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;  // GO AI recruits only
     // Nomad Leaders is a GO AI perk — only on the go. line, never on itztime.trade
     document.getElementById('tileNomad').style.display = window.SHOW_GOAI ? '' : 'none';
@@ -569,16 +596,16 @@
     const apps=ob.apps||{}, ch=ob.channels||{};
     const goaiDone = window.GOAI_UNLOCKED;
     const appsDone   = ['tradelocker','tradingview','telegram','goai','gokollab'].every(k=>apps[k]);  // GO AI app + GoKollab required
-    const crucialDone= !!window.HAS_CRUCIAL || !!ob.crucial_skipped;   // verified OR chose "do it later"
     const chDone     = ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
-    const phase = !goaiDone?0:(!appsDone?1:(!crucialDone?2:(!chDone?3:4)));
+    // 3-step onboarding: GO AI (0) -> Apps (1) -> Chats (2) -> in the hub (3). Broker funding is OPTIONAL, handled inside the hub.
+    const phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
     // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
     // NOTE: don't include HAS_CRUCIAL here — that gets set mid-wizard at the Crucial step.
     // On go.itztime.trade EVERYONE runs the GO AI onboarding fresh (ITZ membership does NOT skip it).
     // On itztime.trade the wizard never gates anyway; keep the member-skip there for safety.
     const alreadySetUp = GOAI_SITE ? false : (window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member);
     const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
-    window.ONBOARDED = ((phase>=4) || alreadySetUp) && !forcePreview;
+    window.ONBOARDED = ((phase>=3) || alreadySetUp) && !forcePreview;
     const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;
     document.getElementById('onboardCard').style.display = gate?'block':'none';
     document.getElementById('tilesWrap').style.display   = gate?'none':'block';
@@ -587,7 +614,7 @@
     const label=document.getElementById('onboardPhase');
     const body=document.getElementById('onboardBody');
     if(phase===0){
-      label.textContent='GET STARTED · GO AI';
+      label.textContent='STEP 1 OF 3 · GO AI';
       const goaiSignup=(window.DATA&&window.DATA.sponsor_goai_link)||'https://goai.global/';
       body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">First, get your <b style="color:#fff">GO AI account</b> through your team's link — then drop your info below to connect. Use the <b style="color:#fff">same email you register with ITZ</b>.</div>
         <a href="#" onclick="window.open('${goaiSignup}','_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box;margin-bottom:14px">① Create my GO AI account →</a>
@@ -599,29 +626,18 @@
         <p style="color:var(--dim);font-size:11px;margin-top:8px">Already in GO AI? Skip ① — just enter your username + email.</p>
         <p id="ob_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
     } else if(phase===1){
-      label.textContent='PHASE 1 OF 3 · APPS';
+      label.textContent='STEP 2 OF 3 · GET THE APPS';
       body.innerHTML=Object.keys(APP_LINKS).map(k=>{
         const a=APP_LINKS[k], done=!!apps[k];
         if(a.soon) return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px;opacity:.55"><span style="font-size:13.5px">📱 ${a.name}</span><span style="font-size:11px;color:var(--dim)">Coming soon</span></div>`;
         return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'📱'} ${a.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obGetApp('${k}')">${done?'Got it':'Download →'}</button></div>`;
       }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap each to download — it checks off automatically. Opens the right store for your phone (iPhone or Android). <b style="color:#fff">GoKollab</b> is your community — you're auto-added when you connect GO AI.</p>`;
     } else if(phase===2){
-      label.textContent='PHASE 2 OF 3 · BROKER';
-      const cru=(window.DATA&&window.DATA.sponsor_crucial_link)||'https://dashboard.crucialmarkets.com/register?ref=3963';
-      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">Open your <b style="color:#fff">Crucial trading account</b> through your team's link, using the <b style="color:#fff">same email you registered with ITZ</b> — then come back and verify.</div>
-        <a href="#" onclick="window.open('${cru}','_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box;margin-bottom:14px">① Open my Crucial account →</a>
-        <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:0 0 6px">② Verify the email you used</label>
-        <input class="gi" id="ob_cru_email" value="${itz}" placeholder="your email (same as ITZ)" style="margin-bottom:4px">
-        <div style="color:var(--dim);font-size:11px;margin:0 0 10px">Must match your ITZ email: <b style="color:var(--green)">${itz}</b></div>
-        <button class="btn full" id="ob_cru_btn" onclick="obVerifyCrucial()" style="width:100%">Verify my Crucial account →</button>
-        <p id="ob_cru_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`+altBlockHTML('pamm','ob')
-        +`<div style="text-align:center;margin-top:14px;border-top:1px solid var(--border);padding-top:12px"><a href="#" onclick="obSkipCrucial();return false;" style="color:var(--dim);font-size:12px">Still opening your account / waiting on the broker? <b style="color:var(--green)">Continue to your hub — verify later →</b></a><div style="color:var(--dim);font-size:11px;margin-top:6px">ITZTAP &amp; Goldielots stay locked until your Crucial account is verified.</div></div>`;
-    } else if(phase===3){
-      label.textContent='PHASE 3 OF 3 · CHANNELS';
-      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Join all three. The <b style="color:#fff">ITZ bot</b> will DM you to verify your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
+      label.textContent='STEP 3 OF 3 · JOIN THE CHATS';
+      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Last step — tap all three. The <b style="color:#fff">ITZ bot</b> will DM you to confirm your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
         const c=CH_LINKS[k], done=!!ch[k];
         return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'💬'} ${c.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obJoin('${k}')">${done?'Joined':'Join →'}</button></div>`;
-      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Once you're in all three, everything unlocks. 🚀</p>`;
+      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap all three and you're in. 🚀 <b style="color:#fff">Fund your broker later inside the hub</b> to unlock ITZTAP &amp; Goldielots.</p>`;
     }
   }
   // ── Alt Crucial email (different email than ITZ) — emailed OTP proves ownership ──
@@ -682,6 +698,8 @@
   }
   function obGetApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
   function hubOpenApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); }  // persistent re-download from the hub (device-aware)
+  function hubOpenTeam(){ if(window.TEAM_LINK) window.open(window.TEAM_LINK,'_blank'); }
+  function hubOpenBroker(){ const cru=(window.DATA&&window.DATA.sponsor_crucial_link)||'https://dashboard.crucialmarkets.com/register?ref=3963'; window.open(cru,'_blank'); }
   function obJoin(k){ const c=CH_LINKS[k]; if(c&&c.url) window.open(c.url,'_blank'); const channels=Object.assign({},((window.DATA.onboarding||{}).channels)||{},{[k]:true}); obPatch({channels}); }
   // Failsafe: let them into the hub while their Crucial account is still being sorted. ITZTAP/Goldielots stay locked until verified.
   function obSkipCrucial(){ obPatch({crucial_skipped:true}); }

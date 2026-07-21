@@ -146,7 +146,7 @@
     <!-- go.itz only: after the video, jump straight to the hub (GO AI / apps / chats set up in there) -->
     <div id="goHubStep" style="display:none">
       <div class="step" style="text-align:center;border-color:var(--green)">
-        <a class="btn full" id="goHubBtn" href="/portal">🚀 Go to your hub →</a>
+        <a class="btn full" id="goHubBtn" href="/hub">🚀 Go to your hub →</a>
         <p style="color:var(--dim);font-size:12px;margin-top:12px">That's it here — your GO AI, apps and chats all get set up right inside the hub. Takes about a minute. ☕</p>
       </div>
     </div>
@@ -207,6 +207,12 @@
       var it=document.getElementById('introText');   if(it) it.textContent='Watch the quick intro, then jump into your hub — your GO AI, apps and chats all get set up right inside. ☕';
       var pg=document.querySelector('.progress');    if(pg) pg.style.display='none';
     }
+  })();
+
+  // The hub lives at /hub on go.itztime.trade and /portal on itztime.trade — point BOTH hub buttons correctly.
+  (function(){
+    var hubPath = /(^|\.)go\./i.test(location.hostname) ? '/hub' : '/portal';
+    ['goHubBtn','hubBtn'].forEach(function(id){ var el=document.getElementById(id); if(el) el.setAttribute('href', hubPath); });
   })();
   const sb = supabase.createClient(SB_URL, SB_KEY);
 

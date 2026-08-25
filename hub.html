@@ -186,8 +186,8 @@
       <div style="display:flex;align-items:center;gap:14px">
         <div style="font-size:26px;line-height:1">💰</div>
         <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:#fff">Want ITZTAP &amp; Goldielots?</div>
-          <div style="color:var(--dim);font-size:12.5px">Fund a live Crucial account to turn on auto-copy trading + the hands-off managed strategy. Optional — do it whenever you're ready.</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:#fff">Want ITZTAP copy-trading?</div>
+          <div style="color:var(--dim);font-size:12.5px">Fund a live Crucial account to auto-copy our live trades to your account, one tap. Optional — do it whenever you're ready.</div>
         </div>
       </div>
       <span class="btn ghost" style="white-space:nowrap;pointer-events:none">Fund my broker →</span>
@@ -519,8 +519,9 @@
     document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
-    // ITZ Indicator: TradingView-based — hidden for now (not part of the GO AI flow)
+    // ITZ Indicator (TradingView) + Goldielots PAMM — hidden (not part of the GO AI flow)
     { const ti=document.getElementById('tileIndicator'); if(ti) ti.style.display='none'; }
+    { const tp=document.getElementById('tilePamm'); if(tp) tp.style.display='none'; }
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
     renderOnboarding(d);
   }

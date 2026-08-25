@@ -28,15 +28,12 @@
   .brand h1{font-family:'Bebas Neue';font-size:30px;letter-spacing:4px;line-height:1}
   .brand h1 span{color:var(--green)}
   .brand .sub{color:var(--green);font-size:11px;letter-spacing:2px;margin-top:2px}
-
   .screen{display:none}.screen.active{display:block}
-
   .hero{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px 24px;margin-bottom:22px;backdrop-filter:blur(6px);text-align:center}
   .invited{color:var(--green);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'Barlow Condensed';font-weight:700}
   .hero h2{font-family:'Bebas Neue';font-size:clamp(30px,6vw,44px);letter-spacing:2px;margin:6px 0 8px;line-height:1}
   .hero h2 span{color:var(--green)}
   .hero p{color:var(--dim);font-size:14.5px;line-height:1.6;max-width:520px;margin:0 auto}
-
   .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin:0 auto;max-width:440px;backdrop-filter:blur(6px)}
   label.fld{display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px}
   .fld-in{width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:15px;padding:12px;font-family:'Barlow'}
@@ -51,11 +48,9 @@
   .btn[disabled]{opacity:.5;cursor:not-allowed}
   .err{color:#ff6b6b;font-size:13px;margin-top:10px;min-height:16px;text-align:center}
   .fine{color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:14px;text-align:center}
-
   .progress{display:flex;gap:6px;margin:18px 0 24px}
   .progress .seg{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.08)}
   .progress .seg.on{background:var(--green);box-shadow:0 0 10px rgba(57,255,20,0.5)}
-
   .step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;backdrop-filter:blur(6px);position:relative}
   .step .num{position:absolute;top:-12px;left:20px;background:var(--green);color:#000;font-family:'Bebas Neue';font-size:16px;letter-spacing:1px;padding:3px 12px;border-radius:6px}
   .step h3{font-family:'Barlow Condensed';font-weight:700;font-size:22px;letter-spacing:.5px;margin:6px 0 8px}
@@ -71,7 +66,6 @@
   .checklist{list-style:none}
   .checklist li{display:flex;gap:10px;align-items:flex-start;color:#ddd;font-size:13.5px;line-height:1.5;margin-bottom:8px}
   .checklist li::before{content:"✓";color:var(--green);font-weight:800}
-
   .foot{text-align:center;color:rgba(255,255,255,0.28);font-size:12px;margin-top:36px;letter-spacing:1px}
   .loading{text-align:center;color:var(--dim);padding:60px 0;font-size:14px}
   @media(max-width:520px){.brokers{grid-template-columns:1fr}}
@@ -79,7 +73,6 @@
 </head>
 <body>
 <div class="wrap">
-
   <div class="brand">
     <div class="logo"><img src="https://itztime.trade/logo.png" alt="ITZ" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
     <div>
@@ -87,9 +80,7 @@
       <div class="sub">☕ IN AND OUT THE MARKETS LIKE WE MAKING TEA</div>
     </div>
   </div>
-
   <div class="loading" id="loading">Loading your onboarding…</div>
-
   <!-- ===== GATE ===== -->
   <div class="screen" id="gate">
     <div class="hero">
@@ -102,7 +93,6 @@
         <button class="tab active" id="tabSignup" onclick="gateTab('signup')">Sign Up</button>
         <button class="tab" id="tabLogin" onclick="gateTab('login')">Log In</button>
       </div>
-
       <!-- SIGN UP -->
       <div id="signupForm">
         <label class="fld">Name</label>
@@ -114,7 +104,6 @@
         <div style="margin-top:18px"><button class="btn full" id="g_submit" onclick="doSignup()">Create account → get started</button></div>
         <div class="err" id="g_err"></div>
       </div>
-
       <!-- LOG IN -->
       <div id="loginForm" style="display:none">
         <label class="fld">Email</label>
@@ -122,11 +111,9 @@
         <div style="margin-top:18px"><button class="btn full" id="l_submit" onclick="doStartLogin()">Log in → my steps</button></div>
         <div class="err" id="l_err"></div>
       </div>
-
       <div class="fine">By continuing you agree to our Terms &amp; Privacy. Educational content only — not financial advice.</div>
     </div>
   </div>
-
   <!-- ===== STEPS ===== -->
   <div class="screen" id="steps">
     <div class="hero">
@@ -135,22 +122,19 @@
       <p id="introText">Four steps and you're trading with the team — watch the intro, open your broker, set it up, then connect to TradeLocker. Take 'em one at a time. ☕</p>
       <div class="progress"><span class="seg on"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
     </div>
-
-    <div class="step">
+    <div class="step" id="step1card">
       <div class="num">STEP 1</div>
       <h3 id="s1title">Watch this first</h3>
-      <p>Quick welcome + how ITZ works. Give it a watch before you set anything up.</p>
+      <p id="s1desc">Quick welcome + how ITZ works. Give it a watch before you set anything up.</p>
       <div class="video" id="videoBox"><span class="play">▶</span> Getting-started video coming soon</div>
     </div>
-
-    <!-- go.itz only: after the video, jump straight to the hub (GO AI / apps / chats set up in there) -->
+    <!-- go.itz only: after the welcome, jump straight to the hub (GO AI / apps / chats set up in there) -->
     <div id="goHubStep" style="display:none">
       <div class="step" style="text-align:center;border-color:var(--green)">
         <a class="btn full" id="goHubBtn" href="/hub">🚀 Go to your hub →</a>
-        <p style="color:var(--dim);font-size:12px;margin-top:12px">That's it here — your GO AI, apps and chats all get set up right inside the hub. Takes about a minute. ☕</p>
+        <p style="color:var(--dim);font-size:12px;margin-top:12px">That's it here — your onboarding call, GO AI, apps and chats all live inside the hub. Takes about a minute. ☕</p>
       </div>
     </div>
-
     <div id="brokerSteps">
     <div class="step">
       <div class="num">STEP 2</div>
@@ -159,7 +143,6 @@
       <div style="margin:6px 0 4px"><a class="btn full" id="crucialBtn" href="#" target="_blank" rel="noopener">Open my Crucial account →</a></div>
       <p style="color:var(--dim);font-size:12px;margin-top:12px">🎓 New and want to practice first? <b style="color:var(--green)">Demo accounts on Crucial are launching any day</b> — you'll practice risk-free right here on the same account. For now, open yours and fund when you're ready.</p>
     </div>
-
     <div class="step">
       <div class="num">STEP 3</div>
       <h3>Set up your account</h3>
@@ -171,7 +154,6 @@
         <li>Note your login, password + server — you'll need it in Step 4</li>
       </ul>
     </div>
-
     <div class="step">
       <div class="num">STEP 4</div>
       <h3 id="s4title">Link it to TradeLocker</h3>
@@ -186,10 +168,8 @@
     </div>
     </div><!-- /brokerSteps -->
   </div>
-
   <div class="foot">ITZ — a brand of Built For More Enterprises LLC · itztime.trade</div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ---- config ----
@@ -197,29 +177,25 @@
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1Z2F3aWVja3JkdWN5Y2ZlZXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3OTkzMDQsImV4cCI6MjA5NjM3NTMwNH0.IP18N9yHclow9OkPQyt7seRYViVyBkfw4Gkw5TMZNqg';
   const HOUSE_CODE = 'SKYLAR0L_E57';           // ITZ house — fallback sponsor + broker links
   const HUB_URL = '/hub';                       // Built For More hub (home base)
-
-  // go.itz keeps the start page simple: account → welcome video → hub. Broker setup lives INSIDE the hub (optional).
+  // go.itz keeps the start page simple: account → welcome + next steps → hub. Everything else lives INSIDE the hub.
   // itztime.trade keeps the full broker funnel (Crucial → TradeLocker).
   (function(){
     if(/(^|\.)go\./i.test(location.hostname)){
       var bs=document.getElementById('brokerSteps'); if(bs) bs.style.display='none';
       var gh=document.getElementById('goHubStep');   if(gh) gh.style.display='block';
-      var it=document.getElementById('introText');   if(it) it.textContent='Watch the quick intro, then jump into your hub — your GO AI, apps and chats all get set up right inside. ☕';
+      var it=document.getElementById('introText');   if(it) it.textContent='One quick step: create your account, then jump into your hub — that’s where you watch the onboarding call, connect GO AI, grab the apps, and join the chats. ☕';
       var pg=document.querySelector('.progress');    if(pg) pg.style.display='none';
     }
   })();
-
   // The hub lives at /hub on go.itztime.trade and /portal on itztime.trade — point BOTH hub buttons correctly.
   (function(){
     var hubPath = /(^|\.)go\./i.test(location.hostname) ? '/hub' : '/portal';
     ['goHubBtn','hubBtn'].forEach(function(id){ var el=document.getElementById(id); if(el) el.setAttribute('href', hubPath); });
   })();
   const sb = supabase.createClient(SB_URL, SB_KEY);
-
   // ---- cookie helpers ----
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
   function getCookie(k){return document.cookie.split('; ').reduce((r,c)=>{const[n,...val]=c.split('=');return n===k?decodeURIComponent(val.join('=')):r;},'');}
-
   // ---- figure out the referrer (first-touch) ----
   function urlRef(){
     const q=new URLSearchParams(location.search).get('ref');
@@ -240,9 +216,7 @@
     // First-touch: whoever brought them to GO AI first sticks.
     if(/(^|\.)go\./i.test(location.hostname) && fresh && !getCookie('goai_ref')){ setCookie('goai_ref',fresh,365); }
   })();
-
   let PROFILE=null;
-
   async function loadProfile(){
     let {data,error}=await sb.rpc('get_start_profile',{p_code:REF});
     if(error||!data||!data.length){
@@ -260,8 +234,8 @@
     }
     render();
   }
-
   function render(){
+    const isGo = /(^|\.)go\./i.test(location.hostname);
     const who=PROFILE.name?PROFILE.name.split(' ')[0]:'ITZ';
     document.getElementById('invitedBy').textContent=(PROFILE.name?`${who} invited you`:'You’re invited')+' · your spot is saved 🔒';
     document.getElementById('stepsInvited').textContent=(PROFILE.name?`${who} brought you in`:'Welcome to ITZ')+' 🚀';
@@ -272,20 +246,33 @@
     if(cs.step4) document.getElementById('s4title').textContent=cs.step4;
     // broker link (Crucial only — Genesis retired; Crucial demos launching soon)
     document.getElementById('crucialBtn').href=PROFILE.crucial_link||'#';
-    // video
+    // video / welcome
     const v=PROFILE.custom_video_url;
     if(v){
       const embed=toEmbed(v);
       document.getElementById('videoBox').innerHTML=embed
         ? `<iframe src="${embed}" allowfullscreen></iframe>`
         : `<a class="btn ghost" href="${v}" target="_blank" rel="noopener">▶ Watch the intro</a>`;
+    } else if(isGo){
+      // No welcome video yet on the GO AI line — show a short welcome + the steps they'll take in the hub.
+      if(!cs.step1) document.getElementById('s1title').textContent="You're in — here's what's next 🎉";
+      document.getElementById('s1desc').textContent = PROFILE.name
+        ? `${who} brought you onto the team — welcome! Everything's set up in your hub. Here's all it takes:`
+        : "Welcome to the team! Everything's set up in your hub. Here's all it takes:";
+      document.getElementById('videoBox').outerHTML =
+        `<ul class="checklist" style="margin-top:6px">
+           <li>Tap <b>Go to your hub</b> below 👇</li>
+           <li>Watch the quick onboarding call</li>
+           <li>Connect your GO AI account (use this same email)</li>
+           <li>Grab the apps (GO AI OS + Telegram) &amp; join the team chats</li>
+           <li>That's it — you're rolling. ☕</li>
+         </ul>`;
     }
     document.getElementById('hubBtn').href=HUB_URL;
     // show gate or steps
     document.getElementById('loading').style.display='none';
     if(getCookie('itz_member')){ showSteps(); } else { document.getElementById('gate').classList.add('active'); }
   }
-
   function toEmbed(url){
     let m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
     if(m) return `https://www.youtube.com/embed/${m[1]}`;
@@ -293,13 +280,11 @@
     if(m) return `https://player.vimeo.com/video/${m[1]}`;
     return '';
   }
-
   function showSteps(){
     document.getElementById('gate').classList.remove('active');
     document.getElementById('steps').classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   }
-
   async function doSignup(){
     const name=document.getElementById('g_name').value.trim();
     const email=document.getElementById('g_email').value.trim();
@@ -320,7 +305,6 @@
     setCookie('itz_email',email.toLowerCase(),365);
     showSteps();
   }
-
   function gateTab(which){
     const su=which==='signup';
     document.getElementById('signupForm').style.display=su?'block':'none';
@@ -330,7 +314,6 @@
     document.getElementById('gateTitle').innerHTML=su?'Create your <span>ITZ account</span>':'Welcome <span>back</span>';
     document.getElementById('gateSub').textContent=su?"One account for everything — signals, community, and your step-by-step onboarding. Takes 20 seconds.":'Log in with the email you signed up with to jump back into your steps.';
   }
-
   async function doStartLogin(){
     const email=document.getElementById('l_email').value.trim();
     const err=document.getElementById('l_err');
@@ -345,7 +328,6 @@
     setCookie('itz_email',email.toLowerCase(),365);
     window.location.href = HUB_URL;   // returning member → straight to the hub
   }
-
   loadProfile();
 </script>
 </body>

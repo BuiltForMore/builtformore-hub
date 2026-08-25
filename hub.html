@@ -546,10 +546,12 @@
     const appsDone   = !!ob.apps_done   || ['goai','telegram'].every(k=>apps[k]);   // core apps, or they hit "skip"
     const chDone     = !!ob.chats_done  || ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
     // 3-step onboarding: GO AI (0) -> Apps (1) -> Chats (2) -> in the hub (3). Broker funding is OPTIONAL, handled inside the hub.
-    const phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
+    const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
+    let phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
+    // Preview mode (?onboard=1): if you've already finished onboarding, jump to the apps step so you can see the new flow.
+    if(forcePreview && phase>=3) phase = goaiDone ? 1 : 0;
     // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
     const alreadySetUp = GOAI_SITE ? false : (window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member);
-    const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
     window.ONBOARDED = ((phase>=3) || alreadySetUp) && !forcePreview;
     // Wizard shows GO AI connect (gates) then apps + chats (both fully skippable — never forced).
     const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;

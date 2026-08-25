@@ -196,7 +196,7 @@
     <div class="section-label">📈 Trade</div>
     <div class="grid">
       <a class="tile locked" id="tileSignals"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
-      <a class="tile locked" id="tileTapTrade" onclick="tileTapTradeClick()"><span class="badge gray">🔒 Locked</span><div class="ic">⚡</div><h3>ITZTAP</h3><p>Fund a broker → auto-copy our live trades to your account, one tap.</p></a>
+      <a class="tile locked" id="tileGoaiTg" onclick="tileGoaiTgClick()"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🚀</div><h3>GO AI Telegram</h3><p>GO AI's channels + signals on Telegram — tap in.</p></a>
       <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
@@ -387,6 +387,7 @@
   // (server-side, only for eligible members) so they never sit in the public page source.
   const GOKOLAB_URL='https://groups.builtformore.xyz/communities/groups/built-for-more/home';   // Built For More community (GoKollab)
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
+  const GOAI_TG_URL='https://t.me/GOAILaunchENBOT';   // GO AI channels on Telegram (message the bot to get in)
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
   const MEMBERSHIP_URL='https://itztime.trade/join';   // $22.22/mo ITZ Membership checkout (confirm exact path)
   // Which line is this? go.itztime.trade = GO AI + ITZ. itztime.trade = ITZ-only (GO AI never shown).
@@ -492,8 +493,8 @@
           .map(k=>`<a class="appbtn" onclick="hubOpenApp('${k}')">📱 ${APP_LINKS[k].name}</a>`).join(''); } }
     // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
-    setTileLock('tileTapTrade',trade);
-    setTileLock('tilePamm',window.BROKER_UNLOCKED);  // Goldielots: funded Crucial only
+    setTileLock('tileGoaiTg',member);                // GO AI Telegram — open to members
+    setTileLock('tilePamm',window.BROKER_UNLOCKED);  // Goldielots (hidden)
     setTileLock('tileEdu',member);
     { const _e=document.getElementById('tileEdu'); _e.removeAttribute('href'); _e.onclick = member ? openEducation : openGate; }
     if(GOAI_SITE){
@@ -509,7 +510,7 @@
     document.getElementById('tileChat').style.display = window.SHOW_GOAI ? '' : 'none';
     if(window.SHOW_GOAI) lockOrLink('tileChat',member,window.TEAM_LINK||'#');
     { const tb=document.getElementById('teamBanner'); if(tb) tb.style.display = (window.SHOW_GOAI && member && window.TEAM_LINK) ? 'flex' : 'none'; }
-    { const bb=document.getElementById('brokerBanner'); if(bb) bb.style.display = (window.SHOW_GOAI && member && !window.BROKER_UNLOCKED) ? 'flex' : 'none'; }
+    { const bb=document.getElementById('brokerBanner'); if(bb) bb.style.display = 'none'; }  // broker-funding push removed (ITZTAP + Goldielots gone)
     window.NOMAD_COUNT=d.goai_referrals||0; window.NOMAD_OK=window.NOMAD_COUNT>=4;  // GO AI recruits only
     // Nomad Leaders is a GO AI perk — only on the go. line, never on itztime.trade
     document.getElementById('tileNomad').style.display = window.SHOW_GOAI ? '' : 'none';
@@ -701,6 +702,7 @@
     document.getElementById('gokOpen').style.display='block';
   }
   function tileTapTradeClick(){ if(window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
+  function tileGoaiTgClick(){ if(window.SIGNALS_UNLOCKED){ window.open(GOAI_TG_URL,'_blank'); } else openGate(); }
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
   function tileChatClick(){ alert('💬 Daily Chat is coming soon — hang tight!'); }
   function tileNomadClick(){ if(window.NOMAD_OK && window.NOMAD_LINK){ window.open(window.NOMAD_LINK,'_blank'); } else { alert('👑 Nomad Leaders unlocks once you\'ve onboarded 4 people. You\'re at '+(window.NOMAD_COUNT||0)+' — keep bringing people in!'); } }

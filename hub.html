@@ -32,26 +32,21 @@
   .pill{border:1px solid var(--border);border-radius:999px;padding:8px 15px;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1.2px;text-transform:uppercase;font-size:11.5px;color:var(--dim);background:var(--card)}
   .pill b{color:var(--green)}
   .logout{background:none;border:none;color:var(--dim);font-size:12px;cursor:pointer;text-decoration:underline;margin-left:10px}
-
   .hello{font-family:'Bebas Neue';font-size:clamp(28px,5vw,44px);letter-spacing:2px;margin:26px 0 4px}
   .hello span{color:var(--green)}
   .tag{color:var(--dim);font-size:14px;margin-bottom:26px}
-
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
   .stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;backdrop-filter:blur(6px)}
   .stat .n{font-family:'Bebas Neue';font-size:30px;color:var(--green);line-height:1;text-shadow:0 0 18px rgba(57,255,20,0.4)}
   .stat .l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-top:6px}
-
   .linkcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:26px;backdrop-filter:blur(6px)}
   .linkcard .ll{font-family:'Barlow Condensed';font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-size:12px;margin-bottom:10px}
   .linkbox{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .linkbox input{flex:1;min-width:220px;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:var(--green);font-family:monospace;font-size:13px;padding:11px 12px}
   .up{color:var(--dim);font-size:12.5px;margin-top:10px}
   .up b{color:#fff}
-
   .section-label{font-family:'Barlow Condensed';font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-size:13px;margin:6px 0 16px;display:flex;align-items:center;gap:10px}
   .section-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
-
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
   .tile{position:relative;display:block;text-decoration:none;color:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;background:var(--card);backdrop-filter:blur(6px);overflow:hidden;transition:.25s;min-height:148px;cursor:pointer}
   .tile::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 200px at 30% 0%,rgba(57,255,20,0.10),transparent 70%);opacity:0;transition:.25s}
@@ -71,7 +66,6 @@
   .tile:hover .arrow{opacity:1;transform:translateX(3px)}
   .badge{position:absolute;top:18px;right:20px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--green);color:#000;padding:3px 7px;border-radius:4px}
   .badge.gray{background:rgba(255,255,255,0.15);color:#fff}
-
   .appstrip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
   .appbtn{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 15px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;text-decoration:none}
   .appbtn:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 0 22px rgba(57,255,20,0.14)}
@@ -79,7 +73,6 @@
   .btn{display:inline-block;background:var(--green);color:#000;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:13px;text-decoration:none;padding:10px 16px;border-radius:8px;border:none;cursor:pointer}
   .btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green)}
   .foot{text-align:center;color:rgba(255,255,255,0.28);font-size:12px;margin-top:40px;letter-spacing:1px}
-
   /* login gate */
   #login{max-width:420px;margin:60px auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;backdrop-filter:blur(6px)}
   #login h2{font-family:'Bebas Neue';font-size:30px;letter-spacing:2px;margin-bottom:6px}
@@ -93,7 +86,6 @@
 <body>
 <div class="wrap">
   <div class="loading" id="loading">Loading your hub…</div>
-
   <!-- LOGIN -->
   <div id="login" style="display:none">
     <h2>ITZ HUB</h2>
@@ -102,7 +94,6 @@
     <button class="btn" style="width:100%" id="loginBtn" onclick="doLogin()">Open my hub →</button>
     <div class="err" id="loginErr"></div>
   </div>
-
   <!-- APP -->
   <div id="app">
     <div class="top">
@@ -115,17 +106,14 @@
       </div>
       <div><span class="pill" id="statusPill">MEMBER · <b>ACTIVE</b></span><button class="logout" onclick="logout()">Log out</button></div>
     </div>
-
     <div class="hello">Welcome back, <span id="firstName">friend</span> 🚀</div>
     <div class="tag">Everything in one place — your signals, your team, your income.</div>
-
     <div class="stats">
       <div class="stat"><div class="n" id="s_points">0</div><div class="l" id="l_points">Your Points</div></div>
       <div class="stat"><div class="n" id="s_rank">—</div><div class="l" id="l_rank">Leaderboard Rank</div></div>
       <div class="stat"><div class="n" id="s_refs">0</div><div class="l" id="l_refs">Members Referred</div></div>
       <div class="stat"><div class="n" id="s_broker">—</div><div class="l">Broker Linked</div></div>
     </div>
-
     <div class="linkcard">
       <div class="ll">🔗 Your start link — share it, grow your team</div>
       <div class="linkbox">
@@ -135,7 +123,6 @@
       </div>
       <div class="up" id="uplineLine"></div>
     </div>
-
     <!-- ITZ SIGNALS ACCESS GATE (branching) -->
     <div class="linkcard" id="goaiCard" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
@@ -146,43 +133,33 @@
         <button class="btn" id="unlockOpenBtn" onclick="openGate()">Unlock access →</button>
       </div>
     </div>
-
     <!-- SETUP PANEL -->
     <div class="linkcard" id="setup" style="display:none">
       <div class="ll">⚙️ Your start portal setup</div>
       <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:4px">Customize your link handle + broker links + getting-started video. Anyone who joins through your link sees these. Leave a field blank to use the ITZ defaults.</p>
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Your link handle (what comes after /start/)</label>
       <input class="fld-in" id="f_handle" oninput="handlePreview()" placeholder="e.g. JOHNFX" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:var(--green);font-size:14px;padding:11px 12px;font-family:monospace;letter-spacing:1px">
       <div id="handleHint" style="color:var(--dim);font-size:12px;margin-top:6px"></div>
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Crucial — your LIVE-account referral link</label>
       <input class="fld-in" id="f_crucial" placeholder="https://dashboard.crucialmarkets.com/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">GO AI — your referral / signup link <span style="color:var(--green)">(recruits sign up under you)</span></label>
       <input class="fld-in" id="f_goai_ref" placeholder="https://goai.global/...your GO AI referral link..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Genesis — your DEMO-account referral link</label>
       <input class="fld-in" id="f_genesis" placeholder="https://dashboard.genesisfxmarkets.com/auth/register?ref=..." style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Getting-started video (YouTube / Vimeo URL)</label>
       <input class="fld-in" id="f_video" placeholder="Paste a video link (optional)" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-
       <label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Personal welcome note (optional)</label>
       <input class="fld-in" id="f_intro" placeholder="e.g. So hyped you're here — let's get you trading!" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'">
-
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Step 1 title (optional)</label><input class="fld-in" id="f_step1" placeholder="Watch this first" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'"></div>
         <div><label class="fld" style="display:block;font-family:'Barlow Condensed';font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:12px;color:var(--dim);margin:14px 0 6px">Step 4 title (optional)</label><input class="fld-in" id="f_step4" placeholder="Link it to TradeLocker" style="width:100%;background:#0a0a0a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;padding:11px 12px;font-family:'Barlow'"></div>
       </div>
-
       <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <button class="btn" onclick="saveSetup()" id="saveBtn">💾 Save my setup</button>
         <button class="btn ghost" onclick="closeSetup()">Cancel</button>
         <span id="setupMsg" style="color:var(--green);font-size:13px"></span>
       </div>
     </div>
-
     <!-- GO AI phased onboarding (hard-locks the tiles until complete) -->
     <div class="linkcard" id="onboardCard" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px">
@@ -192,9 +169,7 @@
       <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:14px">Finish these steps to unlock everything. It only takes a few minutes.</p>
       <div id="onboardBody"></div>
     </div>
-
     <div id="tilesWrap">
-
     <!-- TEAM CHAT — front and center for GO AI members -->
     <a id="teamBanner" href="#" onclick="hubOpenTeam();return false;" style="display:none;text-decoration:none;background:linear-gradient(135deg,rgba(57,255,20,.16),rgba(57,255,20,.03));border:1px solid var(--green);border-radius:14px;padding:16px 20px;margin-bottom:24px;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 0 30px rgba(57,255,20,.12)">
       <div style="display:flex;align-items:center;gap:14px">
@@ -206,7 +181,6 @@
       </div>
       <span class="btn" style="white-space:nowrap;pointer-events:none">Open Team Chat →</span>
     </a>
-
     <!-- OPTIONAL: fund broker to unlock the funded tools (shown to GO AI members who haven't funded) -->
     <a id="brokerBanner" href="#" onclick="hubOpenBroker();return false;" style="display:none;text-decoration:none;background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:14px;padding:14px 20px;margin-bottom:24px;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:14px">
@@ -218,7 +192,6 @@
       </div>
       <span class="btn ghost" style="white-space:nowrap;pointer-events:none">Fund my broker →</span>
     </a>
-
     <!-- SECTION 1 · TRADE -->
     <div class="section-label">📈 Trade</div>
     <div class="grid">
@@ -228,16 +201,14 @@
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
       <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
     </div>
-
     <!-- SECTION 2 · GET SET UP -->
     <div class="section-label" style="margin-top:32px">🧭 Get Set Up</div>
     <div class="grid">
-      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Open &amp; fund your broker, link TradeLocker — start trading with us.</p></a>
+      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your step-by-step walkthrough. Trade the signals with any broker — set up a live one only when you're ready.</p></a>
       <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
     </div>
     <div class="section-label" style="margin-top:22px;letter-spacing:2px;font-size:12px">📱 Your Apps <span class="subhint">— download or re-install anytime</span></div>
     <div class="appstrip" id="appStrip"></div>
-
     <!-- SECTION 3 · TEAM & INCOME -->
     <div class="section-label" style="margin-top:30px">👥 Team &amp; Income</div>
     <div class="grid">
@@ -248,13 +219,10 @@
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
       <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
     </div>
-
     </div><!-- /tilesWrap -->
-
     <div class="foot">ITZ — a brand of Built For More Enterprises LLC · builtformore.xyz</div>
   </div>
 </div>
-
 <!-- ITZ Indicator access modal -->
 <div id="indModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -271,7 +239,6 @@
     <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">The indicator lives on TradingView as an invite-only script. Run your broker account on TradeLocker as usual — the indicator is for charting and learning the zones.</p>
   </div>
 </div>
-
 <!-- Goldilots PAMM info modal -->
 <div id="pammModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -280,7 +247,6 @@
       <button onclick="closePamm()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
     <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 12px">Goldilots is a <b>managed PAMM strategy</b> that runs on Crucial. A professional manager trades the allocation and your account follows along automatically — fully hands-off.</p>
-
     <!-- STEP 1: confirm they have a Crucial account (locked state) -->
     <div id="pammVerify">
       <div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin:2px 0 10px">Goldielots runs on <b style="color:#fff">Crucial</b>. <b style="color:var(--green)">Fund a live Crucial account ($125+)</b> under the <b style="color:#fff">same email you registered with ITZ</b> to unlock. (Same funded account also unlocks ITZTAP copy-trading.)</div>
@@ -292,7 +258,6 @@
       <div id="pammAltMount"></div>
       <p style="color:var(--dim);font-size:11.5px;line-height:1.5;margin-top:6px">Don't have a Crucial account yet? Set it up in <b>Getting Started</b> first, then come back.</p>
     </div>
-
     <!-- STEP 2: unlocked — open the PAMM -->
     <div id="pammOpen" style="display:none">
       <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:0 0 12px">✅ Crucial account confirmed. Tap below to open the Goldilots PAMM inside your Crucial dashboard — you'll see the <b>live stats, minimum, and profit split</b> there and can allocate. Make sure you're <b>logged into Crucial</b>.</p>
@@ -301,7 +266,6 @@
     <p style="color:var(--dim);font-size:11px;line-height:1.5;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px">Managed trading carries real risk — you can lose money, and past performance doesn't guarantee future results. Only allocate what you can afford to lose. Educational only, not financial advice.</p>
   </div>
 </div>
-
 <!-- EDUCATION modal (pulls published lessons from the DB — same source as the portal) -->
 <div id="eduModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -313,7 +277,6 @@
     <div id="eduList"><div style="color:var(--dim);font-size:13px">Loading lessons…</div></div>
   </div>
 </div>
-
 <!-- RESULTS modal (live signal track record) -->
 <div id="resultsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:560px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -325,7 +288,6 @@
     <div id="perfBody"><div style="color:var(--dim);font-size:13px">Loading results…</div></div>
   </div>
 </div>
-
 <!-- DOWNLINE modal (full-depth referral tree) -->
 <div id="downlineModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -338,7 +300,6 @@
     <div id="dlBody"><div style="color:var(--dim);font-size:13px">Loading…</div></div>
   </div>
 </div>
-
 <div id="goaiBoardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
@@ -350,7 +311,6 @@
     <div id="gbBody"><div style="color:var(--dim);font-size:13px">Loading…</div></div>
   </div>
 </div>
-
 <!-- UNLOCK ACCESS popup (two ways in) -->
 <div id="unlockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -390,7 +350,6 @@
     </div>
   </div>
 </div>
-
 <!-- GOKOLAB access modal (GO AI unlock — separate from the broker path) -->
 <div id="gokolabModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px">
   <div style="background:#0a0f0a;border:1px solid var(--border);border-radius:16px;max-width:440px;width:100%;padding:22px 20px;max-height:90vh;overflow:auto">
@@ -398,7 +357,6 @@
       <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--green)">👥 GOKOLAB</div>
       <button onclick="closeGokolab()" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
-
     <!-- locked: enter GO AI username + email to auto-approve -->
     <div id="gokVerify">
       <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:4px 0 12px">GOKOLAB is the ITZ community — courses, events and wins. Unlock it with your <b>GO AI account</b>.</p>
@@ -410,7 +368,6 @@
       <button class="btn full" id="gokBtn" onclick="submitGokolab()" style="width:100%">Unlock GOKOLAB →</button>
       <p id="gokMsg" style="color:var(--green);font-size:13px;margin-top:10px;min-height:16px"></p>
     </div>
-
     <!-- unlocked: fire them off to GOKOLAB -->
     <div id="gokOpen" style="display:none">
       <p style="color:#ddd;font-size:13.5px;line-height:1.6;margin:0 0 12px">✅ You're approved for GOKOLAB. Tap below to jump into the community.</p>
@@ -418,7 +375,6 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SB_URL='https://lugawieckrducycfeeql.supabase.co';
@@ -439,14 +395,12 @@
                   : (location.search.includes('goai=1') ? true
                   : /(^|\.)go\./i.test(location.hostname));
   const sb=supabase.createClient(SB_URL,SB_KEY);
-
-  // ── GO AI phased-onboarding links ──
+  // ── GO AI phased-onboarding links (each app: what it's for + store links) ──
   const APP_LINKS = {
-    tradelocker: {name:'TradeLocker', ios:'https://apps.apple.com/app/id6447196449', android:'https://play.google.com/store/apps/details?id=com.tradelocker.mobile'},
-    tradingview: {name:'TradingView', ios:'https://apps.apple.com/app/id1205990992', android:'https://play.google.com/store/apps/details?id=com.tradingview.tradingviewapp'},
-    telegram:    {name:'Telegram',    ios:'https://telegram.org/dl', android:'https://telegram.org/dl'},
-    goai:        {name:'GO AI app',   ios:'https://apps.apple.com/us/app/go-ai-os/id6756324129', android:'https://play.google.com/store/apps/details?id=com.iosstore.osgo'},
-    gokollab:    {name:'GoKollab (community)', ios:'https://apps.apple.com/us/app/gokollab/id6484272411', android:'https://play.google.com/store/apps/details?id=net.clientclub.app.kollab'}
+    goai:        {name:'GO AI OS', desc:'Your GO AI dashboard — trade signals, team & commissions. This is your home base.', ios:'https://apps.apple.com/us/app/go-ai-os/id6756324129', android:'https://play.google.com/store/apps/details?id=com.iosstore.osgo'},
+    telegram:    {name:'Telegram', desc:'Where the ITZ signals + team chat live. You get in the channels here.', ios:'https://telegram.org/dl', android:'https://telegram.org/dl'},
+    tradelocker: {name:'TradeLocker', desc:'The trading platform you place trades on (only needed when you\'re ready to trade live).', ios:'https://apps.apple.com/app/id6447196449', android:'https://play.google.com/store/apps/details?id=com.tradelocker.mobile'},
+    gokollab:    {name:'GoKollab', desc:'The community app — courses, events & wins. You\'re auto-added when you connect GO AI.', ios:'https://apps.apple.com/us/app/gokollab/id6484272411', android:'https://play.google.com/store/apps/details?id=net.clientclub.app.kollab'}
   };
   // pick the right store by device (Android vs iPhone/default)
   function isAndroid(){ return /android/i.test(navigator.userAgent||''); }
@@ -456,10 +410,8 @@
     itz_team:    {name:'ITZ Team Chat', get url(){return window.TEAM_LINK||'#';} },
     goai_bot:    {name:'GO AI channels (message the bot)', url:'https://t.me/GOAILaunchENBOT'}
   };
-
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
   function getCookie(k){return document.cookie.split('; ').reduce((r,c)=>{const[n,...v]=c.split('=');return n===k?decodeURIComponent(v.join('=')):r;},'');}
-
   async function loadHub(email){
     const {data,error}=await sb.rpc('get_member_hub',{p_email:email});
     if(error||!data||data.ok===false){ return false; }
@@ -467,7 +419,6 @@
     render(data);
     return true;
   }
-
   function render(d){
     window.DATA=d;
     document.getElementById('loading').style.display='none';
@@ -498,7 +449,6 @@
     else up=`You're at the top of your tree 👑`;
     if(!d.has_broker_links) up+=` &nbsp;·&nbsp; <span style="color:var(--green)">Set your Crucial + Genesis links in onboarding</span>`;
     document.getElementById('uplineLine').innerHTML=up;
-
     // ---- access flags ----
     const gs=d.go_ai_status, bs=d.broker_status;
     const itz=(getCookie('itz_email')||'').toLowerCase();
@@ -514,7 +464,6 @@
     window.TV_USERNAME=d.tradingview_username||''; window.TV_GRANTED=!!d.tv_granted;
     const member = window.SIGNALS_UNLOCKED;                        // base tier: in-system, paid, funded, or GO AI
     const trade  = window.BROKER_UNLOCKED;  // ITZTAP: funded Crucial only (GO AI membership does NOT unlock it)
-
     // ---- unlock card ----
     document.getElementById('goaiCard').style.display='block';
     document.getElementById('goaiItzEmail').textContent=itz||'your ITZ email';
@@ -535,14 +484,12 @@
       document.getElementById('goaiText').textContent = window.SHOW_GOAI ? 'Connect your GO AI login to unlock ITZ free — fund a Crucial account for ITZTAP & Goldielots.' : 'Fund a live Crucial account ($125+) to unlock ITZTAP & Goldielots.';
       document.getElementById('unlockOpenBtn').style.display='';
     }
-
     // ---- persistent apps strip (re-download anytime; GO AI app only on the GO AI line) ----
     { const strip=document.getElementById('appStrip');
-      if(strip){ const order=['tradelocker','tradingview','telegram','goai','gokollab'];
+      if(strip){ const order=['goai','telegram','tradelocker','gokollab'];
         const goaiOnly={goai:1,gokollab:1};
         strip.innerHTML=order.filter(k=>APP_LINKS[k]&&(!goaiOnly[k]||GOAI_SITE))
           .map(k=>`<a class="appbtn" onclick="hubOpenApp('${k}')">📱 ${APP_LINKS[k].name}</a>`).join(''); } }
-
     // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
     setTileLock('tileTapTrade',trade);
@@ -572,11 +519,11 @@
     document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
     setTileLock('tileCommunity',window.GOAI_UNLOCKED);
-    // ITZ Indicator stays locked — Coming Soon (not unlockable yet)
+    // ITZ Indicator: TradingView-based — hidden for now (not part of the GO AI flow)
+    { const ti=document.getElementById('tileIndicator'); if(ti) ti.style.display='none'; }
     const ts=document.getElementById('tileSignals'); ts.removeAttribute('href'); ts.onclick=signalsTileClick;
     renderOnboarding(d);
   }
-
   function setTileLock(id,unlocked){
     const t=document.getElementById(id); if(!t) return;
     const b=t.querySelector('.badge'); const ar=t.querySelector('.arrow');
@@ -590,22 +537,21 @@
     t.removeAttribute('href');
     t.onclick = unlocked ? function(){ if(url&&url!=='#'){ window.open(url,'_blank'); } else { alert('Coming soon.'); } } : openGate;
   }
-  // ── GO AI phased onboarding (hard-locks the tiles until complete) ──
+  // ── GO AI phased onboarding (apps + chats are OPTIONAL now — skippable) ──
   function renderOnboarding(d){
     d=d||window.DATA||{}; const ob=d.onboarding||{};
     const apps=ob.apps||{}, ch=ob.channels||{};
     const goaiDone = window.GOAI_UNLOCKED;
-    const appsDone   = ['tradelocker','tradingview','telegram','goai','gokollab'].every(k=>apps[k]);  // GO AI app + GoKollab required
-    const chDone     = ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
+    // Apps & chats are no longer HARD requirements — a person can skip them and still land in the hub.
+    const appsDone   = !!ob.apps_done   || ['goai','telegram'].every(k=>apps[k]);   // core apps, or they hit "skip"
+    const chDone     = !!ob.chats_done  || ['itz_signals','itz_team','goai_bot'].every(k=>ch[k]);
     // 3-step onboarding: GO AI (0) -> Apps (1) -> Chats (2) -> in the hub (3). Broker funding is OPTIONAL, handled inside the hub.
     const phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
     // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
-    // NOTE: don't include HAS_CRUCIAL here — that gets set mid-wizard at the Crucial step.
-    // On go.itztime.trade EVERYONE runs the GO AI onboarding fresh (ITZ membership does NOT skip it).
-    // On itztime.trade the wizard never gates anyway; keep the member-skip there for safety.
     const alreadySetUp = GOAI_SITE ? false : (window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member);
     const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
     window.ONBOARDED = ((phase>=3) || alreadySetUp) && !forcePreview;
+    // Wizard shows GO AI connect (gates) then apps + chats (both fully skippable — never forced).
     const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;
     document.getElementById('onboardCard').style.display = gate?'block':'none';
     document.getElementById('tilesWrap').style.display   = gate?'none':'block';
@@ -614,7 +560,7 @@
     const label=document.getElementById('onboardPhase');
     const body=document.getElementById('onboardBody');
     if(phase===0){
-      label.textContent='STEP 1 OF 3 · GO AI';
+      label.textContent='STEP 1 · CONNECT GO AI';
       const goaiSignup=(window.DATA&&window.DATA.sponsor_goai_link)||'https://goai.global/';
       body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">First, get your <b style="color:#fff">GO AI account</b> through your team's link — then drop your info below to connect. Use the <b style="color:#fff">same email you register with ITZ</b>.</div>
         <a href="#" onclick="window.open('${goaiSignup}','_blank');return false;" class="btn full" style="width:100%;display:block;text-align:center;text-decoration:none;box-sizing:border-box;margin-bottom:14px">① Create my GO AI account →</a>
@@ -626,18 +572,32 @@
         <p style="color:var(--dim);font-size:11px;margin-top:8px">Already in GO AI? Skip ① — just enter your username + email.</p>
         <p id="ob_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
     } else if(phase===1){
-      label.textContent='STEP 2 OF 3 · GET THE APPS';
-      body.innerHTML=Object.keys(APP_LINKS).map(k=>{
+      label.textContent='STEP 2 · GET THE APPS';
+      body.innerHTML=`<div style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">These are the apps you'll use. Tap <b style="color:#fff">Download</b> to grab any you don't have, or <b style="color:#fff">✓ I have it</b> if you're already set. Opens the right store for your phone.</div>`+Object.keys(APP_LINKS).map(k=>{
         const a=APP_LINKS[k], done=!!apps[k];
-        if(a.soon) return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px;opacity:.55"><span style="font-size:13.5px">📱 ${a.name}</span><span style="font-size:11px;color:var(--dim)">Coming soon</span></div>`;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'📱'} ${a.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obGetApp('${k}')">${done?'Got it':'Download →'}</button></div>`;
-      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap each to download — it checks off automatically. Opens the right store for your phone (iPhone or Android). <b style="color:#fff">GoKollab</b> is your community — you're auto-added when you connect GO AI.</p>`;
+        return `<div style="border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:11px;padding:12px 13px;margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:600">${done?'✅':'📱'} ${a.name}</span>
+            <span style="display:flex;gap:6px">
+              <button class="btn${done?' ghost':''}" style="padding:6px 13px;font-size:11.5px;margin:0;width:auto" onclick="obGetApp('${k}')">${done?'Got it':'Download →'}</button>
+              ${done?'':`<button class="btn ghost" style="padding:6px 11px;font-size:11.5px;margin:0;width:auto" onclick="obMarkApp('${k}')">✓ I have it</button>`}
+            </span>
+          </div>
+          <div style="color:var(--dim);font-size:11.5px;line-height:1.45;margin-top:7px">${a.desc||''}</div>
+        </div>`;
+      }).join('')+`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <span style="color:var(--dim);font-size:11.5px">Already got these? No need to re-download.</span>
+        <button class="btn ghost" style="margin:0;width:auto" onclick="obSkipApps()">Skip this step →</button>
+      </div>`;
     } else if(phase===2){
-      label.textContent='STEP 3 OF 3 · JOIN THE CHATS';
-      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Last step — tap all three. The <b style="color:#fff">ITZ bot</b> will DM you to confirm your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
+      label.textContent='STEP 3 · JOIN THE CHATS';
+      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Tap each one — the <b style="color:#fff">ITZ bot</b> will DM you to confirm your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
         const c=CH_LINKS[k], done=!!ch[k];
         return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'💬'} ${c.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obJoin('${k}')">${done?'Joined':'Join →'}</button></div>`;
-      }).join('')+`<p style="color:var(--dim);font-size:11.5px;margin-top:6px">Tap all three and you're in. 🚀 <b style="color:#fff">Fund your broker later inside the hub</b> to unlock ITZTAP &amp; Goldielots.</p>`;
+      }).join('')+`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <span style="color:var(--dim);font-size:11.5px">You can jump in the chats anytime from the hub.</span>
+        <button class="btn ghost" style="margin:0;width:auto" onclick="obSkipChats()">Skip &amp; enter hub →</button>
+      </div>`;
     }
   }
   // ── Alt Crucial email (different email than ITZ) — emailed OTP proves ownership ──
@@ -678,31 +638,19 @@
     if(data.verified){ msg.style.color='var(--green)'; msg.textContent='✅ Verified — unlocking…'; await loadHub(itz); }
     else { msg.style.color='#ff6b6b'; msg.textContent=data.message||'That code isn\'t right.'; }
   }
-
-  async function obVerifyCrucial(){
-    const itz=(getCookie('itz_email')||'').toLowerCase();
-    const typed=document.getElementById('ob_cru_email').value.trim().toLowerCase();
-    const msg=document.getElementById('ob_cru_msg');
-    if(typed!==itz){msg.style.color='#ff6b6b';msg.textContent='This must be the same email you registered with ITZ ('+itz+').';return;}
-    const btn=document.getElementById('ob_cru_btn'); btn.disabled=true; btn.textContent='Verifying…';
-    const {data,error}=await sb.functions.invoke('crucial-verify',{body:{member_email:itz,mode:'pamm'}});
-    btn.disabled=false; btn.textContent='Verify my Crucial account →';
-    if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
-    if(data.verified){ msg.style.color='var(--green)'; msg.textContent='✅ Verified — moving on…'; await loadHub(itz); }
-    else { msg.style.color='#ff6b6b'; msg.textContent=data.message||'We couldn\'t find a Crucial account under that email yet.'; }
-  }
   async function obPatch(patch){
     const itz=(getCookie('itz_email')||'').toLowerCase();
     const {data}=await sb.rpc('upsert_onboarding',{p_email:itz,p_patch:patch});
     if(data&&data.ok&&window.DATA){ window.DATA.onboarding=data.onboarding; renderOnboarding(); }
   }
   function obGetApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
+  function obMarkApp(k){ const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }  // "I already have it" — check off without opening the store
+  function obSkipApps(){ obPatch({apps_done:true}); }    // skip the whole apps step
+  function obSkipChats(){ obPatch({chats_done:true}); }  // skip chats & go straight into the hub
   function hubOpenApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); }  // persistent re-download from the hub (device-aware)
   function hubOpenTeam(){ if(window.TEAM_LINK) window.open(window.TEAM_LINK,'_blank'); }
   function hubOpenBroker(){ const cru=(window.DATA&&window.DATA.sponsor_crucial_link)||'https://dashboard.crucialmarkets.com/register?ref=3963'; window.open(cru,'_blank'); }
   function obJoin(k){ const c=CH_LINKS[k]; if(c&&c.url) window.open(c.url,'_blank'); const channels=Object.assign({},((window.DATA.onboarding||{}).channels)||{},{[k]:true}); obPatch({channels}); }
-  // Failsafe: let them into the hub while their Crucial account is still being sorted. ITZTAP/Goldielots stay locked until verified.
-  function obSkipCrucial(){ obPatch({crucial_skipped:true}); }
   async function obConnectGoAi(){
     const itz=(getCookie('itz_email')||'').toLowerCase();
     const user=document.getElementById('ob_user').value.trim();
@@ -745,7 +693,7 @@
     btn.disabled=false; btn.textContent='Unlock GOKOLAB →';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
     window.GOAI_UNLOCKED=true;
-    ['tileGoai','tileCommunity','tileTapTrade','tileIndicator'].forEach(id=>setTileLock(id,true));
+    ['tileGoai','tileCommunity'].forEach(id=>setTileLock(id,true));
     document.getElementById('gokVerify').style.display='none';
     document.getElementById('gokOpen').style.display='block';
   }
@@ -753,17 +701,6 @@
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }
   function tileChatClick(){ alert('💬 Daily Chat is coming soon — hang tight!'); }
   function tileNomadClick(){ if(window.NOMAD_OK && window.NOMAD_LINK){ window.open(window.NOMAD_LINK,'_blank'); } else { alert('👑 Nomad Leaders unlocks once you\'ve onboarded 4 people. You\'re at '+(window.NOMAD_COUNT||0)+' — keep bringing people in!'); } }
-  function openIndicator(){
-    const o=document.getElementById('indModal');
-    const inp=document.getElementById('tvUser'); inp.value=window.TV_USERNAME||'';
-    document.getElementById('indMsg').textContent='';
-    document.getElementById('indMsg').style.color='var(--green)';
-    const st=document.getElementById('indStatus');
-    if(window.TV_GRANTED){ st.innerHTML='✅ <b>Access granted.</b> Open TradingView → Indicators → <b>Invite-only scripts</b> to find <b>ITZ Zone + 60 EMA Bias</b>.'; }
-    else if(window.TV_USERNAME){ st.innerHTML='⏳ <b>Request received</b> for <b>@'+window.TV_USERNAME+'</b>. We add members to the invite-only script daily — you\'ll get a TradingView notification when you\'re in. Need to fix your username? Update it below.'; }
-    else { st.innerHTML='The ITZ indicator is an <b>invite-only</b> TradingView script. Drop your TradingView username and we\'ll grant you access — then it shows up under your <b>Invite-only scripts</b>.'; }
-    o.style.display='flex';
-  }
   function closeIndicator(){ document.getElementById('indModal').style.display='none'; }
   function openEducation(){ document.getElementById('eduModal').style.display='flex'; loadLessons(); }
   function closeEducation(){ document.getElementById('eduModal').style.display='none'; }
@@ -814,7 +751,6 @@
       _perfLoaded=true;
     }catch(e){ el.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load results.</div>'; }
   }
-
   // ── MY DOWNLINE (infinite-level referral tree) ──
   function openDownline(){
     document.getElementById('downlineModal').style.display='flex';
@@ -864,7 +800,6 @@
     document.getElementById('dlSummary').textContent='Total '+rows.length+' · '+Object.keys(perLevel).sort((a,b)=>a-b).map(k=>'L'+k+': '+perLevel[k]).join(' · ');
     _dlLoaded=true;
   }
-
   // ── GO AI DOWNLINE (separate lineage — walks goai_sponsor_code, GO-AI-connected only) ──
   let _gdlLoaded=false;
   async function loadGoaiDownline(){
@@ -892,7 +827,6 @@
     document.getElementById('dlSummary').textContent='Total '+rows.length+' in GO AI · '+Object.keys(perLevel).sort((a,b)=>a-b).map(k=>'L'+k+': '+perLevel[k]).join(' · ');
     _gdlLoaded=true;
   }
-
   // ── GO AI LEADERBOARD (separate points line) ──
   function openGoaiBoard(){ document.getElementById('goaiBoardModal').style.display='flex'; loadGoaiBoard(); }
   function closeGoaiBoard(){ document.getElementById('goaiBoardModal').style.display='none'; }
@@ -918,7 +852,6 @@
       _gbLoaded=true;
     }catch(e){ tb.innerHTML='<div style="color:var(--dim);font-size:13px">Couldn\'t load the board right now — try again.</div>'; }
   }
-
   function openPamm(){
     const unlocked=!!window.BROKER_UNLOCKED;  // Goldielots needs a FUNDED Crucial account
     document.getElementById('pammVerify').style.display = unlocked ? 'none':'block';
@@ -950,20 +883,6 @@
       msg.style.color='#ff6b6b'; msg.textContent=data.message||'We couldn\'t confirm a Crucial account under that email.';
     }
   }
-  async function submitTv(){
-    const u=document.getElementById('tvUser').value.trim().replace(/^@/,'');
-    const msg=document.getElementById('indMsg');
-    if(u.length<2){ msg.style.color='var(--red)'; msg.textContent='Enter your TradingView username.'; return; }
-    const btn=document.getElementById('tvBtn'); btn.disabled=true; btn.textContent='Submitting…';
-    const {data,error}=await sb.rpc('submit_tv_username',{p_email:getCookie('itz_email'),p_username:u});
-    btn.disabled=false; btn.textContent='Request access →';
-    if(error||!data||data.ok===false){ msg.style.color='var(--red)'; msg.textContent=(data&&data.error)||'Try again.'; return; }
-    window.TV_USERNAME=data.username; window.TV_GRANTED=!!data.granted;
-    msg.style.color='var(--green)';
-    msg.textContent='✅ Got it! You\'re on the list as @'+data.username+'. Watch for a TradingView notification when access is granted.';
-    document.getElementById('indStatus').innerHTML='⏳ <b>Request received</b> for <b>@'+data.username+'</b>. We add members to the invite-only script daily.';
-  }
-
   // ---- ITZ Signals gate ----
   async function submitBroker(){
     const email=getCookie('itz_email');
@@ -1004,7 +923,6 @@
     msg.style.color='var(--green)';msg.textContent='✅ Unlocked! Loading your access…';
     await loadHub(itz);
   }
-
   async function doLogin(){
     const email=document.getElementById('loginEmail').value.trim();
     const err=document.getElementById('loginErr');
@@ -1015,11 +933,8 @@
     const ok=await loadHub(email);
     if(!ok){err.textContent="We couldn't find that email. Try the one you signed up with.";btn.disabled=false;btn.textContent='Open my hub →';}
   }
-
   function logout(){setCookie('itz_email','',-1);location.reload();}
-
   function copyLink(){const i=document.getElementById('startLink');i.select();document.execCommand('copy');}
-
   function handlePreview(){
     const el=document.getElementById('f_handle');
     let v=(el.value||'').toUpperCase().replace(/[^A-Z0-9_-]/g,'');
@@ -1028,7 +943,6 @@
       ? `Your link: <span style="color:var(--green)">${location.host}${GOAI_SITE?'/start/':'/join?ref='}${v}</span>`
       : 'At least 3 characters — letters, numbers, - and _.';
   }
-
   function openSetup(){
     const d=window.DATA||{};
     const cs=d.custom_steps||{};
@@ -1046,7 +960,6 @@
     document.getElementById('setup').scrollIntoView({behavior:'smooth'});
   }
   function closeSetup(){document.getElementById('setup').style.display='none';}
-
   async function saveSetup(){
     const email=getCookie('itz_email');
     const btn=document.getElementById('saveBtn');
@@ -1078,7 +991,6 @@
     await loadHub(email);       // refresh stats (broker ✓)
     setTimeout(()=>{closeSetup();},900);
   }
-
   (async function init(){
     const email=getCookie('itz_email');
     if(email){ const ok=await loadHub(email); if(ok) return; }

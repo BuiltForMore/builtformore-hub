@@ -216,7 +216,6 @@
       <a class="tile" id="tileBroker" onclick="hubOpenBroker()"><span class="arrow">&#8594;</span><div class="ic">🏦</div><h3>Sign Up for Broker</h3><p>Open a live Crucial account through your coach's link — only when you're ready to trade live.</p></a>
       <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tilePersona" onclick="window.open('https://personaforce.co/trader','_blank')"><span class="arrow">&#8594;</span><div class="ic">🧠</div><h3>Trader's Persona</h3><p>Dr. Travis Fox's course — uncover your trader personality &amp; sharpen your edge. Sign up →</p></a>
-      <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
     </div>
     <div class="section-label" style="margin-top:22px;letter-spacing:2px;font-size:12px">📱 Your Apps <span class="subhint">— download or re-install anytime</span></div>
     <div class="appstrip" id="appStrip"></div>
@@ -225,6 +224,7 @@
     <div class="grid">
       <a class="tile locked" id="tileBoard"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🏆</div><h3>Points &amp; Leaderboard</h3><p>Where you rank. Bring members, climb the board.</p></a>
       <a class="tile" id="tileDownline" onclick="openDownline()"><span class="arrow">&#8594;</span><div class="ic">👥</div><h3>My Downline</h3><p>Everyone in your network, all the way down — tagged by level.</p></a>
+      <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
       <a class="tile locked" id="tileChat"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
       <a class="tile locked" id="tileNomad" onclick="tileNomadClick()"><span class="badge gray">🔒 4 referrals</span><span class="arrow">&#8594;</span><div class="ic">👑</div><h3>Nomad Leaders</h3><p>Leaders-only chat — unlocks once you've onboarded 4 people.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
@@ -529,9 +529,8 @@
     if(window.SHOW_GOAI) setTileLock('tileNomad',window.NOMAD_OK);
     // GO AI tiles: hidden entirely unless GO AI is relevant (member is GO AI, or GO-AI-track link)
     document.getElementById('tileGoai').style.display = window.SHOW_GOAI ? '' : 'none';
-    document.getElementById('tileCommunity').style.display = window.SHOW_GOAI ? '' : 'none';
+    document.getElementById('tileCommunity').style.display = 'none';   // GOKOLAB removed
     setTileLock('tileGoai',window.GOAI_UNLOCKED);
-    setTileLock('tileCommunity',window.GOAI_UNLOCKED);
     // ITZ Indicator (TradingView) + Goldielots PAMM — hidden (not part of the GO AI flow)
     { const ti=document.getElementById('tileIndicator'); if(ti) ti.style.display='none'; }
     { const tp=document.getElementById('tilePamm'); if(tp) tp.style.display='none'; }

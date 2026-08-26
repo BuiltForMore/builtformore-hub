@@ -212,7 +212,7 @@
     <!-- SECTION 2 · GET SET UP -->
     <div class="section-label" style="margin-top:32px">🧭 Get Set Up</div>
     <div class="grid">
-      <a class="tile" id="tileStart" href="/start"><span class="arrow">&#8594;</span><div class="ic">🧭</div><h3>Getting Started</h3><p>Your step-by-step walkthrough. Trade the signals with any broker — set up a live one only when you're ready.</p></a>
+      <a class="tile" id="tileStart" onclick="window.open(ONBOARD_VIDEO,'_blank')"><span class="arrow">&#8594;</span><div class="ic">▶️</div><h3>Getting Started — Watch This First</h3><p>Your full onboarding call: how ITZ &amp; GO AI work, connecting your account, the apps &amp; chats, and how to start trading the signals. Watch this before anything else.</p></a>
       <a class="tile" id="tileBroker" onclick="hubOpenBroker()"><span class="arrow">&#8594;</span><div class="ic">🏦</div><h3>Sign Up for Broker</h3><p>Open a live Crucial account through your coach's link — only when you're ready to trade live.</p></a>
       <a class="tile locked" id="tileEdu"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🎓</div><h3>Education</h3><p>The 3-Step strategy, zones, risk — your full library.</p></a>
       <a class="tile" id="tilePersona" onclick="window.open('https://personaforce.co/trader','_blank')"><span class="arrow">&#8594;</span><div class="ic">🧠</div><h3>Trader's Persona</h3><p>Dr. Travis Fox's course — uncover your trader personality &amp; sharpen your edge. Sign up →</p></a>
@@ -399,6 +399,7 @@
   const GOKOLAB_URL='https://groups.builtformore.xyz/communities/groups/built-for-more/home';   // Built For More community (GoKollab)
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
   const GOAI_TG_URL='https://t.me/+GNpoEZ13vcU5NmM5';   // GO AI signals chat + onboarding bot (same link)
+  const ONBOARD_VIDEO='https://us06web.zoom.us/rec/share/adELEYPrrOMNc1rQ-US4ZPpBR9YR323HSNUIu1QW0Eb8mneGKkNOIXexyUB3i0th.VUgodH_wUh1xeqB9';  // onboarding call recording
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
   const MEMBERSHIP_URL='https://itztime.trade/join';   // $22.22/mo ITZ Membership checkout (confirm exact path)
   // Which line is this? go.itztime.trade = GO AI + ITZ. itztime.trade = ITZ-only (GO AI never shown).
@@ -455,7 +456,7 @@
     // referral link is domain-aware: go.itztime.trade uses /start, itztime.trade uses /join
     const link = GOAI_SITE ? `${location.origin}/start/${d.referral_code}` : `${location.origin}/join?ref=${d.referral_code}`;
     document.getElementById('startLink').value=link;
-    document.getElementById('tileStart').href = GOAI_SITE ? '/start' : '/join';
+    // tileStart now opens the onboarding call video (see ONBOARD_VIDEO) — no page href.
     let up='';
     if(d.sponsor_name) up=`Your sponsor: <b>${d.sponsor_name}</b>`;
     else if(d.sponsor_code) up=`Your sponsor: <b>${d.sponsor_code}</b>`;

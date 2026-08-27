@@ -203,9 +203,11 @@
     <!-- SECTION 1 · CHATS -->
     <div class="section-label">💬 Chats</div>
     <div class="grid">
-      <a class="tile locked" id="tileSignals"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>ITZ Subs — Team Chat</h3><p>Our team chat + live graded signals across 13 assets, on Telegram.</p></a>
+      <a class="tile locked" id="tileSignals"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">📡</div><h3>ITZ Signals</h3><p>Live graded signals across 13 assets — straight to Telegram.</p></a>
+      <a class="tile locked" id="tileSubs" onclick="tileSubsClick()"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>ITZ Subs — Team Chat</h3><p>Our team chat — daily chatter, the calls, and the whole crew.</p></a>
       <a class="tile locked" id="tileGoaiTg" onclick="tileGoaiTgClick()"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🚀</div><h3>GO AI — Signals &amp; Announcements</h3><p>GO AI's company signal channels + official announcements.</p></a>
       <a class="tile locked" id="tileTwr" onclick="tileTwrClick()"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">🐺</div><h3>TWR Community</h3><p>The main TWR community — channels inside for Nomads &amp; more.</p></a>
+      <a class="tile locked" id="tileNomad" onclick="tileNomadClick()"><span class="badge gray">🔒 4 referrals</span><span class="arrow">&#8594;</span><div class="ic">👑</div><h3>Nomad Leaders</h3><p>Leaders-only chat — unlocks once you've onboarded 4 people.</p></a>
       <a class="tile locked" id="tilePamm" onclick="openPamm()"><span class="badge gray">🔒 Crucial</span><div class="ic">📊</div><h3>ITZ Goldielots PAMM</h3><p>Managed strategy on Crucial — allocate and let it run hands-off.</p></a>
       <a class="tile locked" id="tileIndicator" onclick="tileIndicatorClick()"><span class="badge gray">🔜 Coming Soon</span><div class="ic">📈</div><h3>ITZ Indicator</h3><p>Our support/resistance + 60 EMA zones on your TradingView charts.</p></a>
     </div>
@@ -226,7 +228,6 @@
       <a class="tile" id="tileDownline" onclick="openDownline()"><span class="arrow">&#8594;</span><div class="ic">👥</div><h3>My Downline</h3><p>Everyone in your network, all the way down — tagged by level.</p></a>
       <a class="tile" id="tileResults" onclick="openResults()"><span class="arrow">&#8594;</span><div class="ic">📊</div><h3>Results</h3><p>The live ITZ signal track record — wins, losses, win rate.</p></a>
       <a class="tile locked" id="tileChat"><span class="badge gray">🔒 Locked</span><span class="arrow">&#8594;</span><div class="ic">💬</div><h3>Daily Chat</h3><p>The ITZ Telegram — real-time chatter with the team.</p></a>
-      <a class="tile locked" id="tileNomad" onclick="tileNomadClick()"><span class="badge gray">🔒 4 referrals</span><span class="arrow">&#8594;</span><div class="ic">👑</div><h3>Nomad Leaders</h3><p>Leaders-only chat — unlocks once you've onboarded 4 people.</p></a>
       <a class="tile locked" id="tileGoai" onclick="tileGoAiClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">🚀</div><h3>GO AI Back Office</h3><p>Your GO AI dashboard, team volume &amp; commissions.</p></a>
       <a class="tile locked" id="tileCommunity" onclick="tileCommunityClick()"><span class="badge gray">🔒 GO AI</span><div class="ic">👥</div><h3>The Community</h3><p>GOKOLAB — courses, events, wins.</p></a>
     </div>
@@ -506,6 +507,7 @@
           .map(k=>`<a class="appbtn" onclick="hubOpenApp('${k}')">📱 ${APP_LINKS[k].name}</a>`).join(''); } }
     // ---- tiles ----
     setTileLock('tileSignals',window.SIGNALS_UNLOCKED);
+    setTileLock('tileSubs', !!(member && window.TEAM_LINK));  // ITZ subs / team chat (GO AI members)
     setTileLock('tileGoaiTg',member);                // GO AI signals & announcements — open to members
     setTileLock('tileTwr',member);                   // TWR community — open to members
     setTileLock('tilePamm',window.BROKER_UNLOCKED);  // Goldielots (hidden)
@@ -714,6 +716,7 @@
     document.getElementById('gokOpen').style.display='block';
   }
   function tileTapTradeClick(){ if(window.BROKER_UNLOCKED){ location.href='/trades'; } else openGate(); }
+  function tileSubsClick(){ if(window.SIGNALS_UNLOCKED && window.TEAM_LINK){ window.open(window.TEAM_LINK,'_blank'); } else openGate(); }
   function tileGoaiTgClick(){ if(window.SIGNALS_UNLOCKED){ window.open(GOAI_TG_URL,'_blank'); } else openGate(); }
   function tileTwrClick(){ if(window.SIGNALS_UNLOCKED){ window.open(TWR_URL,'_blank'); } else openGate(); }
   function tileIndicatorClick(){ alert('📈 The ITZ Indicator is coming soon — hang tight!'); }

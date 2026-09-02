@@ -399,7 +399,7 @@
   // (server-side, only for eligible members) so they never sit in the public page source.
   const GOKOLAB_URL='https://groups.builtformore.xyz/communities/groups/built-for-more/home';   // Built For More community (GoKollab)
   const GOAI_URL='https://goai.global/my-account/';   // GO AI back-office login
-  const GOAI_TG_URL='https://t.me/+GNpoEZ13vcU5NmM5';   // GO AI signals chat + onboarding bot (same link)
+  const GOAI_TG_URL='https://t.me/GOAIINTELL_BOT';   // GO AI signals & announcements bot
   const ONBOARD_VIDEO='https://us06web.zoom.us/rec/share/adELEYPrrOMNc1rQ-US4ZPpBR9YR323HSNUIu1QW0Eb8mneGKkNOIXexyUB3i0th.VUgodH_wUh1xeqB9';  // onboarding call recording
   const PAMM_URL='https://dashboard.crucialmarkets.com/pamm/pamm-stats/c43aaeda-eacd-4db1-a1d4-08f523c215d5';  // Goldilots PAMM on Crucial
   const MEMBERSHIP_URL='https://itztime.trade/join';   // $22.22/mo ITZ Membership checkout (confirm exact path)
@@ -419,7 +419,7 @@
   // pick the right store by device (Android vs iPhone/default)
   function isAndroid(){ return /android/i.test(navigator.userAgent||''); }
   function appUrl(k){ const a=APP_LINKS[k]; if(!a) return '#'; return isAndroid() ? (a.android||a.ios) : (a.ios||a.android); }
-  const TWR_URL='https://t.me/+5_VyAJRWiV4wMTIx';           // TWR community (Nomad channels inside)
+  const TWR_URL='https://t.me/+GNpoEZ13vcU5NmM5';           // TWR community (Nomad channels inside)
   const CH_LINKS = {
     itz_subs:  {name:'ITZ Subs — Team Chat', get url(){return window.SIGNALS_LINK||'#';} },
     goai_ann:  {name:'GO AI — Signals & Announcements (onboarding bot)', url:GOAI_TG_URL},

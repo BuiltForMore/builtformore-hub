@@ -81,7 +81,39 @@
   .err{color:#ff6b6b;font-size:13px;min-height:16px;margin-top:8px}
   .loading{text-align:center;color:var(--dim);padding:70px 0;font-size:14px}
   #app{display:none}
-#onboardCard p{font-size:16px;line-height:1.65}#onboardCard .btn{min-height:44px;font-size:15px;margin:5px 5px 5px 0;white-space:normal}#obSteps{display:flex;flex-wrap:wrap;gap:4px}#obSteps [aria-current="step"]{border-color:var(--green);color:var(--green)}.ob-item{padding:18px;border:1px solid var(--border);border-radius:12px;margin:14px 0}#onboardCard summary{cursor:pointer;padding:12px 0}#onboardCard button:focus-visible,#onboardCard a:focus-visible{outline:3px solid white;outline-offset:3px}
+/* Guided setup uses the same rounded cards and spacing as the original hub. */
+#onboardCard{padding:28px;margin:24px 0 32px;border-radius:16px;background:linear-gradient(145deg,rgba(57,255,20,.035),rgba(255,255,255,.025))}
+#onboardCard p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.68);margin:0 0 16px;max-width:70ch}
+#onboardCard .ll{margin-bottom:10px}
+#onboardCard #obInviter{font-size:13px;margin-bottom:8px;color:var(--green)}
+#onboardCard .btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1.4;white-space:normal;text-align:center;padding:12px 18px;border-radius:10px;max-width:100%}
+#onboardCard .btn.ghost{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.85);background:rgba(255,255,255,.025)}
+#obSteps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:24px 0 28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+#onboardCard #obSteps .btn{justify-content:flex-start;gap:10px;text-align:left;padding:12px;font-size:12px;letter-spacing:.6px}
+#obSteps .ob-number{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.07)}
+#onboardCard #obSteps [aria-current="step"]{border-color:var(--green);background:rgba(57,255,20,.08);color:var(--green)}
+#onboardPhase{font-family:'Barlow Condensed',sans-serif;font-size:28px;line-height:1.2;letter-spacing:.3px;margin:0 0 16px}
+#onboardBody{display:flow-root}
+#onboardBody>.btn{margin:8px 8px 16px 0}
+.ob-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0}
+.ob-item{padding:24px;border:1px solid var(--border);border-radius:16px;margin:18px 0;background:rgba(255,255,255,.025);min-width:0}
+.ob-grid>.ob-item{margin:0;display:flex;flex-direction:column;align-items:flex-start}
+.ob-item .ic{flex-shrink:0}
+.ob-item h3{font-family:'Barlow Condensed',sans-serif;font-size:21px;letter-spacing:.3px;margin-bottom:10px}
+#onboardCard .ob-item p{font-size:14px;margin-bottom:18px}
+.ob-item>.btn{margin:0 0 12px}
+#onboardCard .ob-hint{font-size:13px;margin:12px 0;color:var(--dim)}
+.ob-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.ob-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;padding-top:8px}
+#onboardCard .ob-footer p{margin:0;font-size:13px;max-width:50ch}
+#onboardCard details{border-top:1px solid var(--border);margin-top:20px;padding-top:6px}
+#onboardCard summary{cursor:pointer;padding:14px 0;color:var(--dim);font-size:14px}
+#onboardCard details p{margin-top:10px}
+#onboardCard #obSaveStatus:empty{display:none}
+#onboardCard #obSaveStatus:not(:empty){margin:18px 0 0;color:var(--green)}
+#onboardCard button:focus-visible,#onboardCard a:focus-visible{outline:3px solid white;outline-offset:3px}
+@media(max-width:700px){#onboardCard{padding:20px}.ob-grid{grid-template-columns:1fr}#obSteps{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:20px 0}.ob-item{padding:20px}#onboardPhase{font-size:25px}.ob-footer .btn{width:100%}}
+
 </style>
 </head>
 <body>
@@ -164,7 +196,7 @@
     <section class="linkcard" id="onboardCard" style="display:none" aria-label="Your ITZ setup">
       <div class="ll">Welcome to ITZ · Your team for GO AI</div>
       <p id="obInviter"></p>
-      <p>One step at a time, at your own pace. Your progress is saved. Already have an app? No need to download it again.</p>
+      <p>A few simple steps to get connected. Pick up where you left off, anytime.</p>
       <nav id="obSteps" aria-label="Setup steps"></nav>
       <h2 id="onboardPhase" tabindex="-1"></h2>
       <div id="onboardBody"></div>
@@ -568,7 +600,7 @@
     const phase=obView===null?(first<0?5:first):obView;
     const itz=obEscape((getCookie('itz_email')||'').toLowerCase());
     const label=document.getElementById('onboardPhase'),body=document.getElementById('onboardBody');
-    document.getElementById('obSteps').innerHTML=OB_TITLES.map((t,i)=>`<button class="btn ghost" aria-current="${phase===i?'step':'false'}" onclick="obShow(${i})">${done[i]?'✓':i+1} ${t}</button>`).join('');
+    document.getElementById('obSteps').innerHTML=OB_TITLES.map((t,i)=>`<button class="btn ghost" aria-current="${phase===i?'step':'false'}" onclick="obShow(${i})"><span class="ob-number">${done[i]?'✓':i+1}</span><span>${['GO AI','Team chat','Walkthrough','Communities','Your apps'][i]}</span></button>`).join('');
     if(phase===0){
       label.textContent='STEP 1 · CONNECT GO AI';
       const goaiSignup=(window.DATA&&window.DATA.sponsor_goai_link)||'https://goai.global/';
@@ -583,16 +615,19 @@
         <p id="ob_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
     } else if(phase===1){
       label.textContent='Step 2 · Join ITZ Subs';
-      body.innerHTML=`<p>This is your main ITZ team chat with Skylar, Preston and the team. Find upcoming calls, live trading sessions, opportunity calls, Nomad training and team help here.</p>
-        <p><b>First, open Telegram.</b> If you already use it, go straight to the chat.</p>
-        <button class="btn ghost" onclick="obGetApp('telegram')">Help me install Telegram</button>
-        <button class="btn ghost" onclick="obMarkApp('telegram')">I already have Telegram</button>
-        <p><b>Connect your Telegram once.</b> Open the ITZ access bot, tap Start, and enter your ITZ signup email. Enter the code from your email in the bot. It will show your ITZ Subs and Signals buttons. You do not need to know your Telegram username.</p>
-        <a class="btn" href="https://t.me/Itzaccessbot?start=goai" target="_blank" rel="noopener">Connect Telegram &amp; get my chat links ↗</a>
-        <p>Already connected? Open the team chat below.</p>
-        ${obChatCard('itz_subs',ch)}
-        <p>After joining, read the pinned messages at the top of the chat. That is where to look for the latest instructions and calls.</p>
-        <button class="btn" onclick="obShow(2)">Next: GO AI walkthrough →</button>`;
+      body.innerHTML=`<p>Your home for team help, call announcements and live trading sessions with Skylar, Preston and the crew.</p>
+        <div class="ob-grid">
+          <div class="ob-item"><div class="ic">🔗</div><h3>1. Connect your Telegram</h3>
+          <p>Tap Start in the bot. Enter your signup email, then the code sent to your inbox. Your chat buttons will appear there.</p>
+          <a class="btn" href="https://t.me/Itzaccessbot?start=goai" target="_blank" rel="noopener">Connect Telegram ↗</a>
+          <p class="ob-hint">Already connected? Go straight to the team chat.</p>
+          <details><summary>Need to set up Telegram?</summary><div class="ob-actions"><button class="btn ghost" onclick="obGetApp('telegram')">Download Telegram ↗</button><button class="btn ghost" onclick="obMarkApp('telegram')">I already have it</button></div></details></div>
+          <div class="ob-item"><div class="ic">💬</div><h3>2. Join ITZ Subs</h3>
+          <p>Open the team chat and follow any join prompts. Then come back and confirm you can see the messages.</p>
+          <button class="btn" onclick="obJoin('itz_subs')">Open team chat ↗</button>
+          <button class="btn ghost" onclick="obConfirmChat('itz_subs')">${ch.itz_subs?'✓ You confirmed you are inside':'I am inside the chat ✓'}</button></div>
+        </div>
+        <div class="ob-footer"><p>Once you are in, check the pinned messages for upcoming calls.</p><button class="btn" onclick="obShow(2)">Next: walkthrough →</button></div>`;
     } else if(phase===2){
       label.textContent='Step 3 · Watch the GO AI walkthrough';
       body.innerHTML=`<p>Rakan walks you through the GO AI platform and how to find its learning and trading tools. Watch the full video, then return here.</p>

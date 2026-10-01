@@ -81,6 +81,7 @@
   .err{color:#ff6b6b;font-size:13px;min-height:16px;margin-top:8px}
   .loading{text-align:center;color:var(--dim);padding:70px 0;font-size:14px}
   #app{display:none}
+#onboardCard p{font-size:16px;line-height:1.65}#onboardCard .btn{min-height:44px;font-size:15px;margin:5px 5px 5px 0;white-space:normal}#obSteps{display:flex;flex-wrap:wrap;gap:4px}#obSteps [aria-current="step"]{border-color:var(--green);color:var(--green)}.ob-item{padding:18px;border:1px solid var(--border);border-radius:12px;margin:14px 0}#onboardCard summary{cursor:pointer;padding:12px 0}#onboardCard button:focus-visible,#onboardCard a:focus-visible{outline:3px solid white;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -160,23 +161,16 @@
         <span id="setupMsg" style="color:var(--green);font-size:13px"></span>
       </div>
     </div>
-    <!-- GO AI phased onboarding (hard-locks the tiles until complete) -->
-    <div class="linkcard" id="onboardCard" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px">
-        <div class="ll" style="margin:0">🚀 Your GO AI setup</div>
-        <span class="pill" id="onboardPhase" style="background:rgba(57,255,20,.12);color:var(--green);border:1px solid var(--border);padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700">STEP 1 OF 3</span>
-      </div>
-      <p style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:14px">Finish these steps to unlock everything. It only takes a few minutes.</p>
-      <a href="https://us06web.zoom.us/rec/share/adELEYPrrOMNc1rQ-US4ZPpBR9YR323HSNUIu1QW0Eb8mneGKkNOIXexyUB3i0th.VUgodH_wUh1xeqB9" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;text-decoration:none;background:linear-gradient(135deg,rgba(57,255,20,.16),rgba(57,255,20,.03));border:1px solid var(--green);border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 0 26px rgba(57,255,20,.12)">
-        <div style="font-size:30px;line-height:1">▶️</div>
-        <div style="flex:1">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:#fff">Watch the onboarding call first</div>
-          <div style="color:var(--dim);font-size:12px;line-height:1.4">A walkthrough of your GO AI back office — how to navigate it and use it. ☕</div>
-        </div>
-        <span class="btn" style="white-space:nowrap;pointer-events:none">Play →</span>
-      </a>
+    <section class="linkcard" id="onboardCard" style="display:none" aria-label="Your ITZ setup">
+      <div class="ll">Welcome to ITZ · Your team for GO AI</div>
+      <p id="obInviter"></p>
+      <p>One step at a time, at your own pace. Your progress is saved. Already have an app? No need to download it again.</p>
+      <nav id="obSteps" aria-label="Setup steps"></nav>
+      <h2 id="onboardPhase" tabindex="-1"></h2>
       <div id="onboardBody"></div>
-    </div>
+      <p id="obSaveStatus" role="status" aria-live="polite"></p>
+      <details><summary>I need help</summary><p>Return to the person who sent you your ITZ link and tell them which step you are on. If you can open ITZ Subs, ask there too. Do not share your password.</p><button class="btn ghost" onclick="obJoin('itz_subs')">Open ITZ Subs for help</button></details>
+    </section>
     <div id="tilesWrap">
     <!-- TEAM CHAT — front and center for GO AI members -->
     <a id="teamBanner" href="#" onclick="hubOpenTeam();return false;" style="display:none;text-decoration:none;background:linear-gradient(135deg,rgba(57,255,20,.16),rgba(57,255,20,.03));border:1px solid var(--green);border-radius:14px;padding:16px 20px;margin-bottom:24px;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 0 30px rgba(57,255,20,.12)">
@@ -421,9 +415,10 @@
   function appUrl(k){ const a=APP_LINKS[k]; if(!a) return '#'; return isAndroid() ? (a.android||a.ios) : (a.ios||a.android); }
   const TWR_URL='https://t.me/+GNpoEZ13vcU5NmM5';           // TWR community (Nomad channels inside)
   const CH_LINKS = {
-    itz_subs:  {name:'ITZ Subs — Team Chat', get url(){return window.SIGNALS_LINK||'#';} },
-    goai_ann:  {name:'GO AI — Signals & Announcements (onboarding bot)', url:GOAI_TG_URL},
-    twr:       {name:'TWR Community', url:TWR_URL}
+    itz_subs:  {name:'ITZ Subs — Team Chat', get url(){return window.TEAM_LINK||'#';}, desc:'Your ITZ team: call announcements, questions and ongoing support.' },
+    signals: {name:'In The Zone Signals',get url(){return window.SIGNALS_LINK||"#";},desc:'Your ITZ signals channel, included for GO AI customers on the team.'},
+    goai_ann:  {name:'GO AI — Signals & Announcements (onboarding bot)', url:GOAI_TG_URL,desc:'GO AI signals and announcements. Follow the onboarding bot prompts to get connected.'},
+    twr:       {name:'TWR Community', url:TWR_URL,desc:'The wider community across our upline and other teams. ITZ Subs remains your main ITZ team chat.'}
   };
   function setCookie(k,v,days){const d=new Date();d.setTime(d.getTime()+days*864e5);document.cookie=`${k}=${encodeURIComponent(v)};expires=${d.toUTCString()};path=/;SameSite=Lax`;}
   function getCookie(k){return document.cookie.split('; ').reduce((r,c)=>{const[n,...v]=c.split('=');return n===k?decodeURIComponent(v.join('=')):r;},'');}
@@ -553,30 +548,27 @@
     t.removeAttribute('href');
     t.onclick = unlocked ? function(){ if(url&&url!=='#'){ window.open(url,'_blank'); } else { alert('Coming soon.'); } } : openGate;
   }
-  // ── GO AI phased onboarding (apps + chats are OPTIONAL now — skippable) ──
+  // Guided setup is independent of access permissions. Opening links never confirms completion.
+  let obView=null;
+  const OB_TITLES=['Connect GO AI','Join ITZ Subs','Watch the GO AI walkthrough','Join your other communities','Set up your apps'];
+  function obEscape(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function obShow(n){obView=n;renderOnboarding();document.getElementById('onboardPhase').focus();}
   function renderOnboarding(d){
     d=d||window.DATA||{}; const ob=d.onboarding||{};
-    const apps=ob.apps||{}, ch=ob.channels||{};
-    const goaiDone = window.GOAI_UNLOCKED;
-    // Apps & chats are no longer HARD requirements — a person can skip them and still land in the hub.
-    const appsDone   = !!ob.apps_done   || ['goai','telegram'].every(k=>apps[k]);   // core apps, or they hit "skip"
-    const chDone     = !!ob.chats_done  || ['itz_subs','goai_ann','twr'].every(k=>ch[k]);
-    // 3-step onboarding: GO AI (0) -> Apps (1) -> Chats (2) -> in the hub (3). Broker funding is OPTIONAL, handled inside the hub.
-    const forcePreview = location.search.includes('onboard=1');   // preview the wizard on any account
-    let phase = !goaiDone?0:(!appsDone?1:(!chDone?2:3));
-    // Preview mode (?onboard=1): if you've already finished onboarding, jump to the apps step so you can see the new flow.
-    if(forcePreview && phase>=3) phase = goaiDone ? 1 : 0;
-    // Established members (paid, legacy, or admin/broker-verified) skip the wizard.
-    const alreadySetUp = GOAI_SITE ? false : (window.IS_PAID || window.BROKER_UNLOCKED || !!d.is_member);
-    window.ONBOARDED = ((phase>=3) || alreadySetUp) && !forcePreview;
-    // Wizard shows GO AI connect (gates) then apps + chats (both fully skippable — never forced).
-    const gate = (GOAI_SITE || forcePreview) && !window.ONBOARDED;
-    document.getElementById('onboardCard').style.display = gate?'block':'none';
-    document.getElementById('tilesWrap').style.display   = gate?'none':'block';
-    if(!gate) return;
-    const itz=(getCookie('itz_email')||'').toLowerCase();
-    const label=document.getElementById('onboardPhase');
-    const body=document.getElementById('onboardBody');
+    const apps=ob.apps||{}, ch=ob.confirmed_channels||{};
+    const done=[!!window.GOAI_UNLOCKED,!!ch.itz_subs,!!ob.walkthrough_watched,['signals','goai_ann','twr'].every(k=>ch[k]),Object.keys(APP_LINKS).every(k=>apps[k])];
+    const first=done.findIndex(x=>!x);
+    window.ONBOARDED=done.slice(0,4).every(Boolean);
+    const card=document.getElementById('onboardCard');
+    card.style.display=GOAI_SITE?'block':'none';
+    document.getElementById('tilesWrap').style.display='block';
+    if(!GOAI_SITE)return;
+    const hello=document.querySelector('.hello');hello.after(card);
+    document.getElementById('obInviter').textContent=d.sponsor_name?'Your inviter: '+d.sponsor_name:'Your ITZ team will help you get started.';
+    const phase=obView===null?(first<0?5:first):obView;
+    const itz=obEscape((getCookie('itz_email')||'').toLowerCase());
+    const label=document.getElementById('onboardPhase'),body=document.getElementById('onboardBody');
+    document.getElementById('obSteps').innerHTML=OB_TITLES.map((t,i)=>`<button class="btn ghost" aria-current="${phase===i?'step':'false'}" onclick="obShow(${i})">${done[i]?'✓':i+1} ${t}</button>`).join('');
     if(phase===0){
       label.textContent='STEP 1 · CONNECT GO AI';
       const goaiSignup=(window.DATA&&window.DATA.sponsor_goai_link)||'https://goai.global/';
@@ -590,34 +582,37 @@
         <p style="color:var(--dim);font-size:11px;margin-top:8px">Already in GO AI? Skip ① — just enter your username + email.</p>
         <p id="ob_msg" style="font-size:12px;margin-top:8px;min-height:14px"></p>`;
     } else if(phase===1){
-      label.textContent='STEP 2 · GET THE APPS';
-      body.innerHTML=`<div style="color:var(--dim);font-size:12.5px;line-height:1.5;margin-bottom:12px">These are the apps you'll use. Tap <b style="color:#fff">Download</b> to grab any you don't have, or <b style="color:#fff">✓ I have it</b> if you're already set. Opens the right store for your phone.</div>`+Object.keys(APP_LINKS).map(k=>{
-        const a=APP_LINKS[k], done=!!apps[k];
-        return `<div style="border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:11px;padding:12px 13px;margin-bottom:9px">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-            <span style="font-size:14px;font-weight:600">${done?'✅':'📱'} ${a.name}</span>
-            <span style="display:flex;gap:6px">
-              <button class="btn${done?' ghost':''}" style="padding:6px 13px;font-size:11.5px;margin:0;width:auto" onclick="obGetApp('${k}')">${done?'Got it':'Download →'}</button>
-              ${done?'':`<button class="btn ghost" style="padding:6px 11px;font-size:11.5px;margin:0;width:auto" onclick="obMarkApp('${k}')">✓ I have it</button>`}
-            </span>
-          </div>
-          <div style="color:var(--dim);font-size:11.5px;line-height:1.45;margin-top:7px">${a.desc||''}</div>
-        </div>`;
-      }).join('')+`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
-        <span style="color:var(--dim);font-size:11.5px">Already got these? No need to re-download.</span>
-        <button class="btn ghost" style="margin:0;width:auto" onclick="obSkipApps()">Skip this step →</button>
-      </div>`;
+      label.textContent='Step 2 · Join ITZ Subs';
+      body.innerHTML=`<p>This is your main ITZ team chat with Skylar, Preston and the team. Find upcoming calls, live trading sessions, opportunity calls, Nomad training and team help here.</p>
+        <p><b>First, open Telegram.</b> If you already use it, go straight to the chat.</p>
+        <button class="btn ghost" onclick="obGetApp('telegram')">Help me install Telegram</button>
+        <button class="btn ghost" onclick="obMarkApp('telegram')">I already have Telegram</button>
+        ${obChatCard('itz_subs',ch)}
+        <p>After joining, read the pinned messages at the top of the chat. That is where to look for the latest instructions and calls.</p>
+        <button class="btn" onclick="obShow(2)">Next: GO AI walkthrough →</button>`;
     } else if(phase===2){
-      label.textContent='STEP 3 · JOIN THE CHATS';
-      body.innerHTML=`<div style="border-left:3px solid var(--green);padding:8px 0 8px 14px;color:var(--dim);font-size:12.5px;margin-bottom:12px">Tap each one — the <b style="color:#fff">ITZ bot</b> will DM you to confirm your email, then let you in.</div>`+Object.keys(CH_LINKS).map(k=>{
-        const c=CH_LINKS[k], done=!!ch[k];
-        return `<div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${done?'var(--green)':'var(--border)'};border-radius:10px;padding:11px 13px;margin-bottom:8px"><span style="font-size:13.5px">${done?'✅':'💬'} ${c.name}</span><button class="btn${done?' ghost':''}" style="padding:6px 15px;font-size:12px;margin:0;width:auto" onclick="obJoin('${k}')">${done?'Joined':'Join →'}</button></div>`;
-      }).join('')+`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
-        <span style="color:var(--dim);font-size:11.5px">You can jump in the chats anytime from the hub.</span>
-        <button class="btn ghost" style="margin:0;width:auto" onclick="obSkipChats()">Skip &amp; enter hub →</button>
-      </div>`;
+      label.textContent='Step 3 · Watch the GO AI walkthrough';
+      body.innerHTML=`<p>Rakan walks you through the GO AI platform and how to find its learning and trading tools. Watch the full video, then return here.</p>
+        <a class="btn" href="${ONBOARD_VIDEO}" target="_blank" rel="noopener">Watch the walkthrough ↗</a>
+        <p>Opening the video does not mark it finished. Your setup stays unfinished until you confirm you watched it.</p>
+        <button class="btn" onclick="obConfirmVideo()">${ob.walkthrough_watched?'✓ Watched — continue':'I have watched the full walkthrough'}</button>`;
+    } else if(phase===3){
+      label.textContent='Step 4 · Join your other communities';
+      body.innerHTML=['signals','goai_ann','twr'].map(k=>obChatCard(k,ch)).join('')+`<p>Nomad Leaders is for team builders. Its existing four-referral unlock stays in your hub; Skylar and Preston can also invite leaders manually.</p><button class="btn" onclick="obShow(4)">Next: your apps →</button>`;
+    } else if(phase===4){
+      label.textContent='Step 5 · Apps, only when you need them';
+      body.innerHTML='<p>Use “I already have it” for installed apps. Downloads open separately; return here when installation is finished. You can use ITZ Subs while these are pending.</p>'+Object.keys(APP_LINKS).map(k=>`<div class="ob-item"><h3>${apps[k]?'✓ ':''}${APP_LINKS[k].name}</h3><p>${APP_LINKS[k].desc}</p><button class="btn ghost" onclick="obGetApp('${k}')">Open download</button><button class="btn ghost" onclick="obMarkApp('${k}')">${apps[k]?'✓ Installed':'I already have it / installed it'}</button></div>`).join('')+`<button class="btn" onclick="obShow(5)">Continue — set up remaining apps later →</button>`;
+    } else {
+      label.textContent=window.ONBOARDED?'You are connected to ITZ':'Your setup is saved — finish when ready';
+      body.innerHTML=`<p>ITZ Subs is your next stop for call announcements, live sessions and team guidance. Check its pinned messages for what is happening next.</p><button class="btn" onclick="obJoin('itz_subs')">Open ITZ Subs →</button>`+done.map((v,i)=>v?'':`<p><button class="btn ghost" onclick="obShow(${i})">Finish later: ${OB_TITLES[i]} →</button></p>`).join('');
     }
   }
+  function obChatCard(k,ch){
+    const c=CH_LINKS[k];
+    return `<div class="ob-item"><h3>${ch[k]?'✓ ':''}${c.name}</h3><p>${c.desc||''}</p><button class="btn" onclick="obJoin('${k}')">Open ${c.name} ↗</button><p>Follow any Telegram or bot prompts. Then return here and confirm you can see the messages.</p><button class="btn ghost" onclick="obConfirmChat('${k}')">${ch[k]?'✓ Confirmed by you':'I am inside and can see the messages'}</button></div>`;
+  }
+  async function obConfirmChat(k){const channels={...((window.DATA.onboarding||{}).confirmed_channels||{}),[k]:true};await obPatch({confirmed_channels:channels});}
+  async function obConfirmVideo(){if(await obPatch({walkthrough_watched:true}))obShow(3);}
   // ── Alt Crucial email (different email than ITZ) — emailed OTP proves ownership ──
   function altBlockHTML(mode, ns){
     return `<div style="text-align:center;margin-top:12px"><a href="#" id="${ns}_altlink" onclick="document.getElementById('${ns}_altwrap').style.display='block';this.parentNode.style.display='none';return false;" style="color:var(--green);font-size:12px">My Crucial account is under a different email →</a></div>
@@ -656,19 +651,25 @@
     if(data.verified){ msg.style.color='var(--green)'; msg.textContent='✅ Verified — unlocking…'; await loadHub(itz); }
     else { msg.style.color='#ff6b6b'; msg.textContent=data.message||'That code isn\'t right.'; }
   }
+  let obSaving=false;
   async function obPatch(patch){
-    const itz=(getCookie('itz_email')||'').toLowerCase();
-    const {data}=await sb.rpc('upsert_onboarding',{p_email:itz,p_patch:patch});
-    if(data&&data.ok&&window.DATA){ window.DATA.onboarding=data.onboarding; renderOnboarding(); }
+    if(obSaving)return false;
+    obSaving=true;
+    const status=document.getElementById('obSaveStatus');status.textContent='Saving your progress…';
+    try{
+      const itz=(getCookie('itz_email')||'').toLowerCase();
+      const {data,error}=await sb.rpc('upsert_onboarding',{p_email:itz,p_patch:patch});
+      if(error||!data||!data.ok)throw new Error('Save failed');
+      window.DATA.onboarding=data.onboarding;renderOnboarding();status.textContent='Progress saved.';return true;
+    }catch(e){status.textContent='Your progress could not be saved. Please try that button again.';return false;}
+    finally{obSaving=false;}
   }
-  function obGetApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }
-  function obMarkApp(k){ const apps=Object.assign({},((window.DATA.onboarding||{}).apps)||{},{[k]:true}); obPatch({apps}); }  // "I already have it" — check off without opening the store
-  function obSkipApps(){ obPatch({apps_done:true}); }    // skip the whole apps step
-  function obSkipChats(){ obPatch({chats_done:true}); }  // skip chats & go straight into the hub
+  function obGetApp(k){const u=appUrl(k);if(u&&u!=='#')window.open(u,'_blank','noopener');}
+  function obMarkApp(k){const apps={...((window.DATA.onboarding||{}).apps||{}),[k]:true};obPatch({apps});}
   function hubOpenApp(k){ const u=appUrl(k); if(u&&u!=='#') window.open(u,'_blank'); }  // persistent re-download from the hub (device-aware)
   function hubOpenTeam(){ if(window.TEAM_LINK) window.open(window.TEAM_LINK,'_blank'); }
   function hubOpenBroker(){ const cru=(window.DATA&&window.DATA.sponsor_crucial_link)||'https://dashboard.crucialmarkets.com/register?ref=3963'; window.open(cru,'_blank'); }
-  function obJoin(k){ const c=CH_LINKS[k]; if(c&&c.url) window.open(c.url,'_blank'); const channels=Object.assign({},((window.DATA.onboarding||{}).channels)||{},{[k]:true}); obPatch({channels}); }
+  function obJoin(k){const c=CH_LINKS[k];if(c&&c.url&&c.url!=='#')window.open(c.url,'_blank','noopener');else alert('Your chat link is not available yet. Contact the person who invited you for help.');}
   async function obConnectGoAi(){
     const itz=(getCookie('itz_email')||'').toLowerCase();
     const user=document.getElementById('ob_user').value.trim();
@@ -680,6 +681,7 @@
     const {data,error}=await sb.functions.invoke('goai-approve',{body:{member_email:itz,username:user,goai_sponsor:getCookie('goai_ref')}});
     btn.disabled=false; btn.textContent='🔓 Connect & continue';
     if(error||!data||data.ok===false){msg.style.color='#ff6b6b';msg.textContent=(data&&data.error)||'Try again.';return;}
+    obView=null;
     await loadHub(itz);
   }
   function openGate(){ const m=document.getElementById('unlockAltMount'); if(m&&!m.innerHTML) m.innerHTML=altBlockHTML('signals','unlock'); document.getElementById('unlockModal').style.display='flex'; }

@@ -440,7 +440,6 @@
     goai:        {name:'GO AI OS', desc:'Your GO AI dashboard — trade signals, team & commissions. This is your home base.', ios:'https://apps.apple.com/us/app/go-ai-os/id6756324129', android:'https://play.google.com/store/apps/details?id=com.iosstore.osgo'},
     telegram:    {name:'Telegram', desc:'Where the ITZ signals + team chat live. You get in the channels here.', ios:'https://telegram.org/dl', android:'https://telegram.org/dl'},
     tradelocker: {name:'TradeLocker', desc:'The trading platform you place trades on (only needed when you\'re ready to trade live).', ios:'https://apps.apple.com/app/id6447196449', android:'https://play.google.com/store/apps/details?id=com.tradelocker.mobile'},
-    gokollab:    {name:'GoKollab', desc:'The community app — courses, events & wins. You\'re auto-added when you connect GO AI.', ios:'https://apps.apple.com/us/app/gokollab/id6484272411', android:'https://play.google.com/store/apps/details?id=net.clientclub.app.kollab'}
   };
   // pick the right store by device (Android vs iPhone/default)
   function isAndroid(){ return /android/i.test(navigator.userAgent||''); }
@@ -528,8 +527,8 @@
     }
     // ---- persistent apps strip (re-download anytime; GO AI app only on the GO AI line) ----
     { const strip=document.getElementById('appStrip');
-      if(strip){ const order=['goai','telegram','tradelocker','gokollab'];
-        const goaiOnly={goai:1,gokollab:1};
+      if(strip){ const order=['goai','telegram','tradelocker'];
+        const goaiOnly={goai:1};
         strip.innerHTML=order.filter(k=>APP_LINKS[k]&&(!goaiOnly[k]||GOAI_SITE))
           .map(k=>`<a class="appbtn" onclick="hubOpenApp('${k}')">📱 ${APP_LINKS[k].name}</a>`).join(''); } }
     // ---- tiles ----

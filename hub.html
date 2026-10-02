@@ -591,7 +591,7 @@
     const first=done.findIndex(x=>!x);
     window.ONBOARDED=done.slice(0,4).every(Boolean);
     const card=document.getElementById('onboardCard');
-    card.style.display=GOAI_SITE?'block':'none';
+    card.style.display=GOAI_SITE&&first!==-1?'block':'none';
     document.getElementById('tilesWrap').style.display='block';
     if(!GOAI_SITE)return;
     const hello=document.querySelector('.hello');hello.after(card);
